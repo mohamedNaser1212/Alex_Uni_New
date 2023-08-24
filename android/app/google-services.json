@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "702970152564",
+    "firebase_url": "https://alexandria-university-app-default-rtdb.firebaseio.com",
+    "project_id": "alexandria-university-app",
+    "storage_bucket": "alexandria-university-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702970152564:android:e59d4476e1a4493f037321",
+        "android_client_info": {
+          "package_name": "com.example.alex_uni_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702970152564-7ue8j666f7f0b7kfna98i733u6esaevq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.alex_uni_app",
+            "certificate_hash": "8ea3604232aa6dd5146ef55fbdc01a7b4c740eab"
+          }
+        },
+        {
+          "client_id": "702970152564-93l2906fbkvd1glsvq4tv692tig50ged.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.alex_uni_app",
+            "certificate_hash": "469e2460514f0095d67e55d1b06358db6b48f79f"
+          }
+        },
+        {
+          "client_id": "702970152564-i7lurph8mr5dd41oatos28ekvtuatk4f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9VF_JIowy25ybDzK4jJlxTG_OBVulrq0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "702970152564-i7lurph8mr5dd41oatos28ekvtuatk4f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "702970152564-59vbqasod5m8d0uihn9v29dg933vt5dq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.alexUniApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702970152564:android:cfcefef23edf0acb037321",
+        "android_client_info": {
+          "package_name": "com.example.alex_uni_new"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702970152564-i7lurph8mr5dd41oatos28ekvtuatk4f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9VF_JIowy25ybDzK4jJlxTG_OBVulrq0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "702970152564-i7lurph8mr5dd41oatos28ekvtuatk4f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "702970152564-59vbqasod5m8d0uihn9v29dg933vt5dq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.alexUniApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
