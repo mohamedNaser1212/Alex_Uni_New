@@ -54,10 +54,15 @@ class _MyAppState extends State<MyApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       routes: {
-        SplashScreen.id: (context) => const SplashScreen(),
-        LoginScreen.id: (context) => LoginScreen(),
-        RegisterationScreen.id: (context) => const RegisterationScreen(),
-        HomeScreen.id: (context) => const HomeScreen(),
+    SplashScreen.id: (context) => const SplashScreen(),
+    LoginScreen.id: (context) => LoginScreen(),
+    RegisterationScreen.id: (context) => const RegisterationScreen(),
+    HomeScreen.id: (context) {
+      final List<dynamic> arguments =
+      ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+      final email = arguments[1] as String;
+      return HomeScreen(email: email); // Pass the email only
+      },
       },
       initialRoute: SplashScreen.id,
     );

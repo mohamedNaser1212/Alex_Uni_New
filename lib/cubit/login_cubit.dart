@@ -1,4 +1,3 @@
-import 'package:alex_uni_new/states/register_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,7 +61,7 @@ class LoginCubit extends Cubit<LoginStates> {
       uId: id,
     );
     FirebaseFirestore.instance.collection('users').doc(id).set(model.toMap()).then((value){
-      navigateAndFinish(context: context, screen: const HomeScreen());
+      navigateAndFinish(context: context, screen:  HomeScreen(email: email,));
       emit(CreateUserLoginSuccessState());
     }).catchError((error){
       emit(CreateUserLoginErrorState());

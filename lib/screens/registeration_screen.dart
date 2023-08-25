@@ -1,6 +1,5 @@
 import 'package:alex_uni_new/cubit/register_cubit.dart';
 import 'package:alex_uni_new/screens/home_screen.dart';
-import 'package:alex_uni_new/screens/login_screen.dart';
 
 import 'package:alex_uni_new/states/register_states.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
@@ -16,7 +15,7 @@ class RegisterationScreen extends StatefulWidget {
 }
 
 class RegisterationScreenState extends State<RegisterationScreen> {
-  final formKey = GlobalKey<FormState>(); // Add form key for validation
+  final formKey = GlobalKey<FormState>();
 
 
   num? phone;
@@ -49,7 +48,7 @@ class RegisterationScreenState extends State<RegisterationScreen> {
         body: Form(
           key: formKey,
           child: SingleChildScrollView(
-            child: Container(
+            child: SizedBox(
               width: double.infinity,
               child: Column(
                 children: [
@@ -233,7 +232,7 @@ class RegisterationScreenState extends State<RegisterationScreen> {
                                 decoration: BoxDecoration(
 
                                   borderRadius: BorderRadius.circular(10),
-                                  color: Color(0xffFFFFFF), // Your specified color
+                                  color: const Color(0xffFFFFFF), // Your specified color
                                 ),
                                 child:ConditionalBuilder(
                                   condition: state is! RegisterLoadingState,
@@ -245,7 +244,10 @@ class RegisterationScreenState extends State<RegisterationScreen> {
                                           email: email!,
                                           password: password!,
                                         );
-                                        Navigator.pushReplacementNamed(context, HomeScreen.id);
+                                        Navigator.pushReplacementNamed(context, HomeScreen.id,arguments: (
+                                            selectedLocale,email!
+
+                                        ));
                                       }
                                     },
                                   child: Container(
@@ -255,7 +257,7 @@ class RegisterationScreenState extends State<RegisterationScreen> {
 
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      color: Color(0xffFFFFFF),
+                                      color: const Color(0xffFFFFFF),
                                     ),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,

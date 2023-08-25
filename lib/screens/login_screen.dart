@@ -1,43 +1,42 @@
-
 import 'package:alex_uni_new/cubit/login_cubit.dart';
-import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/home_screen.dart';
 import 'package:alex_uni_new/states/login_states.dart';
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:alex_uni_new/screens/registeration_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+   const LoginScreen({super.key});
   static String id = 'LoginScreen';
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
+
   String? email;
+
   String? password;
+
   bool isloading = false;
+
+  String? globalEmail;
 
   @override
   Widget build(BuildContext context) {
-    final selectedLocale =
-    ModalRoute.of(context)!.settings.arguments as Locale;
+    final selectedLocale = ModalRoute.of(context)!.settings.arguments as Locale;
 
     bool isArabic = selectedLocale.languageCode == 'ar';
     TextDirection textDirection =
-    isArabic ? TextDirection.rtl : TextDirection.ltr;
+        isArabic ? TextDirection.rtl : TextDirection.ltr;
 
     return BlocProvider(
       create: (BuildContext context) => LoginCubit(),
       child: BlocConsumer<LoginCubit, LoginStates>(
         listener: (context, state) {
-          if (state is LoginSuccessState) {
-            navigateAndFinish(context: context, screen: const HomeScreen());
-          }
+          if (state is LoginSuccessState) {}
           if (state is LoginErrorState) {
             showSnackBar(context, state.error);
           }
@@ -109,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(15),
+                                              BorderRadius.circular(15),
                                         ),
                                       ),
                                       textDirection: textDirection,
@@ -125,8 +124,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         }
                                         return null;
                                       },
-                                      onChanged: (value){
-                                        email=value;
+                                      onChanged: (value) {
+                                        email = value;
+                                        globalEmail = value; // Set the value to the global variable
                                       },
                                     ),
                                     const SizedBox(height: 20),
@@ -137,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(15),
+                                              BorderRadius.circular(15),
                                         ),
                                       ),
                                       obscureText: true,
@@ -150,46 +150,58 @@ class _LoginScreenState extends State<LoginScreen> {
                                         }
                                         return null;
                                       },
-                                      onChanged: (value){
-                                        password=value;
+                                      onChanged: (value) {
+                                        password = value;
                                       },
                                     ),
                                     const SizedBox(height: 30),
                                     Center(
                                       child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                         children: [
                                           InkWell(
-                                            onTap:(){
-                                              Navigator.pushReplacementNamed(context, HomeScreen.id);
-          },
+                                            onTap: () {
+                                              Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => HomeScreen(email:''), // Pass only the email
+                                                  settings: RouteSettings(arguments: [
+                                                  selectedLocale, isArabic ?'لا يوجد ':'Not provided'// Pass the locale and the email
+                                            ]),
+                                                ),
+                                              );
+                                            },
                                             child: Container(
                                               width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
+                                                      .size
+                                                      .width /
                                                   2.5,
                                               height: 60,
                                               decoration: BoxDecoration(
                                                 border: Border.all(
-                                                  color: const Color(0xff3E657B),
+                                                  color:
+                                                      const Color(0xff3E657B),
                                                 ),
                                                 borderRadius:
-                                                BorderRadius.circular(10),
+                                                    BorderRadius.circular(10),
                                                 color: const Color(0xffffffff),
                                               ),
                                               child: Center(
                                                 child: Row(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     Text(
-                                                      isArabic ? 'ضيف' : 'Guest',
+                                                      isArabic
+                                                          ? 'ضيف'
+                                                          : 'Guest',
                                                       style: const TextStyle(
                                                         fontSize: 26,
-                                                        color: Color(0xff3E657B),
+                                                        color:
+                                                            Color(0xff3E657B),
                                                         fontWeight:
-                                                        FontWeight.w600,
+                                                            FontWeight.w600,
                                                       ),
                                                     ),
                                                     const SizedBox(
@@ -208,68 +220,67 @@ class _LoginScreenState extends State<LoginScreen> {
                                           const SizedBox(
                                             width: 10,
                                           ),
-                                          ConditionalBuilder(
-                                            condition: state is! LoginLoadingState,
-                                            builder: (context)=>GestureDetector(
-                                              onTap: (){
-                                                if(formKey.currentState!.validate()){
-                                                  cubit.userLogin(
-                                                    email: email!,
-                                                    password: password!,
-                                                  );
-                                                  print('Valid');
+                                          GestureDetector(
+                                            onTap: () {
+                                              if (formKey.currentState!
+                                                  .validate()) {
+                                                cubit.userLogin(
+                                                  email: email!,
+                                                  password: password!,
+                                                );
 
-                                                }else{
-                                                  print('Not Valid');
-                                                }
-                                              },
-                                                  child: Container(
-                                                    width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                        2.5,
-                                                    height: 60,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                      BorderRadius.circular(10),
-                                                      color:
-                                                      const Color(0xff3E657B),
-                                                    ),
-                                                    child: Center(
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                        children: [
-                                                          Text(
-                                                            isArabic
-                                                                ? 'تسجيل'
-                                                                : 'Login',
-                                                            style:
-                                                            const TextStyle(
-                                                              fontSize: 26,
-                                                              color: Colors.white,
-                                                              fontWeight:
-                                                              FontWeight.bold,
-                                                            ),
-                                                            textAlign:
-                                                            TextAlign.center,
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 20,
-                                                          ),
-                                                          const Icon(
-                                                            Icons.arrow_forward,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ],
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  HomeScreen.id,
+                                                  //passing the selected locale and email  to the home screen
+                                                  arguments: [
+                                                    selectedLocale,
+                                                    email
+                                                  ],
+                                                );
+                                              }
+                                            },
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.5,
+                                              height: 60,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: const Color(0xff3E657B),
+                                              ),
+                                              child: Center(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      isArabic
+                                                          ? 'تسجيل'
+                                                          : 'Login',
+                                                      style: const TextStyle(
+                                                        fontSize: 26,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                       ),
+                                                      textAlign:
+                                                          TextAlign.center,
                                                     ),
-                                                  ),
-                                                ), fallback: (context)=>const CircularProgressIndicator(),
-
-
-                                          ),
+                                                    const SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    const Icon(
+                                                      Icons.arrow_forward,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ),
@@ -278,7 +289,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           isArabic
