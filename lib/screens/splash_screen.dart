@@ -1,3 +1,5 @@
+import 'package:alex_uni_new/cache_helper.dart';
+import 'package:alex_uni_new/constants.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
 import 'login_screen.dart';
@@ -22,12 +24,21 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _changeLanguage(Locale? newLocale) {
     if (newLocale != null) {
-      setState(() {
-        _selectedLocale = newLocale;
+      lang=newLocale.toString();
+      CacheHelper.saveData(
+        key: 'lang',
+        value: newLocale.toString(),
+      ).then((value) {
+        setState(() {
+          _selectedLocale = newLocale;
+        });
+        MyApp.setLocale(context, newLocale);
+      }).catchError((e) {
+        print(e.toString());
       });
-      MyApp.setLocale(context, newLocale);
     }
   }
+
   void _toggleDropdown() {
     setState(() {
       _isDropdownOpen = !_isDropdownOpen;
@@ -72,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius:
-                      BorderRadius.circular(_isDropdownOpen ? 10 : 200),
+                          BorderRadius.circular(_isDropdownOpen ? 10 : 200),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -80,7 +91,8 @@ class _SplashScreenState extends State<SplashScreen> {
                         value: _selectedLocale,
                         onChanged: (newLocale) {
                           _changeLanguage(newLocale);
-                          _navigateToLoginScreen(newLocale!); // Navigate when language changes
+                          _navigateToLoginScreen(
+                              newLocale!); // Navigate when language changes
                         },
                         items: const [
                           DropdownMenuItem(

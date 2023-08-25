@@ -1,44 +1,40 @@
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
+
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key, this.email}) : super(key: key);
   static const String id = 'home_screen';
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final String? email;
 
-  late UserAccountsDrawerHeader drawerHeader; // Declare as an instance variable
+  // late UserAccountsDrawerHeader drawerHeader; // Declare as an instance variable
 
   @override
   Widget build(BuildContext context) {
-    final List<dynamic> arguments =
-    ModalRoute
-        .of(context)!
-        .settings
-        .arguments as List<dynamic>;
-    final selectedLocale = arguments[0] as Locale;
-    final email = arguments[1] as String;
-    bool isArabic = selectedLocale.languageCode == 'ar';
+    final selectedLocale = Locale(lang!);
+    bool isArabic = lang == 'ar';
     TextDirection textDirection =
     isArabic ? TextDirection.rtl : TextDirection.ltr;
 
-    drawerHeader = UserAccountsDrawerHeader(
-      accountName: const Text(''),
-      accountEmail: Text(email, style: const TextStyle(
-        color: Colors.black,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
-      ), // Use the passed email here
-      currentAccountPicture: const CircleAvatar(
-        backgroundColor: Colors.white,
-        child: Icon(Icons.image, size: 50,),
-      ),
-
-    );
+    // drawerHeader = UserAccountsDrawerHeader(
+    //   accountName: const Text(''),
+    //   accountEmail: Text(email, style: const TextStyle(
+    //     color: Colors.black,
+    //     fontSize: 20,
+    //     fontWeight: FontWeight.bold,
+    //   ),
+    //   ), // Use the passed email here
+    //   currentAccountPicture: const CircleAvatar(
+    //     backgroundColor: Colors.white,
+    //     child: Icon(Icons.image, size: 50,),
+    //   ),
+    //
+    // );
 
     final drawerItems = ListView(
       children: <Widget>[
-        drawerHeader,
+        // drawerHeader,
         const SizedBox(
           height: 20,
         ),

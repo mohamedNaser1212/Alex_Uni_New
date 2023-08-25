@@ -22,7 +22,6 @@ class LoginCubit extends Cubit<LoginStates> {
         email: email,
         password: password,
       );
-
       emit(LoginSuccessState(userCredential.user!.uid));
       print(userCredential.user!.email);
       print(userCredential.user!.uid);

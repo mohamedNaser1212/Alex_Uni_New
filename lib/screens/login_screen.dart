@@ -1,12 +1,17 @@
+import 'package:alex_uni_new/cache_helper.dart';
 import 'package:alex_uni_new/cubit/login_cubit.dart';
+import 'package:alex_uni_new/reusable_widgets.dart';
+import 'package:alex_uni_new/screens/guest_layout_screen.dart';
 import 'package:alex_uni_new/screens/home_screen.dart';
 import 'package:alex_uni_new/states/login_states.dart';
 import 'package:flutter/material.dart';
 import 'package:alex_uni_new/screens/registeration_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../constants.dart';
+
 class LoginScreen extends StatefulWidget {
-   const LoginScreen({super.key});
+  const LoginScreen({super.key});
   static String id = 'LoginScreen';
 
   @override
@@ -26,9 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedLocale = ModalRoute.of(context)!.settings.arguments as Locale;
-
-    bool isArabic = selectedLocale.languageCode == 'ar';
+    bool isArabic = lang == 'ar';
     TextDirection textDirection =
         isArabic ? TextDirection.rtl : TextDirection.ltr;
 
@@ -36,7 +39,11 @@ class _LoginScreenState extends State<LoginScreen> {
       create: (BuildContext context) => LoginCubit(),
       child: BlocConsumer<LoginCubit, LoginStates>(
         listener: (context, state) {
-          if (state is LoginSuccessState) {}
+          if (state is LoginSuccessState) {
+            uId = state.uId;
+            CacheHelper.saveData(key: 'uId', value: uId);
+            Navigator.pushReplacementNamed(context, HomeScreen.id);
+          }
           if (state is LoginErrorState) {
             showSnackBar(context, state.error);
           }
@@ -58,14 +65,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          const SizedBox(height: 100),
+                          SizedBox(
+                            height: 20,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Image.asset('assets/images/University.png'),
                             ],
                           ),
-                          const SizedBox(height: 50),
+                          const SizedBox(
+                            height: 50,
+                          ),
                           Container(
                             width: double.infinity,
                             height: MediaQuery.of(context).size.height * 0.7,
@@ -126,7 +137,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       },
                                       onChanged: (value) {
                                         email = value;
-                                        globalEmail = value; // Set the value to the global variable
+                                        globalEmail =
+                                            value; // Set the value to the global variable
                                       },
                                     ),
                                     const SizedBox(height: 20),
@@ -162,14 +174,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         children: [
                                           InkWell(
                                             onTap: () {
-                                              Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => HomeScreen(email:''), // Pass only the email
-                                                  settings: RouteSettings(arguments: [
-                                                  selectedLocale, isArabic ?'لا يوجد ':'Not provided'// Pass the locale and the email
-                                            ]),
-                                                ),
+                                              navigateAndFinish(
+                                                context: context,
+                                                screen: GuestLayoutScreen(),
                                               );
                                             },
                                             child: Container(
@@ -228,16 +235,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   email: email!,
                                                   password: password!,
                                                 );
-
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  HomeScreen.id,
-                                                  //passing the selected locale and email  to the home screen
-                                                  arguments: [
-                                                    selectedLocale,
-                                                    email
-                                                  ],
-                                                );
                                               }
                                             },
                                             child: Container(
@@ -280,12 +277,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 ),
                                               ),
                                             ),
-                                          )
+                                          ),
                                         ],
                                       ),
                                     ),
                                     const SizedBox(
-                                      height: 50,
+                                      height: 25,
                                     ),
                                     Row(
                                       mainAxisAlignment:
@@ -308,7 +305,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                             Navigator.pushNamed(
                                               context,
                                               RegisterationScreen.id,
-                                              arguments: selectedLocale,
                                             );
                                           },
                                           child: Text(

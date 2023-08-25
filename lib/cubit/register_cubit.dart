@@ -77,16 +77,4 @@ class RegisterCubit extends Cubit<RegisterStates>{
       print(onError.toString());
     });
   }
-
-  int selectedRadioValue = 1;
-  void changeRadioValue(int value) {
-    selectedRadioValue = value;
-    emit(RegisterChangeRadioValueState());
-  }
-
-  bool showEmailField = true;
-  void changeEmailFieldState(bool value) {
-    showEmailField = value;
-    emit(RegisterChangeRadioValueState());
-  }
 }
