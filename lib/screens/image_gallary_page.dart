@@ -66,8 +66,8 @@ class _GalleryPageState extends State<GalleryPage> {
                 GestureDetector(
                   onTap: _pickImage,
                   child: Container(
-                    width: 270,
-                    height: 270,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.width * 0.8,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 2),
