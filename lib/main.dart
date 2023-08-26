@@ -3,14 +3,18 @@ import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/bloc_observer.dart';
 import 'package:alex_uni_new/firebase_options.dart';
 import 'package:alex_uni_new/screens/home_screen.dart';
+import 'package:alex_uni_new/screens/image_gallary_page.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:alex_uni_new/screens/splash_screen.dart';
 import 'package:alex_uni_new/screens/registeration_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,15 +23,34 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  String startPage;
-  lang = await CacheHelper.getData(key: 'lang') ?? null;
-  if(lang==null)
-    startPage=SplashScreen.id;
-  else
-    startPage=LoginScreen.id;
-  print(lang);
-  runApp(MyApp(startPage: startPage,));
+
+  bool isAuthenticated = await checkAuthentication();
+
+  String startPage = isAuthenticated ? HomeScreen.id : SplashScreen.id;
+
+  runApp(MyApp(startPage: startPage));
 }
+
+
+Future<bool> checkAuthentication() async {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  User? user = auth.currentUser;
+
+  if (user != null) {
+    // User is authenticated
+    return true;
+  } else {
+    // User is not authenticated
+    return false;
+  }
+}
+
+
+Future<bool> checkProfileImageStatus() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('hasSetProfileImage') ?? false;
+}
+
 
 class MyApp extends StatefulWidget {
   MyApp({
@@ -47,7 +70,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale _selectedLocale =  Locale(lang??'en'); // Default language is English
+  Locale _selectedLocale = Locale(lang ?? 'en'); // Default language is English
 
   void setLocale(Locale newLocale) {
     setState(() {
@@ -60,37 +83,9 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: Colors.white,
-          appBarTheme: AppBarTheme(
-            systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.white,
-              statusBarIconBrightness: Brightness.dark,
-            ),
-            backgroundColor: Colors.white,
-            elevation: 2,
-            titleTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-            iconTheme: IconThemeData(
-              color: Colors.black,
-            ),
-          ),
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: Colors.blue,
-            elevation: 20,
-          ),
-          textTheme: TextTheme(
-            bodyText1: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-            ),
-          ),),
-
+        // Your theme configuration...
+        // ...
+      ),
       locale: _selectedLocale,
       supportedLocales: const [
         Locale('en', ''), // English
@@ -103,9 +98,11 @@ class _MyAppState extends State<MyApp> {
       ],
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
-        LoginScreen.id: (context) => LoginScreen(),
+        LoginScreen.id: (context) => const LoginScreen(),
         RegisterationScreen.id: (context) => const RegisterationScreen(),
-        HomeScreen.id: (context) => HomeScreen(), // Pass the email only
+        HomeScreen.id: (context) => HomeScreen(),
+        GalleryPage.id: (context) => const GalleryPage(),
+
       },
       initialRoute: widget.startPage,
     );

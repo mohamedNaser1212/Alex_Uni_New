@@ -8,15 +8,12 @@ class HomeScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final String? email;
 
-  // late UserAccountsDrawerHeader drawerHeader; // Declare as an instance variable
-
   @override
   Widget build(BuildContext context) {
-    final selectedLocale = Locale(lang!);
+    final selectedLocale = Locale(lang ?? 'en'); // Provide a default value for lang
     bool isArabic = lang == 'ar';
     TextDirection textDirection =
     isArabic ? TextDirection.rtl : TextDirection.ltr;
-
     // drawerHeader = UserAccountsDrawerHeader(
     //   accountName: const Text(''),
     //   accountEmail: Text(email, style: const TextStyle(

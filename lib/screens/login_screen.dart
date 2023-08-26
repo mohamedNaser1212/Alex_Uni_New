@@ -3,6 +3,7 @@ import 'package:alex_uni_new/cubit/login_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/guest_layout_screen.dart';
 import 'package:alex_uni_new/screens/home_screen.dart';
+import 'package:alex_uni_new/screens/image_gallary_page.dart';
 import 'package:alex_uni_new/states/login_states.dart';
 import 'package:flutter/material.dart';
 import 'package:alex_uni_new/screens/registeration_screen.dart';
@@ -42,7 +43,15 @@ class _LoginScreenState extends State<LoginScreen> {
           if (state is LoginSuccessState) {
             uId = state.uId;
             CacheHelper.saveData(key: 'uId', value: uId);
-            Navigator.pushReplacementNamed(context, HomeScreen.id);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const GalleryPage(
+
+                ),
+              ),
+
+            );
           }
           if (state is LoginErrorState) {
             showSnackBar(context, state.error);
@@ -74,12 +83,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               Image.asset('assets/images/University.png'),
                             ],
                           ),
-                          const SizedBox(
-                            height: 50,
-                          ),
+                           SizedBox(
+                              height: 20,
+                            ),
                           Container(
                             width: double.infinity,
-                            height: MediaQuery.of(context).size.height * 0.7,
+                            height: MediaQuery.of(context).size.height * 0.8,
                             padding: const EdgeInsets.all(20),
                             decoration: const BoxDecoration(
                               color: Colors.white,
@@ -95,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   textDirection: textDirection,
                                   children: [
-                                    const SizedBox(height: 30),
+                                    const SizedBox(height: 10),
                                     Text(
                                       isArabic ? 'تسجيل الدخول' : 'Log in',
                                       style: const TextStyle(
@@ -111,10 +120,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                           : 'Your Email',
                                       style: const TextStyle(
                                         fontFamily: 'Inter',
+                                        fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                         color: Color(0xff7B8189),
                                       ),
                                     ),
+                                    const SizedBox(height:10),
+
                                     TextFormField(
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -143,8 +155,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     const SizedBox(height: 20),
                                     Text(
-                                      isArabic ? 'كلمه المرور' : 'Password',
-                                    ),
+                                      isArabic ? 'كلمه المرور' : 'Password',style: const TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xff7B8189),
+                                      ),
+                                    ),const SizedBox(height:10),
                                     TextFormField(
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -176,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             onTap: () {
                                               navigateAndFinish(
                                                 context: context,
-                                                screen: GuestLayoutScreen(),
+                                                screen: const GuestLayoutScreen(),
                                               );
                                             },
                                             child: Container(
@@ -229,13 +246,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
+
                                               if (formKey.currentState!
                                                   .validate()) {
                                                 cubit.userLogin(
                                                   email: email!,
                                                   password: password!,
+
+
                                                 );
                                               }
+
                                             },
                                             child: Container(
                                               width: MediaQuery.of(context)
@@ -282,7 +303,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                     const SizedBox(
-                                      height: 25,
+                                      height: 20,
                                     ),
                                     Row(
                                       mainAxisAlignment:
@@ -294,7 +315,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               : 'Don\'t have an account?',
                                           style: const TextStyle(
                                             fontSize: 18,
-                                            color: Color(0xff124460),
+                                            color: Color(0xff143153),
                                           ),
                                         ),
                                         const SizedBox(
@@ -312,6 +333,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 ? 'سجل الأن'
                                                 : 'Sign Up Now',
                                             style: const TextStyle(
+                                              fontSize: 18,
                                               fontWeight: FontWeight.w900,
                                               color: Color(0xff124460),
                                             ),

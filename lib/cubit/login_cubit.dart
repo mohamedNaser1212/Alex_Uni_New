@@ -1,12 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/user_model.dart';
+import 'dart:io';
+
+import '../models/user_model.dart'; // Import your user model
 import '../reusable_widgets.dart';
 import '../screens/home_screen.dart';
 import '../states/login_states.dart';
 
 class LoginCubit extends Cubit<LoginStates> {
+  File? selectedImage; // Add this line to declare selectedImage
+
   LoginCubit() : super(LoginInitialState());
 
   static LoginCubit get(context) => BlocProvider.of(context);
@@ -46,23 +51,46 @@ class LoginCubit extends Cubit<LoginStates> {
   }
 
 
-
   createUser({
     required String email,
     required String name,
     required String id,
-    context
-  }){
+    context,
+  }) {
     emit(CreateUserLoginLoadingState());
-    UserModel model=UserModel(
+    UserModel model = UserModel(
       email: email,
       name: name,
       uId: id,
+      profileImage: '', // Initialize with an empty string
     );
-    FirebaseFirestore.instance.collection('users').doc(id).set(model.toMap()).then((value){
-      navigateAndFinish(context: context, screen:  HomeScreen(email: email,));
-      emit(CreateUserLoginSuccessState());
-    }).catchError((error){
+    FirebaseFirestore.instance.collection('users').doc(id).set(model.toMap()).then((value) {
+      if (selectedImage != null) {
+        // Upload the selected image to Firebase Storage
+        Reference storageReference = FirebaseStorage.instance
+            .ref()
+            .child('profile_images')
+            .child('$id.jpg');
+        UploadTask uploadTask = storageReference.putFile(selectedImage!);
+
+        uploadTask.then((res) {
+          res.ref.getDownloadURL().then((downloadUrl) {
+            // Update the profileImage field with the download URL
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(id)
+                .update({'profileImage': downloadUrl})
+                .then((_) {
+              navigateAndFinish(context: context, screen: HomeScreen(email: email));
+              emit(CreateUserLoginSuccessState());
+            });
+          });
+        });
+      } else {
+        navigateAndFinish(context: context, screen: HomeScreen(email: email));
+        emit(CreateUserLoginSuccessState());
+      }
+    }).catchError((error) {
       emit(CreateUserLoginErrorState());
     });
   }
