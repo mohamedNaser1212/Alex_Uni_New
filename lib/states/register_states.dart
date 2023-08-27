@@ -18,3 +18,13 @@ class CreateUserSuccessState extends RegisterStates {}
 class CreateUserErrorState extends RegisterStates {}
 
 class RegisterChangeRadioValueState extends RegisterStates {}
+
+class RegisterChangeImageProfileSuccessState extends RegisterStates {}
+class RegisterChangeImageProfileErrorState extends RegisterStates {}
+
+class RegisterUploadImageProfileSuccessState extends RegisterStates {}
+class RegisterUploadImageProfileErrorState extends RegisterStates {}
+class RegisterUploadImageProfileLoadingState extends RegisterStates {}
+
+class RegisterShowImagePickerChangedState extends RegisterStates {}
+

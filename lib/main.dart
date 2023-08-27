@@ -20,11 +20,16 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   String startPage;
-  lang = await CacheHelper.getData(key: 'lang') ?? null;
-  if(lang==null)
+  lang = await CacheHelper.getData(key: 'lang') ;
+  uId = await CacheHelper.getData(key: 'uId');
+  if(lang==null) {
     startPage=SplashScreen.id;
-  else
+    if(uId!=null){
+      startPage=HomeScreen.id;
+    }
+  } else {
     startPage=LoginScreen.id;
+  }
   print(lang);
   runApp(MyApp(startPage: startPage,));
 }
@@ -104,7 +109,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         LoginScreen.id: (context) => LoginScreen(),
-        RegisterationScreen.id: (context) => const RegisterationScreen(),
+        RegisterationScreen.id: (context) => RegisterationScreen(),
         HomeScreen.id: (context) => HomeScreen(), // Pass the email only
       },
       initialRoute: widget.startPage,

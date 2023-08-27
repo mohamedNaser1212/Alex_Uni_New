@@ -38,6 +38,8 @@ dependencies:
   cloud_firestore: ^4.8.4
   conditional_builder_null_safety: ^0.0.6
   firebase_dynamic_links: ^5.3.5
+  image_picker: ^1.0.2
+  firebase_storage: ^11.2.6
 
 
   flutter:
