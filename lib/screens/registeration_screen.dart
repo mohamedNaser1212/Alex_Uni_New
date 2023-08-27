@@ -8,6 +8,7 @@ import 'package:alex_uni_new/states/register_states.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class RegisterationScreen extends StatefulWidget {
   RegisterationScreen({super.key});
@@ -24,8 +25,7 @@ class RegisterationScreenState extends State<RegisterationScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-
+ String? phone;
   @override
   Widget build(BuildContext context) {
     bool isArabic = lang == 'ar';
@@ -34,13 +34,13 @@ class RegisterationScreenState extends State<RegisterationScreen> {
     return BlocProvider(
       create: (context) => RegisterCubit(),
       child: BlocConsumer<RegisterCubit, RegisterStates>(
-        listener: (context, state) {
+        listener: (context, state)async {
           if (state is RegisterErrorState) {
             showSnackBar(context, state.error);
           } else if (state is RegisterSuccessState) {
             uId = state.uId;
             print('uId is ' + uId!);
-            CacheHelper.saveData(key: 'uId', value: uId);
+           await CacheHelper.saveData(key: 'uId', value: uId);
           } else if (state is CreateUserSuccessState) {
             Navigator.pushReplacementNamed(
               context,
@@ -64,7 +64,7 @@ class RegisterationScreenState extends State<RegisterationScreen> {
                         children: [
                           Container(
                             width: double.infinity,
-                            height: MediaQuery.of(context).size.height / 4,
+                            height: MediaQuery.of(context).size.height / 2.5,
                             decoration: const BoxDecoration(
                               image: DecorationImage(
                                 image: AssetImage(
@@ -76,7 +76,7 @@ class RegisterationScreenState extends State<RegisterationScreen> {
                           SingleChildScrollView(
                             child: Container(
                               width: double.infinity,
-                              height: MediaQuery.of(context).size.height * 0.8,
+                              height: MediaQuery.of(context).size.height * 1,
                               padding: const EdgeInsets.all(20),
                               decoration: const BoxDecoration(
                                 color: Color(0xff3E657B),
@@ -172,6 +172,36 @@ class RegisterationScreenState extends State<RegisterationScreen> {
                                     const SizedBox(
                                       height: 20,
                                     ),
+                                    Text(
+                                      isArabic ? 'رقم الهاتف' : 'Phone Number',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xffffffff),
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                    IntlPhoneField(
+                                      decoration: const InputDecoration(
+
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(20),
+                                          ),
+                                          borderSide: BorderSide(
+                                            color: Color(0xffFFFFFF),
+                                          ),
+                                        ),
+                                      ),
+                                      initialCountryCode: 'EG',
+                                      onChanged: (data) {
+
+                                        phone = data.completeNumber ;
+
+
+
+                                      },
+                                    ),
+
                                     Text(
                                       isArabic ? 'كلمه المرور' : 'Password',
                                       style: const TextStyle(
@@ -338,76 +368,98 @@ class RegisterationScreenState extends State<RegisterationScreen> {
                     ),
                   ),
                 ),
-                fallback: (context) => WillPopScope(
-                  onWillPop: () async {
-                    cubit.changeShowImagePicker();
-                    return false;
-                  },
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: ConditionalBuilder(
-                        condition: cubit.profileImage != null,
-                        builder: (context) => Column(
-                          children: [
-                            CircleAvatar(
-                              radius: MediaQuery.of(context).size.width / 4,
-                              backgroundImage: FileImage(
-                                File(cubit.profileImage!.path),
+                fallback: (context) => Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  color: const Color(0xff3E657B),
+
+                  child: WillPopScope(
+                    onWillPop: () async {
+                      cubit.changeShowImagePicker();
+                      return false;
+                    },
+                    child: Center(
+                      child: SingleChildScrollView(
+
+                        child: ConditionalBuilder(
+
+                          condition: cubit.profileImage != null,
+                          builder: (context) => Column(
+                            children: [
+                              CircleAvatar(
+                                radius: MediaQuery.of(context).size.width / 4,
+                                backgroundImage: FileImage(
+                                  File(cubit.profileImage!.path),
+                                ),
                               ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              reusableElevatedButton(
+                                width: MediaQuery.of(context).size.width/2,
+                                backColor: const Color(0xffEBEBEB),
+                                textColor: const Color(0xff3E657B),
+                                label: lang == 'ar'
+                                    ? 'تغيير الصوره الشخصيه'
+                                    : 'Change Profile Image',
+                                function: () {
+                                  cubit.getProfileImage();
+                                },
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              reusableElevatedButton(
+                                width: MediaQuery.of(context).size.width/2,
+                                backColor: const Color(0xffEBEBEB),
+                                textColor: const Color(0xff3E657B),
+                                label: lang == 'ar'
+                                    ? 'انشاء الحساب'
+                                    : 'Create Account',
+                                function: () async {
+                                  await cubit.uploadProfileImage();
+                                  cubit.userRegister(
+                                    name: nameController.text,
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                    phone: phone!,
+                                  );
+                                  nameController.clear();
+                                  emailController.clear();
+                                  passwordController.clear();
+                                  confirmPasswordController.clear();
+                                },
+                              ),
+                            ],
+                          ),
+                          fallback: (context) => Container(
+                            width: MediaQuery.of(context).size.width ,
+                            height: MediaQuery.of(context).size.height ,
+                            color: const Color(0xff3E657B),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: MediaQuery.of(context).size.width / 3,
+                                  backgroundColor: Color(0xffD9D9D9),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                reusableElevatedButton(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  textColor: Color(0xff3E657B),
+                                  label: lang == 'ar'
+                                      ? 'اضافه صوره شخصيه'
+                                      : 'Add Profile Image',
+
+                                  function: () {
+                                    cubit.getProfileImage();
+                                  },
+                                ),
+                              ],
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            reusableElevatedButton(
-                              label: lang == 'ar'
-                                  ? 'تغيير الصوره الشخصيه'
-                                  : 'Change Profile Image',
-                              function: () {
-                                cubit.getProfileImage();
-                              },
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            reusableElevatedButton(
-                              label: lang == 'ar'
-                                  ? 'انشاء الحساب'
-                                  : 'Create Account',
-                              function: () async {
-                                await cubit.uploadProfileImage();
-                                cubit.userRegister(
-                                  name: nameController.text,
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                  phone: phoneController.text,
-                                );
-                                nameController.clear();
-                                emailController.clear();
-                                passwordController.clear();
-                                confirmPasswordController.clear();
-                                phoneController.clear();
-                              },
-                            ),
-                          ],
-                        ),
-                        fallback: (context) => Column(
-                          children: [
-                            CircleAvatar(
-                              radius: MediaQuery.of(context).size.width / 4,
-                              backgroundColor: Colors.grey,
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            reusableElevatedButton(
-                              label: lang == 'ar'
-                                  ? 'اضافه صوره شخصيه'
-                                  : 'Add Profile Image',
-                              function: () {
-                                cubit.getProfileImage();
-                              },
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ),

@@ -38,10 +38,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocProvider(
       create: (BuildContext context) => LoginCubit(),
       child: BlocConsumer<LoginCubit, LoginStates>(
-        listener: (context, state) {
+        listener: (context, state) async{
           if (state is LoginSuccessState) {
             uId = state.uId;
-            CacheHelper.saveData(key: 'uId', value: uId);
+            await CacheHelper.saveData(key: 'uId', value: uId);
             Navigator.pushReplacementNamed(context, HomeScreen.id);
           }
           if (state is LoginErrorState) {

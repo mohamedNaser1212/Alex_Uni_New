@@ -24,11 +24,12 @@ void main() async {
   uId = await CacheHelper.getData(key: 'uId');
   if(lang==null) {
     startPage=SplashScreen.id;
+
+  } else {
+    startPage=LoginScreen.id;
     if(uId!=null){
       startPage=HomeScreen.id;
     }
-  } else {
-    startPage=LoginScreen.id;
   }
   print(lang);
   runApp(MyApp(startPage: startPage,));
@@ -67,7 +68,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.white,
-          appBarTheme: AppBarTheme(
+          appBarTheme: const AppBarTheme(
             systemOverlayStyle: SystemUiOverlayStyle(
               statusBarColor: Colors.white,
               statusBarIconBrightness: Brightness.dark,
@@ -83,12 +84,12 @@ class _MyAppState extends State<MyApp> {
               color: Colors.black,
             ),
           ),
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             type: BottomNavigationBarType.fixed,
             selectedItemColor: Colors.blue,
             elevation: 20,
           ),
-          textTheme: TextTheme(
+          textTheme: const TextTheme(
             bodyText1: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
