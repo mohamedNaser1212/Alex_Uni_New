@@ -448,7 +448,7 @@ class RegisterationScreenState extends State<RegisterationScreen> {
                                 ),
                                 reusableElevatedButton(
                                   width: MediaQuery.of(context).size.width / 2,
-                                  textColor: Color(0xff3E657B),
+                                  textColor: Color(0xffD9D9D9),
                                   label: lang == 'ar'
                                       ? 'اضافه صوره شخصيه'
                                       : 'Add Profile Image',
