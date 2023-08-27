@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import '../constants.dart';
 import '../models/user_model.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -72,6 +71,8 @@ class RegisterCubit extends Cubit<RegisterStates>{
       email: email,
       phone: phone,
       image: uploadedProfileImageLink,
+      cover:'',
+      bio: '',
     );
 
     FirebaseFirestore.instance
