@@ -46,12 +46,15 @@ Widget reusableTextFormField({
   required TextEditingController controller,
   required TextInputType keyboardType,
   Icon? prefix,
+  TextStyle? style,
+  Color? prefixColor,
   IconButton? suffix,
   bool obscure = false,
 }) =>
     Padding(
       padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
       child: TextFormField(
+        style: style,
         controller: controller,
         obscureText: obscure,
         keyboardType: keyboardType,
@@ -61,11 +64,15 @@ Widget reusableTextFormField({
         decoration: InputDecoration(
           suffixIcon: suffix,
           prefixIcon: prefix,
+          prefixIconColor: prefixColor,
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(width: 2.0, color: Colors.grey),
             borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
           ),
           labelText: label,
+          labelStyle: TextStyle(
+            color: prefixColor,
+          ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: activeColor, width: 2.0),
             borderRadius: BorderRadius.circular(25.0),

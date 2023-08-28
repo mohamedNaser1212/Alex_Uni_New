@@ -134,6 +134,10 @@ class EditProfile extends StatelessWidget {
                           height: 20,
                         ),
                       reusableTextFormField(
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                        prefixColor: Colors.white,
                         onTap: (){},
                         controller: nameController,
                         obscure: false,
