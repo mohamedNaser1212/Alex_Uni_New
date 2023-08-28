@@ -1,4 +1,5 @@
 import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/screens/home_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,13 +18,12 @@ class UserLayout extends StatelessWidget {
               'Layout',
             ),
           ),
-          body: const Center(
-            child: Text(
-              'User Layout',
-            ),
-          ),
+          body: HomeScreen(),
           bottomNavigationBar: BottomNavigationBar(
-            currentIndex: 0,
+            currentIndex: AppCubit.get(context).currentIndex,
+            onTap: (index) {
+              AppCubit.get(context).changeBottomNavBar(index);
+            },
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(
