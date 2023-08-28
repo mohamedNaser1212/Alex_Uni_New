@@ -17,51 +17,62 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     return BlocConsumer<AppCubit,AppStates>(
-      listener: (context,state){},
-      builder: (context,state){
-        var cubit=AppCubit.get(context);
+    bool isArabic = lang == 'ar';
+
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        var cubit = AppCubit.get(context);
         return ConditionalBuilder(
-          condition: cubit.user!=null,
-          builder:(context){
+          condition: cubit.user != null,
+          builder: (context) {
             return Column(
               children: [
-                getUser(AppCubit.get(context).user!,context),
+                getUser(AppCubit.get(context).user!, context, isArabic),
                 ConditionalBuilder(
                   condition: state is! AppLogoutLoadingState,
-                  builder: (context)=>Row(
+                  builder: (context) => Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: (){
+                        onPressed: () {
                           cubit.logout(context);
                         },
                         style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Colors.white)
-                        ),
-                        child: const Text(
-                          'LOGOUT',
-                          style: TextStyle(
-                              color: Colors.black
+                            backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white)),
+                        child: Text(
+                          isArabic ? 'تسجيل الخروج' : 'Logout',
+                          style: const TextStyle(
+                            color: Colors.black,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  fallback: (context)=> Platform.isIOS?const Center(child: CupertinoActivityIndicator()):  Center(child: CircularProgressIndicator(color: defaultColor),)),
+                  fallback: (context) => Platform.isIOS
+                      ? const Center(child: CupertinoActivityIndicator())
+                      : Center(
+                    child:
+                    CircularProgressIndicator(color: defaultColor),
+                  ),
+                ),
               ],
             );
           },
-          fallback: (context)=> Scaffold(
-              body: Center(child: CircularProgressIndicator(
-                color:defaultColor,
+          fallback: (context) => Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(
+                color: defaultColor,
               ),
-              )),
+            ),
+          ),
         );
       },
     );
   }
-  Widget getUser(UserModel model,context){
+
+  Widget getUser(UserModel model, context, isArabic) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -74,10 +85,12 @@ class SettingsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hello: ${model.name}',
+                  isArabic
+                      ? 'مرحبا: ${model.name}'
+                      : 'Hello: ${model.name}',
                   style: const TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 20
+                    fontWeight: FontWeight.w900,
+                    fontSize: 20,
                   ),
                 ),
                 const SizedBox(
@@ -93,7 +106,9 @@ class SettingsScreen extends StatelessWidget {
                   height: 20,
                 ),
                 Text(
-                  'phone:${model.phone}',
+                  isArabic
+                      ? 'رقم الهاتف: ${model.phone}'
+                      : 'Phone: ${model.phone}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -102,12 +117,12 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.all(15.0),
+        Padding(
+          padding: const EdgeInsets.all(15.0),
           child: Text(
-            'Account Settings',
-            style: TextStyle(
-                fontWeight: FontWeight.bold
+            isArabic ? 'اعدادات الحساب' : 'Account Settings',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -118,20 +133,20 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               children: [
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     navigateTo(
-                        context: context,
-                        screen: const EditProfile(),
+                      context: context,
+                      screen: const EditProfile(),
                     );
                   },
-                  child: const Row(
+                  child: Row(
                     children: [
                       Text(
-                          'Edit Profile'
+                        isArabic ? 'تعديل الحساب' : 'Edit Profile',
                       ),
-                      Spacer(),
-                      Icon(
-                          Icons.arrow_forward_ios_outlined
+                      const Spacer(),
+                      const Icon(
+                        Icons.arrow_forward_ios_outlined,
                       ),
                     ],
                   ),
@@ -140,19 +155,19 @@ class SettingsScreen extends StatelessWidget {
                   height: 30,
                 ),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     AppCubit.get(context).deleteUser(
                       context: context,
-                      id:uId!,
+                      id: uId!,
                     );
                   },
-                  child: const Row(
+                  child: Row(
                     children: [
                       Text(
-                          'Delete Account'
+                        isArabic ? 'ازاله الحساب' : 'Delete Account',
                       ),
-                      Spacer(),
-                      Icon(
+                      const Spacer(),
+                      const Icon(
                         Icons.delete,
                       ),
                     ],

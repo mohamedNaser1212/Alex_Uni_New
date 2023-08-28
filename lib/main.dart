@@ -120,6 +120,11 @@ class _MyAppState extends State<MyApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
+        routes: {
+          SplashScreen.id: (context) => const SplashScreen(),
+          LoginScreen.id: (context) => const LoginScreen(),
+          // ... define other named routes if needed ...
+        },
         home: widget.startPage,
       ),
     );

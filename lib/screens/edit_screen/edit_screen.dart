@@ -18,6 +18,7 @@ class EditProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isArabic = lang == 'ar';
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -25,22 +26,37 @@ class EditProfile extends StatelessWidget {
         var profileImage = AppCubit.get(context).profileImage;
         nameController.text = userModel!.name!;
         return Scaffold(
-          appBar:
-          defaultAppBar(context: context, title: 'Edit Profile', action: [
-            TextButton(
-              onPressed: () {
-                AppCubit.get(context).updateUser(
-                  name: nameController.text,
-                );
-              },
-              child: const Text(
-                'Update',
-                style: TextStyle(
-                    color: Colors.white
+          backgroundColor: const Color(0xFF3E657B),
+          appBar: defaultAppBar(
+            context: context,
+            title: isArabic ? 'تعديل الحساب' : 'Edit Profile',
+            action: [
+              TextButton(
+                onPressed: () async {
+                  final success = await AppCubit.get(context).updateUser(
+                    name: nameController.text,
+                  );
+
+                  if (success) {
+                    final currentContext = context; // Store the current context
+                    ScaffoldMessenger.of(currentContext).showSnackBar(
+                      const SnackBar(
+                        content: Text('Edit successful'),
+                        backgroundColor: Color(0xFF3E657B),
+                      ),
+                    );
+                  }
+                },
+
+                child: Text(
+                  isArabic ? 'تحديث' : 'Update',
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-          ]),
+            ],
+          ),
           body: ConditionalBuilder(
               condition: AppCubit.get(context).user!=null,
               builder: (context)=>SingleChildScrollView(
@@ -96,7 +112,7 @@ class EditProfile extends StatelessWidget {
                                 child: Column(
                                   children: [
                                    reusableElevatedButton(
-                                       label: 'Update Profile',
+                                       label: isArabic?'تحديث الملف الشخصي':'Update Profile',
                                        function: (){
                                          AppCubit.get(context).uploadProfileImage(name: nameController.text,);
                                        }
@@ -125,10 +141,10 @@ class EditProfile extends StatelessWidget {
                           Icons.person,
                         ),
                         keyboardType: TextInputType.text,
-                        label: 'Name',
+                        label: isArabic?'الأسم':'Name',
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'name must not be empty';
+                            return isArabic?'الاسم يجب الا يكون فارغا':'name must not be empty';
                           }
                           return null;
                         },

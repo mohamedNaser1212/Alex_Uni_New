@@ -11,10 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../constants.dart';
 
-var emailController=TextEditingController();
-var passwordController=TextEditingController();
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
   static String id = 'LoginScreen';
 
   @override
@@ -24,14 +22,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
 
-
   String? globalEmail;
+  String? globalPassword;
 
   @override
   Widget build(BuildContext context) {
     bool isArabic = lang == 'ar';
     TextDirection textDirection =
-        isArabic ? TextDirection.rtl : TextDirection.ltr;
+    isArabic ? TextDirection.rtl : TextDirection.ltr;
 
     return BlocProvider(
       create: (BuildContext context) => LoginCubit(),
@@ -114,11 +112,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                     TextFormField(
-                                      controller: emailController,
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                              BorderRadius.circular(15),
+                                          BorderRadius.circular(15),
                                         ),
                                       ),
                                       textDirection: textDirection,
@@ -135,7 +132,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                         return null;
                                       },
                                       onChanged: (value) {
-                                        emailController.text = value;
                                         globalEmail =
                                             value; // Set the value to the global variable
                                       },
@@ -145,21 +141,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                       isArabic ? 'كلمه المرور' : 'Password',
                                     ),
                                     TextFormField(
-                                      controller: passwordController,
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                              BorderRadius.circular(15),
+                                          BorderRadius.circular(15),
                                         ),
                                       ),
                                       obscureText: true,
-                                      onFieldSubmitted: (value){
-                                        LoginCubit.get(context).userLogin(
-                                            email: emailController.text,
-                                            password: passwordController.text
-                                        );
-                                        emailController.clear();
-                                        passwordController.clear();
+                                      onFieldSubmitted: (value) {
+                                        cubit.userLogin(
+                                            email: globalEmail!,
+                                            password: value);
                                       },
                                       textDirection: textDirection,
                                       validator: (value) {
@@ -171,14 +163,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                         return null;
                                       },
                                       onChanged: (value) {
-                                        passwordController.text = value;
+                                        globalPassword =
+                                            value; // Set the value to the global variable
                                       },
                                     ),
                                     const SizedBox(height: 30),
 
                                     ConditionalBuilder(
-                                      condition:state is! LoginLoadingState ,
-                                      builder: (context){
+                                      condition: state is! LoginLoadingState,
+                                      builder: (context) {
                                         return Center(
                                           child: Row(
                                             mainAxisAlignment:
@@ -188,7 +181,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 onTap: () {
                                                   navigateAndFinish(
                                                     context: context,
-                                                    screen: const GuestLayoutScreen(),
+                                                    screen:
+                                                    const GuestLayoutScreen(),
                                                   );
                                                 },
                                                 child: Container(
@@ -204,7 +198,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     ),
                                                     borderRadius:
                                                     BorderRadius.circular(10),
-                                                    color: const Color(0xffffffff),
+                                                    color:
+                                                    const Color(0xffffffff),
                                                   ),
                                                   child: Center(
                                                     child: Row(
@@ -244,11 +239,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   if (formKey.currentState!
                                                       .validate()) {
                                                     cubit.userLogin(
-                                                      email: emailController.text,
-                                                      password: passwordController.text,
+                                                      email: globalEmail!,
+                                                      password: globalPassword!,
                                                     );
-                                                    emailController.clear();
-                                                    passwordController.clear();
                                                   }
                                                 },
                                                 child: Container(
@@ -296,16 +289,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                         );
                                       },
-                                      fallback: (context)=>const Center(child: CircularProgressIndicator(
-                                        color: Color(0xff3E657B),
-                                      ),),
+                                      fallback: (context) => const Center(
+                                        child: CircularProgressIndicator(
+                                          color: Color(0xff3E657B),
+                                        ),
+                                      ),
                                     ),
                                     const SizedBox(
                                       height: 25,
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           isArabic
@@ -322,8 +317,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         InkWell(
                                           onTap: () {
                                             navigateTo(
-                                                context: context,
-                                                screen: RegisterationScreen(),
+                                              context: context,
+                                              screen: RegisterationScreen(),
                                             );
                                           },
                                           child: Text(
