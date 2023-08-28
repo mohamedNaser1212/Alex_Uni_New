@@ -1,7 +1,7 @@
 import 'package:alex_uni_new/constants.dart';
-import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/cubit/guest_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
-import 'package:alex_uni_new/states/app_states.dart';
+import 'package:alex_uni_new/states/guest_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,7 +10,7 @@ class GuestLayoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppCubit,AppStates>(
+    return BlocConsumer<GuestCubit,GuestStates>(
       listener: (context,state){},
       builder: (context,state){
         return Scaffold(
@@ -25,7 +25,7 @@ class GuestLayoutScreen extends StatelessWidget {
             ),
           ),
           bottomNavigationBar: BottomNavigationBar(
-            currentIndex: AppCubit.get(context).currentIndex,
+            currentIndex: GuestCubit.get(context).currentIndex,
             onTap: (index) {
               if(index==1){
                 showFlushBar(
@@ -33,7 +33,7 @@ class GuestLayoutScreen extends StatelessWidget {
                     message: lang=='ar'? 'يجب تسجيل الدخول أولاً':'You must login first',
                 );
               }else{
-                AppCubit.get(context).changeBottomNavBar(index);
+                GuestCubit.get(context).changeBottomNavBar(index);
               }
             },
             items: const [

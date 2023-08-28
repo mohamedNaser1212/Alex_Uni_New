@@ -1,9 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/user_model.dart';
-import '../reusable_widgets.dart';
-import '../screens/home_screen.dart';
 import '../states/login_states.dart';
 
 class LoginCubit extends Cubit<LoginStates> {
@@ -40,27 +36,5 @@ class LoginCubit extends Cubit<LoginStates> {
       emit(LoginErrorState(error: 'حدث خطأ ما',  ));
       print(e.toString());
     }
-  }
-
-
-
-  createUser({
-    required String email,
-    required String name,
-    required String id,
-    context
-  }){
-    emit(CreateUserLoginLoadingState());
-    UserModel model=UserModel(
-      email: email,
-      name: name,
-      uId: id,
-    );
-    FirebaseFirestore.instance.collection('users').doc(id).set(model.toMap()).then((value){
-      navigateAndFinish(context: context, screen:  HomeScreen(email: email,));
-      emit(CreateUserLoginSuccessState());
-    }).catchError((error){
-      emit(CreateUserLoginErrorState());
-    });
   }
 }

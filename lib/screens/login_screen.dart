@@ -2,7 +2,6 @@ import 'package:alex_uni_new/cache_helper.dart';
 import 'package:alex_uni_new/cubit/login_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/guest_layout_screen.dart';
-import 'package:alex_uni_new/screens/home_screen.dart';
 import 'package:alex_uni_new/screens/user_layout_screen.dart';
 import 'package:alex_uni_new/states/login_states.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
@@ -64,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Row(
@@ -189,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 onTap: () {
                                                   navigateAndFinish(
                                                     context: context,
-                                                    screen: GuestLayoutScreen(),
+                                                    screen: const GuestLayoutScreen(),
                                                   );
                                                 },
                                                 child: Container(

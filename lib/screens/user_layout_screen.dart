@@ -1,8 +1,9 @@
 import 'package:alex_uni_new/cubit/app_cubit.dart';
-import 'package:alex_uni_new/screens/home_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../constants.dart';
 
 class UserLayout extends StatelessWidget {
   const UserLayout({Key? key}) : super(key: key);
@@ -14,12 +15,13 @@ class UserLayout extends StatelessWidget {
       builder: (context,state){
         return Scaffold(
           appBar: AppBar(
-            title: const Text(
-              'Layout',
-            ),
+            title: Text(
+              AppCubit.get(context).titles[AppCubit.get(context).currentIndex],
+            )
           ),
-          body: HomeScreen(),
+          body: AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
           bottomNavigationBar: BottomNavigationBar(
+            selectedItemColor: defaultColor,
             currentIndex: AppCubit.get(context).currentIndex,
             onTap: (index) {
               AppCubit.get(context).changeBottomNavBar(index);

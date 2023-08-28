@@ -1,6 +1,7 @@
 import 'package:alex_uni_new/cache_helper.dart';
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/bloc_observer.dart';
+import 'package:alex_uni_new/cubit/guest_cubit.dart';
 import 'package:alex_uni_new/firebase_options.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
 import 'package:alex_uni_new/screens/user_layout_screen.dart';
@@ -67,8 +68,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context)=>AppCubit()..getUserData(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (BuildContext context) => AppCubit()..getUserData(),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => GuestCubit(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
