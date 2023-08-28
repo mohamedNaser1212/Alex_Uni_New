@@ -36,7 +36,6 @@ void main() async {
       startPage=const UserLayout();
     }
   }
-  print(lang);
   runApp(MyApp(startPage: startPage,));
 }
 

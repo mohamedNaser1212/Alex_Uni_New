@@ -125,11 +125,7 @@ class RegisterCubit extends Cubit<RegisterStates>{
     firebase_storage.UploadTask uploadTask = ref.putFile(profileImage!);
     await uploadTask.whenComplete(() async {
       uploadedProfileImageLink = await ref.getDownloadURL();
-      print(uploadedProfileImageLink);
       emit(RegisterUploadImageProfileSuccessState());
-    }).catchError((onError) {
-      emit(RegisterUploadImageProfileErrorState());
-      print(onError.toString());
     });
   }
 
