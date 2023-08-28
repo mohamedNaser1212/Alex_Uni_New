@@ -23,8 +23,6 @@ class LoginCubit extends Cubit<LoginStates> {
         password: password,
       );
       emit(LoginSuccessState(userCredential.user!.uid));
-      print(userCredential.user!.email);
-      print(userCredential.user!.uid);
     } on FirebaseAuthException catch (e) {
       String errorMessage = 'حدث خطأ ما';
       if (e.code == 'user-not-found') {
@@ -35,7 +33,6 @@ class LoginCubit extends Cubit<LoginStates> {
         emit(LoginErrorState(error: 'البريد الإلكتروني غير صالح'))  ;
       }else{
         emit(LoginErrorState(error:errorMessage));
-
       }
 
       print(e.toString());

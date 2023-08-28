@@ -9,6 +9,9 @@ class AppGetUserErrorState extends AppStates{
   final String error;
   AppGetUserErrorState(this.error);
 }
+class AppLogoutSuccessState extends AppStates{}
+
+class AppLogoutErrorState extends AppStates{}
 
 //Change Bottom Nav Bar
 class AppChangeBottomNavBarState extends AppStates{}

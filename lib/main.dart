@@ -2,15 +2,17 @@ import 'package:alex_uni_new/cache_helper.dart';
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/bloc_observer.dart';
 import 'package:alex_uni_new/firebase_options.dart';
-import 'package:alex_uni_new/screens/home_screen.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
+import 'package:alex_uni_new/screens/user_layout_screen.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:alex_uni_new/screens/splash_screen.dart';
-import 'package:alex_uni_new/screens/registeration_screen.dart';
+
+import 'cubit/app_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,16 +21,18 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  String startPage;
+  Widget startPage;
   lang = await CacheHelper.getData(key: 'lang') ;
   uId = await CacheHelper.getData(key: 'uId');
   if(lang==null) {
-    startPage=SplashScreen.id;
+    startPage=const SplashScreen();
 
   } else {
-    startPage=LoginScreen.id;
-    if(uId!=null){
-      startPage=HomeScreen.id;
+    if(uId==null) {
+      startPage=const LoginScreen();
+    }
+    else {
+      startPage=const UserLayout();
     }
   }
   print(lang);
@@ -41,7 +45,7 @@ class MyApp extends StatefulWidget {
     required this.startPage,
   }) : super(key: key);
 
-  String startPage;
+  Widget startPage;
 
   static void setLocale(BuildContext context, Locale newLocale) {
     _MyAppState state = context.findAncestorStateOfType<_MyAppState>()!;
@@ -63,9 +67,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
+    return BlocProvider(
+      create: (BuildContext context)=>AppCubit()..getUserData(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
@@ -97,23 +103,18 @@ class _MyAppState extends State<MyApp> {
             ),
           ),),
 
-      locale: _selectedLocale,
-      supportedLocales: const [
-        Locale('en', ''), // English
-        Locale('ar', ''), // Arabic
-      ],
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      routes: {
-        SplashScreen.id: (context) => const SplashScreen(),
-        LoginScreen.id: (context) => LoginScreen(),
-        RegisterationScreen.id: (context) => RegisterationScreen(),
-        HomeScreen.id: (context) => HomeScreen(), // Pass the email only
-      },
-      initialRoute: widget.startPage,
+        locale: _selectedLocale,
+        supportedLocales: const [
+          Locale('en', ''), // English
+          Locale('ar', ''), // Arabic
+        ],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        home: widget.startPage,
+      ),
     );
   }
 }

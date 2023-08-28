@@ -3,13 +3,17 @@ import 'package:alex_uni_new/cubit/login_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/guest_layout_screen.dart';
 import 'package:alex_uni_new/screens/home_screen.dart';
+import 'package:alex_uni_new/screens/user_layout_screen.dart';
 import 'package:alex_uni_new/states/login_states.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:alex_uni_new/screens/registeration_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../constants.dart';
 
+var emailController=TextEditingController();
+var passwordController=TextEditingController();
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
   static String id = 'LoginScreen';
@@ -21,11 +25,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
 
-  String? email;
-
-  String? password;
-
-  bool isloading = false;
 
   String? globalEmail;
 
@@ -42,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
           if (state is LoginSuccessState) {
             uId = state.uId;
             await CacheHelper.saveData(key: 'uId', value: uId);
-            navigateAndFinish(context: context, screen: HomeScreen());
+            navigateAndFinish(context: context, screen: const UserLayout());
           }
           if (state is LoginErrorState) {
             showSnackBar(context, state.error);
@@ -116,6 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                     TextFormField(
+                                      controller: emailController,
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                           borderRadius:
@@ -136,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         return null;
                                       },
                                       onChanged: (value) {
-                                        email = value;
+                                        emailController.text = value;
                                         globalEmail =
                                             value; // Set the value to the global variable
                                       },
@@ -146,6 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       isArabic ? 'كلمه المرور' : 'Password',
                                     ),
                                     TextFormField(
+                                      controller: passwordController,
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                           borderRadius:
@@ -153,6 +154,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       ),
                                       obscureText: true,
+                                      onFieldSubmitted: (value){
+                                        LoginCubit.get(context).userLogin(
+                                            email: emailController.text,
+                                            password: passwordController.text
+                                        );
+                                        emailController.clear();
+                                        passwordController.clear();
+                                      },
                                       textDirection: textDirection,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
@@ -163,123 +172,134 @@ class _LoginScreenState extends State<LoginScreen> {
                                         return null;
                                       },
                                       onChanged: (value) {
-                                        password = value;
+                                        passwordController.text = value;
                                       },
                                     ),
                                     const SizedBox(height: 30),
-                                    Center(
-                                      child: Row(
-                                        mainAxisAlignment:
+
+                                    ConditionalBuilder(
+                                      condition:state is! LoginLoadingState ,
+                                      builder: (context){
+                                        return Center(
+                                          child: Row(
+                                            mainAxisAlignment:
                                             MainAxisAlignment.center,
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              navigateAndFinish(
-                                                context: context,
-                                                screen: GuestLayoutScreen(),
-                                              );
-                                            },
-                                            child: Container(
-                                              width: MediaQuery.of(context)
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  navigateAndFinish(
+                                                    context: context,
+                                                    screen: GuestLayoutScreen(),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
                                                       .size
                                                       .width /
-                                                  2.5,
-                                              height: 60,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color:
+                                                      2.5,
+                                                  height: 60,
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color:
                                                       const Color(0xff3E657B),
-                                                ),
-                                                borderRadius:
+                                                    ),
+                                                    borderRadius:
                                                     BorderRadius.circular(10),
-                                                color: const Color(0xffffffff),
-                                              ),
-                                              child: Center(
-                                                child: Row(
-                                                  mainAxisAlignment:
+                                                    color: const Color(0xffffffff),
+                                                  ),
+                                                  child: Center(
+                                                    child: Row(
+                                                      mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      isArabic
-                                                          ? 'ضيف'
-                                                          : 'Guest',
-                                                      style: const TextStyle(
-                                                        fontSize: 26,
-                                                        color:
+                                                      children: [
+                                                        Text(
+                                                          isArabic
+                                                              ? 'ضيف'
+                                                              : 'Guest',
+                                                          style: const TextStyle(
+                                                            fontSize: 26,
+                                                            color:
                                                             Color(0xff3E657B),
-                                                        fontWeight:
+                                                            fontWeight:
                                                             FontWeight.w600,
-                                                      ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 20,
+                                                        ),
+                                                        const Icon(
+                                                          Icons
+                                                              .arrow_forward_ios_outlined,
+                                                          color: Color(0xff3E657B),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    const SizedBox(
-                                                      width: 20,
-                                                    ),
-                                                    const Icon(
-                                                      Icons
-                                                          .arrow_forward_ios_outlined,
-                                                      color: Color(0xff3E657B),
-                                                    ),
-                                                  ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              if (formKey.currentState!
-                                                  .validate()) {
-                                                cubit.userLogin(
-                                                  email: email!,
-                                                  password: password!,
-                                                );
-                                              }
-                                            },
-                                            child: Container(
-                                              width: MediaQuery.of(context)
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  if (formKey.currentState!
+                                                      .validate()) {
+                                                    cubit.userLogin(
+                                                      email: emailController.text,
+                                                      password: passwordController.text,
+                                                    );
+                                                    emailController.clear();
+                                                    passwordController.clear();
+                                                  }
+                                                },
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
                                                       .size
                                                       .width /
-                                                  2.5,
-                                              height: 60,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
+                                                      2.5,
+                                                  height: 60,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
                                                     BorderRadius.circular(10),
-                                                color: const Color(0xff3E657B),
-                                              ),
-                                              child: Center(
-                                                child: Row(
-                                                  mainAxisAlignment:
+                                                    color: const Color(0xff3E657B),
+                                                  ),
+                                                  child: Center(
+                                                    child: Row(
+                                                      mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      isArabic
-                                                          ? 'تسجيل'
-                                                          : 'Login',
-                                                      style: const TextStyle(
-                                                        fontSize: 26,
-                                                        color: Colors.white,
-                                                        fontWeight:
+                                                      children: [
+                                                        Text(
+                                                          isArabic
+                                                              ? 'تسجيل'
+                                                              : 'Login',
+                                                          style: const TextStyle(
+                                                            fontSize: 26,
+                                                            color: Colors.white,
+                                                            fontWeight:
                                                             FontWeight.bold,
-                                                      ),
-                                                      textAlign:
+                                                          ),
+                                                          textAlign:
                                                           TextAlign.center,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 20,
+                                                        ),
+                                                        const Icon(
+                                                          Icons.arrow_forward,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ],
                                                     ),
-                                                    const SizedBox(
-                                                      width: 20,
-                                                    ),
-                                                    const Icon(
-                                                      Icons.arrow_forward,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
+                                        );
+                                      },
+                                      fallback: (context)=>const Center(child: CircularProgressIndicator(
+                                        color: Color(0xff3E657B),
+                                      ),),
                                     ),
                                     const SizedBox(
                                       height: 25,
@@ -302,9 +322,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            Navigator.pushNamed(
-                                              context,
-                                              RegisterationScreen.id,
+                                            navigateTo(
+                                                context: context,
+                                                screen: RegisterationScreen(),
                                             );
                                           },
                                           child: Text(

@@ -1,4 +1,8 @@
+import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/states/app_states.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../constants.dart';
 
@@ -171,28 +175,71 @@ class HomeScreen extends StatelessWidget {
       ],
     );
 
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          color: Colors.black,
-          onPressed: () {
-            scaffoldKey.currentState!.openDrawer();
+    return BlocConsumer<AppCubit,AppStates>(
+      listener: (context,state){},
+      builder: (context,state){
+        var cubit=AppCubit.get(context);
+        return ConditionalBuilder(
+          condition: cubit.user!=null,
+          builder:(context){
+            return Scaffold(
+              key: scaffoldKey,
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: const Icon(Icons.menu),
+                  color: Colors.black,
+                  onPressed: () {
+                    scaffoldKey.currentState!.openDrawer();
+                  },
+                ),
+                backgroundColor: Colors.white,
+                title: const Text('Drawer example'),
+              ),
+              body:Column(
+                children: [
+
+
+                  Center(
+                    child: Image.network(
+                      cubit.user!.image!,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      'Welcome ${cubit.user!.name}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: TextButton(
+                        onPressed: (){
+                          AppCubit.get(context).logout(context);
+                        },
+                        child: const Text(
+                          'Sign out',
+                        )
+                    ),
+                  ),
+                ],
+              ),
+              drawer: Drawer(
+                child: drawerItems,
+              ),
+            );
           },
-        ),
-        backgroundColor: Colors.white,
-        title: const Text('Drawer example'),
-      ),
-      body:Column(
-        children: [
-
-
-        ],
-      ),
-      drawer: Drawer(
-        child: drawerItems,
-      ),
+          fallback: (context)=>const Scaffold(
+            body: Center(child: CircularProgressIndicator(
+              color: Color(0xff3E657B),
+            ),
+          )),
+        );
+      },
     );
   }
 }

@@ -110,6 +110,9 @@ class RegisterationScreenState extends State<RegisterationScreen> {
                                       ),
                                     ),
                                     TextFormField(
+                                      style: const TextStyle(
+                                        color: Color(0xffffffff),
+                                      ),
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                           borderRadius:
@@ -144,6 +147,9 @@ class RegisterationScreenState extends State<RegisterationScreen> {
                                       ),
                                     ),
                                     TextFormField(
+                                      style: const TextStyle(
+                                        color: Color(0xffffffff),
+                                      ),
                                       controller: emailController,
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -181,6 +187,9 @@ class RegisterationScreenState extends State<RegisterationScreen> {
                                       ),
                                     ),
                                     IntlPhoneField(
+                                      style: const TextStyle(
+                                        color: Color(0xffffffff),
+                                      ),
                                       decoration: const InputDecoration(
 
                                         border: OutlineInputBorder(
@@ -211,6 +220,9 @@ class RegisterationScreenState extends State<RegisterationScreen> {
                                       ),
                                     ),
                                     TextFormField(
+                                      style: const TextStyle(
+                                        color: Color(0xffffffff),
+                                      ),
                                       controller: passwordController,
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -243,6 +255,9 @@ class RegisterationScreenState extends State<RegisterationScreen> {
                                       ),
                                     ),
                                     TextFormField(
+                                      style: const TextStyle(
+                                        color: Color(0xffffffff),
+                                      ),
                                       controller: confirmPasswordController,
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
