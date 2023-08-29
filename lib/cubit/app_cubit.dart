@@ -25,7 +25,7 @@ class AppCubit extends Cubit<AppStates>{
 
   int currentIndex = 0;
   List<Widget> screens = [
-    const HomeScreen(),
+    HomeScreen(),
     const ChatScreen(),
     const SettingsScreen(),
   ];

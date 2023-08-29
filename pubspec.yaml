@@ -53,6 +53,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   another_flushbar: ^1.12.30
+  sliver_tools: ^0.2.12
 
 dev_dependencies:
   flutter_test:
