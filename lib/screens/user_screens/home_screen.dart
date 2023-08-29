@@ -1,5 +1,6 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import '../../reusable_widgets.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -169,38 +170,92 @@ class HomeScreen extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              lang == 'en' ? 'Faculties' : 'الكليات',
-              style: TextStyle(
-                fontSize: MediaQuery.of(context).size.width / 20,
-                fontWeight: FontWeight.w500,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                lang == 'en' ? 'Faculties' : 'الكليات',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width / 20,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height / 5,
-            child: ListView.separated(
-              shrinkWrap: true,
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) => buildFacultyItem(context),
-              separatorBuilder: (context, index) => SizedBox(
-                width: 10,
+            Container(
+              height: MediaQuery.of(context).size.height * 0.2,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => buildFacultyItem(context),
+                separatorBuilder: (context, index) => SizedBox(
+                  width: 10,
+                ),
+                itemCount: 10,
               ),
-              itemCount: 10,
             ),
-          ),
-        ],
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                lang == 'en' ? 'News' : 'الاخبار',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width / 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.34,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => buidNewsItem(context),
+                separatorBuilder: (context, index) => SizedBox(
+                  width: 10,
+                ),
+                itemCount: 10,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                lang == 'en' ? 'Posts' : 'المنشورات',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width / 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              child: ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) => buildPostItem(context),
+                separatorBuilder: (context, index) => SizedBox(
+                  height: 10,
+                ),
+                itemCount: 10,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget buildFacultyItem(context,) => InkWell(
+  Widget buildFacultyItem(context) => InkWell(
         onTap: () {},
         child: Column(
           children: [
@@ -230,6 +285,75 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       );
+
+  Widget buidNewsItem(context)=>Container(
+    clipBehavior: Clip.antiAliasWithSaveLayer,
+    padding: EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.red[300],
+      borderRadius: BorderRadius.circular(
+        10,
+      ),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width * 0.7,
+          height: MediaQuery.of(context).size.height * 0.2,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(
+              6,
+            ),
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: NetworkImage(
+                'https://img.freepik.com/free-photo/stylish-korean-woman-calling-phone-talking-smartphone-looking-happy-upper-right-corner_1258-166198.jpg?w=1060&t=st=1691521908~exp=1691522508~hmac=7bb0edd5b037bcd7102d523d5f4bbd5074be8e8db3c2cc9e5c54bb87ed93d9b5',
+              ),
+            ),
+          ),
+          child: Image(
+            image: NetworkImage(
+              'https://img.freepik.com/free-photo/stylish-korean-woman-calling-phone-talking-smartphone-looking-happy-upper-right-corner_1258-166198.jpg?w=1060&t=st=1691521908~exp=1691522508~hmac=7bb0edd5b037bcd7102d523d5f4bbd5074be8e8db3c2cc9e5c54bb87ed93d9b5',
+            ),
+            height: 120,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          ),
+        ),
+        Text(
+          'Just Now',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        SizedBox(
+          height: 3,
+        ),
+        Text(
+          'Title',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.7,
+          child: Text(
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse volutpat imperdiet neque, sit amet semper arcu mattis sit amet. Proin accumsan lectus vel ullamcorper luctus. Aliquam a vestibulum elit. Morbi sapien ante, facilisis nec augue non, pretium accumsan',
+            maxLines: 2,
+            style: TextStyle(
+              color: Colors.white,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 
   Widget buildPostItem(context) => Card(
         margin: EdgeInsets.symmetric(horizontal: 8),
@@ -273,21 +397,20 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                       Text(
-                        'Mars 21, 2023 at 9:00 pm',
-                        style:
-                            Theme.of(context).textTheme.labelMedium!.copyWith(
-                                  height: 1.4,
-                                ),
+                        '@hazemhamdy',
+                        style: TextStyle(
+                          height: 1.4,
+                        ),
                       ),
                     ],
                   )),
                   SizedBox(
                     width: 20,
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.more_horiz_rounded,
+                  Text(
+                    '2h',
+                    style: TextStyle(
+                      height: 1.4,
                     ),
                   ),
                 ],
@@ -303,141 +426,117 @@ class HomeScreen extends StatelessWidget {
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse volutpat imperdiet neque, sit amet semper arcu mattis sit amet. Proin accumsan lectus vel ullamcorper luctus. Aliquam a vestibulum elit. Morbi sapien ante, facilisis nec augue non, pretium accumsan',
               ),
               SizedBox(
-                height: 5,
+                height: 10,
               ),
               Container(
-                padding: EdgeInsets.only(
-                  bottom: 10,
-                  top: 5,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    10,
+                  ),
                 ),
-                width: double.infinity,
-                child: Wrap(
+                child: Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
                   children: [
-                    Padding(
-                      padding: EdgeInsetsDirectional.only(
-                        end: 6,
-                      ),
-                      child: Container(
-                        height: 25,
-                        child: MaterialButton(
-                          onPressed: () {},
-                          minWidth: 1,
-                          padding: EdgeInsets.zero,
-                          child: Text(
-                            '#software',
-                            style: TextStyle(
-                              color: Colors.blue,
-                            ),
+                    Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          6,
+                        ),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                            'https://img.freepik.com/free-photo/stylish-korean-woman-calling-phone-talking-smartphone-looking-happy-upper-right-corner_1258-166198.jpg?w=1060&t=st=1691521908~exp=1691522508~hmac=7bb0edd5b037bcd7102d523d5f4bbd5074be8e8db3c2cc9e5c54bb87ed93d9b5',
                           ),
+                        ),
+                      ),
+                      child: Image(
+                        image: NetworkImage(
+                          'https://img.freepik.com/free-photo/stylish-korean-woman-calling-phone-talking-smartphone-looking-happy-upper-right-corner_1258-166198.jpg?w=1060&t=st=1691521908~exp=1691522508~hmac=7bb0edd5b037bcd7102d523d5f4bbd5074be8e8db3c2cc9e5c54bb87ed93d9b5',
+                        ),
+                        height: 120,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      color: Colors.black.withOpacity(0.6),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            InkWell(
+                              onTap: () {},
+                              child: Icon(
+                                Icons.favorite_outline_rounded,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            InkWell(
+                              onTap: () {},
+                              child: Text(
+                                '120',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            InkWell(
+                              onTap: () {},
+                              child: Icon(
+                                Icons.comment_outlined,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            InkWell(
+                              onTap: () {},
+                              child: Text(
+                                '120',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Spacer(),
+                            InkWell(
+                              onTap: () {},
+                              child: Icon(
+                                Icons.share_outlined,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            InkWell(
+                              onTap: () {},
+                              child: Icon(
+                                Icons.bookmark_border_outlined,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
-              Container(
-                width: double.infinity,
-                height: 140,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    6,
-                  ),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                      'https://img.freepik.com/free-photo/stylish-korean-woman-calling-phone-talking-smartphone-looking-happy-upper-right-corner_1258-166198.jpg?w=1060&t=st=1691521908~exp=1691522508~hmac=7bb0edd5b037bcd7102d523d5f4bbd5074be8e8db3c2cc9e5c54bb87ed93d9b5',
-                    ),
-                  ),
-                ),
-                child: Image(
-                  image: NetworkImage(
-                    'https://img.freepik.com/free-photo/stylish-korean-woman-calling-phone-talking-smartphone-looking-happy-upper-right-corner_1258-166198.jpg?w=1060&t=st=1691521908~exp=1691522508~hmac=7bb0edd5b037bcd7102d523d5f4bbd5074be8e8db3c2cc9e5c54bb87ed93d9b5',
-                  ),
-                  height: 120,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: Icon(
-                        Icons.favorite_outline_rounded,
-                        size: 18,
-                        color: Colors.red,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Text(
-                        '120',
-                      ),
-                    ),
-                    Spacer(),
-                    InkWell(
-                      onTap: () {},
-                      child: Icon(
-                        Icons.comment_outlined,
-                        size: 18,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Text(
-                        '120',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Divider(
-                color: Colors.grey[350],
-                height: 1,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      'https://img.freepik.com/free-photo/waist-up-portrait-handsome-serious-unshaven-male-keeps-hands-together-dressed-dark-blue-shirt-has-talk-with-interlocutor-stands-against-white-wall-self-confident-man-freelancer_273609-16320.jpg?w=826&t=st=1691522460~exp=1691523060~hmac=2968bc996c6aa11d26e09b088a8ecfa80e042d8194187115b928ef8401a1a774',
-                    ),
-                    radius: 25,
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: 50,
-                      child: reusableTextFormField(
-                        label: 'Comment',
-                        onTap: () {},
-                        controller: commentController,
-                        keyboardType: TextInputType.text,
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {},
-                    child: Icon(
-                      Icons.send_outlined,
-                      color: Colors.blue,
-                      size: 18,
-                    ),
-                  ),
-                ],
               ),
             ],
           ),
