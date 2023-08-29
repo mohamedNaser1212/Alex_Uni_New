@@ -30,9 +30,9 @@ class AppCubit extends Cubit<AppStates>{
     const SettingsScreen(),
   ];
   List<String> titles = [
-    'HomeScreen',
-    'Chats',
-    'Settings',
+    lang=='en'?'Home':'الرئيسية',
+    lang=='en'?'Chat':'المحادثات',
+    lang=='en'?'Settings':'الاعدادات',
   ];
 
   void changeBottomNavBar(int index){

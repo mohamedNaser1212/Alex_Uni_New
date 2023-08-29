@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     bool isArabic = lang == 'ar';
     TextDirection textDirection =
-    isArabic ? TextDirection.rtl : TextDirection.ltr;
+        isArabic ? TextDirection.rtl : TextDirection.ltr;
 
     return BlocProvider(
       create: (BuildContext context) => LoginCubit(),
@@ -38,10 +38,16 @@ class _LoginScreenState extends State<LoginScreen> {
           if (state is LoginSuccessState) {
             uId = state.uId;
             await CacheHelper.saveData(key: 'uId', value: uId);
-            navigateAndFinish(context: context, screen: const UserLayout());
+            navigateAndFinish(
+              context: context,
+              screen: const UserLayout(),
+            );
           }
           if (state is LoginErrorState) {
-            showSnackBar(context, state.error);
+            showFlushBar(
+              context: context,
+              message: state.error,
+            );
           }
         },
         builder: (context, state) {
@@ -115,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(15),
+                                              BorderRadius.circular(15),
                                         ),
                                       ),
                                       textDirection: textDirection,
@@ -144,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(15),
+                                              BorderRadius.circular(15),
                                         ),
                                       ),
                                       obscureText: true,
@@ -168,54 +174,56 @@ class _LoginScreenState extends State<LoginScreen> {
                                       },
                                     ),
                                     const SizedBox(height: 30),
-
                                     ConditionalBuilder(
                                       condition: state is! LoginLoadingState,
                                       builder: (context) {
                                         return Center(
                                           child: Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             children: [
                                               InkWell(
                                                 onTap: () {
                                                   navigateAndFinish(
                                                     context: context,
                                                     screen:
-                                                    const GuestLayoutScreen(),
+                                                        const GuestLayoutScreen(),
                                                   );
                                                 },
                                                 child: Container(
                                                   width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
+                                                          .size
+                                                          .width /
                                                       2.5,
                                                   height: 60,
                                                   decoration: BoxDecoration(
                                                     border: Border.all(
-                                                      color:
-                                                      const Color(0xff3E657B),
+                                                      color: const Color(
+                                                          0xff3E657B),
                                                     ),
                                                     borderRadius:
-                                                    BorderRadius.circular(10),
+                                                        BorderRadius.circular(
+                                                            10),
                                                     color:
-                                                    const Color(0xffffffff),
+                                                        const Color(0xffffffff),
                                                   ),
                                                   child: Center(
                                                     child: Row(
                                                       mainAxisAlignment:
-                                                      MainAxisAlignment.center,
+                                                          MainAxisAlignment
+                                                              .center,
                                                       children: [
                                                         Text(
                                                           isArabic
                                                               ? 'ضيف'
                                                               : 'Guest',
-                                                          style: const TextStyle(
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 26,
-                                                            color:
-                                                            Color(0xff3E657B),
+                                                            color: Color(
+                                                                0xff3E657B),
                                                             fontWeight:
-                                                            FontWeight.w600,
+                                                                FontWeight.w600,
                                                           ),
                                                         ),
                                                         const SizedBox(
@@ -224,7 +232,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         const Icon(
                                                           Icons
                                                               .arrow_forward_ios_outlined,
-                                                          color: Color(0xff3E657B),
+                                                          color:
+                                                              Color(0xff3E657B),
                                                         ),
                                                       ],
                                                     ),
@@ -246,32 +255,36 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 },
                                                 child: Container(
                                                   width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
+                                                          .size
+                                                          .width /
                                                       2.5,
                                                   height: 60,
                                                   decoration: BoxDecoration(
                                                     borderRadius:
-                                                    BorderRadius.circular(10),
-                                                    color: const Color(0xff3E657B),
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color:
+                                                        const Color(0xff3E657B),
                                                   ),
                                                   child: Center(
                                                     child: Row(
                                                       mainAxisAlignment:
-                                                      MainAxisAlignment.center,
+                                                          MainAxisAlignment
+                                                              .center,
                                                       children: [
                                                         Text(
                                                           isArabic
                                                               ? 'تسجيل'
                                                               : 'Login',
-                                                          style: const TextStyle(
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 26,
                                                             color: Colors.white,
                                                             fontWeight:
-                                                            FontWeight.bold,
+                                                                FontWeight.bold,
                                                           ),
                                                           textAlign:
-                                                          TextAlign.center,
+                                                              TextAlign.center,
                                                         ),
                                                         const SizedBox(
                                                           width: 20,
@@ -300,7 +313,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           isArabic

@@ -26,24 +26,24 @@ class UserLayout extends StatelessWidget {
             onTap: (index) {
               AppCubit.get(context).changeBottomNavBar(index);
             },
-            items: const [
+            items: [
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.home,
                 ),
-                label: 'Home',
+                label: lang=='en'?'Home':'الرئيسية',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.chat,
                 ),
-                label: 'Chat',
+                label: lang=='en'?'Chat':'المحادثات',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.settings,
                 ),
-                label: 'Settings',
+                label: lang=='en'?'Settings':'الاعدادات',
               ),
             ],
           ),
