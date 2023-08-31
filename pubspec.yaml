@@ -95,10 +95,6 @@ flutter:
   # example:
   fonts:
 
-    - family: Poppins
-      fonts:
-        - asset: assets/fonts/poppins-Regular.ttf
-
     - family: Belleza
       fonts:
         - asset: assets/fonts/Belleza-Regular.ttf
