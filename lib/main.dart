@@ -5,7 +5,6 @@ import 'package:alex_uni_new/cubit/guest_cubit.dart';
 import 'package:alex_uni_new/firebase_options.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
 import 'package:alex_uni_new/screens/user_layout_screen.dart';
-import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,12 +39,12 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({
+  const MyApp({
     Key? key,
     required this.startPage,
   }) : super(key: key);
 
-  Widget startPage;
+  final Widget startPage;
 
   static void setLocale(BuildContext context, Locale newLocale) {
     _MyAppState state = context.findAncestorStateOfType<_MyAppState>()!;
@@ -70,7 +69,7 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (BuildContext context) => AppCubit()..getUserData(),
+          create: (BuildContext context) => AppCubit()..getUserData()..getPosts(),
         ),
         BlocProvider(
           create: (BuildContext context) => GuestCubit(),

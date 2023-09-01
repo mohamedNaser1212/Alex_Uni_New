@@ -157,6 +157,48 @@ class AppCubit extends Cubit<AppStates>{
     });
   }
 
+  List<Map<String,PostModel>> posts=[];
+  List postsId=[];
+  getPosts(){
+    posts=[];
+    postsId=[];
+    emit(GetPostsLoadingState());
+    FirebaseFirestore.instance.collection('posts').get().then((value){
+      for (var element in value.docs) {
+        posts.add(
+          {
+            element.reference.id: PostModel.fromJson(element.data()),
+          }
+        );
+        postsId.add(element.id);
+      }}).then((value){
+        emit(GetPostsSuccessState());
+    }).catchError((error){
+      emit(GetPostsErrorState());
+    });
+  }
+
+  updatePostLikes(Map<String, PostModel> post) {
+    if (post.values.single.likes!.any((element) => element == user!.uId)) {
+      debugPrint('exist and remove');
+
+      post.values.single.likes
+          !.removeWhere((element) => element == user!.uId);
+    } else {
+      debugPrint('not exist and add');
+
+      post.values.single.likes!.add(user!.uId!);
+    }
+
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(post.keys.single)
+        .update(post.values.single.toMap())
+        .then((value) {
+      emit(LikePostSuccessState());
+    }).catchError((error) {});
+  }
+
 
 
 

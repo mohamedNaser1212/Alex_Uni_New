@@ -1,12 +1,11 @@
 import 'package:alex_uni_new/constants.dart';
+import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
-import 'package:sliver_tools/sliver_tools.dart';
-import '../../reusable_widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key}) : super(key: key);
-
-  TextEditingController commentController = TextEditingController();
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -168,101 +167,106 @@ class HomeScreen extends StatelessWidget {
     //   ],
     // );
 
-    return SingleChildScrollView(
-      child: Column(
+    return BlocConsumer<AppCubit,AppStates>(
+      listener: (context,state){},
+      builder: (context,state){
+        return SingleChildScrollView(
+          child: Column(
 
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Text(
-              lang == 'en' ? 'Faculties' : 'الكليات',
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Text(
+                  lang == 'en' ? 'Faculties' : 'الكليات',
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
 
-              ),
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.2,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) => buildFacultyItem(context),
-              separatorBuilder: (context, index) => const SizedBox(
-                width: 10,
-              ),
-              itemCount: 10,
-            ),
-          ),
-          const  SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              lang == 'en' ? 'News' : 'الاخبار',
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
-              ),
-            ),
-          ),
-          const    SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2.0),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.34,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => buidNewsItem(context),
-                separatorBuilder: (context, index) =>const SizedBox(
-                  width: 15,
-                ),
-                itemCount: 10,
-              ),
-            ),
-          ),
-          const  SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              lang == 'en' ? 'Posts' : 'المنشورات',
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-            Container(
-              decoration: BoxDecoration(
-
-                borderRadius: BorderRadius.circular(
-                  90,
+                  ),
                 ),
               ),
-            child: ListView.separated(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (context, index) => buildPostItem(context),
-              separatorBuilder: (context, index) => const SizedBox(
-                height: 20,
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.2,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => buildFacultyItem(context),
+                  separatorBuilder: (context, index) => const SizedBox(
+                    width: 10,
+                  ),
+                  itemCount: 10,
+                ),
               ),
-              itemCount: 10,
-            ),
+              const  SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  lang == 'en' ? 'News' : 'الاخبار',
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ),
+              const    SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.34,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) => buidNewsItem(context),
+                    separatorBuilder: (context, index) =>const SizedBox(
+                      width: 15,
+                    ),
+                    itemCount: 10,
+                  ),
+                ),
+              ),
+              const  SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  lang == 'en' ? 'Posts' : 'المنشورات',
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                decoration: BoxDecoration(
+
+                  borderRadius: BorderRadius.circular(
+                    90,
+                  ),
+                ),
+                child: ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => buildPostItem(AppCubit.get(context).posts,index,context),
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: 20,
+                  ),
+                  itemCount: AppCubit.get(context).posts.length,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -378,7 +382,9 @@ class HomeScreen extends StatelessWidget {
         ),
       ],
     ),
-  );Widget buildPostItem(context) => Card(
+  );
+
+  Widget buildPostItem(List posts,index,context) => Card(
     margin: const EdgeInsets.symmetric(horizontal: 14),
     color: const Color(0xffE6EEFA),
     elevation: 8,
@@ -386,16 +392,17 @@ class HomeScreen extends StatelessWidget {
     child: Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+           Row(
             children: [
               CircleAvatar(
                 backgroundImage: NetworkImage(
-                  'https://img.freepik.com/free-photo/waist-up-portrait-handsome-serious-unshaven-male-keeps-hands-together-dressed-dark-blue-shirt-has-talk-with-interlocutor-stands-against-white-wall-self-confident-man-freelancer_273609-16320.jpg?w=826&t=st=1691522460~exp=1691523060~hmac=2968bc996c6aa11d26e09b088a8ecfa80e042d8194187115b928ef8401a1a774',
+                  '${posts[index].values.single.userImage}',
                 ),
                 radius: 25,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Expanded(
@@ -405,8 +412,8 @@ class HomeScreen extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Hazem Hamdy',
-                          style: TextStyle(
+                          '${posts[index].values.single.userName}',
+                          style: const TextStyle(
                             height: 1.4,
                             fontSize: 16,
                             color: Colors.black,
@@ -414,34 +421,24 @@ class HomeScreen extends StatelessWidget {
                             fontFamily: 'Poppins',
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
-                        Icon(
+                        const Icon(
                           Icons.verified,
                           size: 16,
                           color: Colors.blue,
                         ),
                       ],
                     ),
-                    Text(
-                      '@hazemhamdy',
-                      style: TextStyle(
-                        height: 1.4,
-                        color: Color(0xff6C7A9C),
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                      ),
-                    ),
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
-              Text(
-                '2h',
+              const Text(
+                '3m',
                 style: TextStyle(
                   height: 1.4,
                 ),
@@ -455,13 +452,14 @@ class HomeScreen extends StatelessWidget {
               height: 1,
             ),
           ),
-          const Text(
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse volutpat imperdiet neque, sit amet semper arcu mattis sit amet. Proin accumsan lectus vel ullamcorper luctus. Aliquam a vestibulum elit. Morbi sapien ante, facilisis nec augue non, pretium accumsan',
+           Text(
+            '${posts[index].values.single.text}',
           ),
           const SizedBox(
             height: 10,
           ),
-          Container(
+          if(posts[index].values.single.image != '')
+            Container(
             clipBehavior: Clip.antiAliasWithSaveLayer,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -474,16 +472,16 @@ class HomeScreen extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.3,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(46),
-                    image: const DecorationImage(
+                    image:  DecorationImage(
                       fit: BoxFit.cover,
                       image: NetworkImage(
-                        'https://img.freepik.com/free-photo/stylish-korean-woman-calling-phone-talking-smartphone-looking-happy-upper-right-corner_1258-166198.jpg?w=1060&t=st=1691521908~exp=1691522508~hmac=7bb0edd5b037bcd7102d523d5f4bbd5074be8e8db3c2cc9e5c54bb87ed93d9b5',
+                        '${posts[index].values.single.image}',
                       ),
                     ),
                   ),
-                  child: const Image(
+                  child:  Image(
                     image: NetworkImage(
-                      'https://img.freepik.com/free-photo/stylish-korean-woman-calling-phone-talking-smartphone-looking-happy-upper-right-corner_1258-166198.jpg?w=1060&t=st=1691521908~exp=1691522508~hmac=7bb0edd5b037bcd7102d523d5f4bbd5074be8e8db3c2cc9e5c54bb87ed93d9b5',
+                        '${posts[index].values.single.image}'
                     ),
                     height: 120,
                     width: double.infinity,
@@ -498,7 +496,11 @@ class HomeScreen extends StatelessWidget {
                     child: Row(
                       children: [
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            AppCubit.get(context).updatePostLikes(
+                              AppCubit.get(context).posts[index],
+                            );
+                          },
                           child: const Icon(
                             Icons.favorite_outline_rounded,
                             size: 18,
@@ -508,9 +510,9 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(width: 5),
                         InkWell(
                           onTap: () {},
-                          child: const Text(
-                            '120',
-                            style: TextStyle(
+                          child:  Text(
+                            '${posts[index].values.single.likes.length}',
+                            style: const TextStyle(
                               color: Colors.white,
                             ),
                           ),
@@ -527,9 +529,9 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(width: 5),
                         InkWell(
                           onTap: () {},
-                          child: const Text(
-                            '120',
-                            style: TextStyle(
+                          child: Text(
+                            '${posts[index].values.single.comments.length}',
+                            style: const TextStyle(
                               color: Colors.white,
                             ),
                           ),

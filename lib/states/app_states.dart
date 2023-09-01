@@ -40,3 +40,13 @@ class CreatePostLoadingState extends AppStates{}
 class CreatePostSuccessState extends AppStates{}
 
 class CreatePostErrorState extends AppStates{}
+
+class GetPostsLoadingState extends AppStates{}
+
+class GetPostsSuccessState extends AppStates{}
+
+class GetPostsErrorState extends AppStates{}
+
+class LikePostSuccessState extends AppStates{}
+
+class LikePostErrorState extends AppStates{}
