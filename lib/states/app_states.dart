@@ -32,3 +32,11 @@ class UploadProfileImageSuccessState extends AppStates{}
 class UploadImageErrorState extends AppStates{}
 
 class DeleteAccountSuccessState extends AppStates{}
+
+class DeletePostImageSuccessState extends AppStates{}
+
+class CreatePostLoadingState extends AppStates{}
+
+class CreatePostSuccessState extends AppStates{}
+
+class CreatePostErrorState extends AppStates{}

@@ -1,4 +1,6 @@
 import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/reusable_widgets.dart';
+import 'package:alex_uni_new/screens/add_posts/add_posts_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +30,7 @@ class UserLayout extends StatelessWidget {
             },
             items: [
               BottomNavigationBarItem(
-                icon: Icon(
+                icon: const Icon(
                   Icons.home,
                 ),
                 label: lang=='en'?'Home':'الرئيسية',
@@ -46,6 +48,17 @@ class UserLayout extends StatelessWidget {
                 label: lang=='en'?'Settings':'الاعدادات',
               ),
             ],
+          ),
+          floatingActionButton: FloatingActionButton(
+              onPressed: (){
+                navigateTo(
+                    context: context,
+                    screen: const AddPostsScreen(),
+                );
+              },
+            child: const Icon(
+              Icons.add,
+            ),
           ),
         );
       },
