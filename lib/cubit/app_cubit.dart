@@ -185,7 +185,6 @@ class AppCubit extends Cubit<AppStates>{
       post.values.single.likes
           !.removeWhere((element) => element == user!.uId);
     } else {
-      debugPrint('not exist and add');
 
       post.values.single.likes!.add(user!.uId!);
     }
