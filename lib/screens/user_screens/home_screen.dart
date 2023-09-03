@@ -411,36 +411,55 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          '${posts[index].values.single.userName}',
-                          style: const TextStyle(
-                            height: 1.4,
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w900,
-                            fontFamily: 'Poppins',
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  '${posts[index].values.single.userName}',
+                                  style: const TextStyle(
+                                    height: 1.4,
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w900,
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.verified,
+                                  size: 16,
+                                  color: Colors.blue,
+                                ),
+                              ],
+                            ),
+                            Text(
+                              '${posts[index].values.single.date}',
+                              style: const TextStyle(
+                                height: 1.4,
+                                fontSize: 12,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        if(posts[index].values.single.userId==uId)
+                          IconButton(
+                            onPressed: () {
+                              AppCubit.get(context).deletePost(AppCubit.get(context).postsId[index]);
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              size: 20,
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        const Icon(
-                          Icons.verified,
-                          size: 16,
-                          color: Colors.blue,
-                        ),
                       ],
                     ),
                   ],
-                ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              const Text(
-                '3m',
-                style: TextStyle(
-                  height: 1.4,
                 ),
               ),
             ],
@@ -508,13 +527,10 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 5),
-                        InkWell(
-                          onTap: () {},
-                          child:  Text(
-                            '${posts[index].values.single.likes.length}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
+                        Text(
+                          '${posts[index].values.single.likes.length}',
+                          style: const TextStyle(
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -561,6 +577,74 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
+          if(posts[index].values.single.image == '')
+            Container(
+              width: double.infinity,
+              color: Colors.black.withOpacity(0.6),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        AppCubit.get(context).updatePostLikes(
+                          AppCubit.get(context).posts[index],
+                        );
+                      },
+                      child: const Icon(
+                        Icons.favorite_outline_rounded,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      '${posts[index].values.single.likes.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    InkWell(
+                      onTap: () {},
+                      child: const Icon(
+                        Icons.comment_outlined,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    InkWell(
+                      onTap: () {},
+                      child: Text(
+                        '${posts[index].values.single.comments.length}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    InkWell(
+                      onTap: () {},
+                      child: const Icon(
+                        Icons.share_outlined,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    InkWell(
+                      onTap: () {},
+                      child: const Icon(
+                        Icons.bookmark_border_outlined,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     ),

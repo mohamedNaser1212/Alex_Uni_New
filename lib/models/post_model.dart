@@ -24,7 +24,7 @@ class PostModel{
     date=json['date']??'';
     userName=json['userName']??'';
     userImage=json['userImage']??'';
-    userId=json['uId']??'';
+    userId=json['userId']??'';
     likes=List.from(json['likes']).map((e) => e.toString()).toList();
     comments = List.from(json['comments']).map((e) => CommentDataModel.fromJson(e)).toList();
     image=json['image']??'';

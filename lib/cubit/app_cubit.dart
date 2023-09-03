@@ -14,6 +14,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import '../constants.dart';
 import '../models/user_model.dart';
 
@@ -111,6 +112,7 @@ class AppCubit extends Cubit<AppStates>{
 
   void uploadPostImage({
     required String text,
+    context,
   }) {
     emit(UserModelUpdateLoadingState());
     FirebaseStorage.instance
@@ -122,6 +124,7 @@ class AppCubit extends Cubit<AppStates>{
         createPost(
             text: text,
             image: value,
+          context: context,
         );
         postImage = null;
       }).catchError((error) {
@@ -140,20 +143,23 @@ class AppCubit extends Cubit<AppStates>{
   createPost({
     required String text,
     required String image,
+    context,
 }){
     emit(CreatePostLoadingState());
     PostModel postModel=PostModel(
         text: text,
-        date: DateTime.now().toString(),
+        date: DateFormat('yyyy-MM-dd h:mm a').format(DateTime.now()),
         userName: user!.name,
         userImage: user!.image,
-        userId: uId!,
+        userId: user!.uId,
         likes: [],
         comments: [],
         image: image,
     );
     FirebaseFirestore.instance.collection('posts').add(postModel.toMap()).then((value){
+      getPosts();
       emit(CreatePostSuccessState());
+      Navigator.pop(context);
     });
   }
 
@@ -163,7 +169,7 @@ class AppCubit extends Cubit<AppStates>{
     posts=[];
     postsId=[];
     emit(GetPostsLoadingState());
-    FirebaseFirestore.instance.collection('posts').get().then((value){
+    FirebaseFirestore.instance.collection('posts').orderBy('date',descending: true).get().then((value){
       for (var element in value.docs) {
         posts.add(
           {
@@ -196,6 +202,13 @@ class AppCubit extends Cubit<AppStates>{
         .then((value) {
       emit(LikePostSuccessState());
     }).catchError((error) {});
+  }
+
+  deletePost(String id){
+    FirebaseFirestore.instance.collection('posts').doc(id).delete().then((value){
+      getPosts();
+      emit(DeletePostSuccessState());
+    });
   }
 
 

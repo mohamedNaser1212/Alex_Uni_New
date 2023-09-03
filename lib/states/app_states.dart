@@ -50,3 +50,5 @@ class GetPostsErrorState extends AppStates{}
 class LikePostSuccessState extends AppStates{}
 
 class LikePostErrorState extends AppStates{}
+
+class DeletePostSuccessState extends AppStates{}

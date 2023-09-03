@@ -108,11 +108,13 @@ class AddPostsScreen extends StatelessWidget {
                       if(AppCubit.get(context).postImage!=null){
                         AppCubit.get(context).uploadPostImage(
                           text: textController.text,
+                          context: context,
                         );
                       }else{
                         AppCubit.get(context).createPost(
                           text: textController.text,
                           image: '',
+                          context: context,
                         );
                       }
                     }
