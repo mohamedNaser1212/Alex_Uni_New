@@ -79,6 +79,7 @@ class ProfileScreen extends StatelessWidget {
                                       },
                                       icon: Icon(
                                         Icons.logout,
+
                                         color: Colors.red,
                                       ),
                                     ),
@@ -118,10 +119,16 @@ class ProfileScreen extends StatelessWidget {
                     SizedBox(
                       height: 5,
                     ),
+                    if(lang=='en')
                     Text(
-                      '${userModel.bio ?? 'No bio added'}',
+                      '${userModel.bio ?? 'Add Bio...'}',
                       style: Theme.of(context).textTheme.bodyMedium!,
                     ),
+                    if(lang=='ar')
+                      Text(
+                        '${userModel.bio ?? 'اضف نبذة عنك...'}',
+                        style: Theme.of(context).textTheme.bodyMedium!,
+                      ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
                       child: Row(
@@ -140,7 +147,7 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    'Posts',
+                                    lang=='en'?'Posts':'منشورات',
                                   ),
                                 ],
                               ),
@@ -160,7 +167,7 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    'Followers',
+                                    lang=='en'?'Followers':'متابعين',
                                   ),
                                 ],
                               ),
@@ -180,7 +187,7 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    'Following',
+                                    lang=='en'?'Following':'متابعة',
                                   ),
                                 ],
                               ),
@@ -191,7 +198,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     reusableElevatedButton(
-                      label: 'Edit Profile',
+                      label: lang=='en'?'Edit Profile':'تعديل الملف الشخصي',
                       backColor: defaultColor,
                       height: 40,
                       function: () {
