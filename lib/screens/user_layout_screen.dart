@@ -2,7 +2,6 @@ import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/add_posts/add_posts_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/profile_screen.dart';
-import 'package:alex_uni_new/screens/user_screens/settings_details_screen_layout.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -174,7 +173,6 @@ static String id='userlayout';
                     ),
                     InkWell(
                       onTap: () {
-                        navigateTo(context: context, screen: const SettingsLayoutScreen(),);
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),

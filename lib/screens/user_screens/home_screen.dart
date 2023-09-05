@@ -1,5 +1,7 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/models/post_model.dart';
+import 'package:alex_uni_new/models/user_model.dart';
 import 'package:alex_uni_new/screens/chat_details/chat_details_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
@@ -258,7 +260,7 @@ class HomeScreen extends StatelessWidget {
                 child: ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemBuilder: (context, index) => buildPostItem(AppCubit.get(context).posts,index,context),
+                  itemBuilder: (context, index) => buildPostItem(AppCubit.get(context).posts,AppCubit.get(context).post[index],index,context),
                   separatorBuilder: (context, index) => const SizedBox(
                     height: 20,
                   ),
@@ -386,7 +388,7 @@ class HomeScreen extends StatelessWidget {
     ),
   );
 
-  Widget buildPostItem(List posts,index,context) => Card(
+  Widget buildPostItem(List posts,PostModel model,index,context) => Card(
     margin: const EdgeInsets.symmetric(horizontal: 14),
     color: const Color(0xffE6EEFA),
     elevation: 8,
@@ -420,11 +422,11 @@ class HomeScreen extends StatelessWidget {
                               children: [
                                 InkWell(
                                   onTap: () {
+                                    print(posts[index].values.single.userId);
                                     navigateTo(
                                         context: context,
                                         screen: ChatDetailsScreen(
-                                         userModel: posts,
-                                          index: index,
+                                         chatUserModel: posts[index].values.single,
                                         ),
                                     );
                                   },
