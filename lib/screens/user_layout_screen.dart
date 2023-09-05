@@ -32,7 +32,7 @@ class UserLayout extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(
-                          '${AppCubit.get(context).user!.image}',
+                          '${AppCubit.get(context).user?.image}',
                         ),
                         radius: MediaQuery.of(context).size.width * 0.1,
                       ),
@@ -40,7 +40,7 @@ class UserLayout extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        '${AppCubit.get(context).user!.name}',
+                        '${AppCubit.get(context).user?.name}',
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -48,7 +48,7 @@ class UserLayout extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${AppCubit.get(context).user!.email}',
+                      '${AppCubit.get(context).user?.email}',
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
