@@ -1,6 +1,7 @@
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/add_posts/add_posts_screen.dart';
+import 'package:alex_uni_new/screens/user_screens/profile_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,7 +59,9 @@ class UserLayout extends StatelessWidget {
                       height: 20,
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        navigateTo(context: context, screen: ProfileScreen(),);
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Row(
