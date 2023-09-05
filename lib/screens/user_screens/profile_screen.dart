@@ -5,6 +5,7 @@ import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/user_model.dart';
+import '../edit_screen/edit_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -194,6 +195,7 @@ class ProfileScreen extends StatelessWidget {
                       backColor: defaultColor,
                       height: 40,
                       function: () {
+                        navigateTo(context: context, screen: EditProfile());
                       },
                     ),
                   ],

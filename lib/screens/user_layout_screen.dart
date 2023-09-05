@@ -226,6 +226,8 @@ class UserLayout extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: reusableElevatedButton(
                         label: lang == 'ar' ? 'تسجيل الخروج' : 'Logout',
+                        backColor: defaultColor,
+                        height: 40,
                         function: () {
                           AppCubit.get(context).logout(context);
                         },
