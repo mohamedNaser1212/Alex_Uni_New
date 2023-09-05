@@ -1,8 +1,11 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/screens/chat_details/chat_details_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../reusable_widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -415,14 +418,25 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                Text(
-                                  '${posts[index].values.single.userName}',
-                                  style: const TextStyle(
-                                    height: 1.4,
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w900,
-                                    fontFamily: 'Poppins',
+                                InkWell(
+                                  onTap: () {
+                                    navigateTo(
+                                        context: context,
+                                        screen: ChatDetailsScreen(
+                                         userModel: posts,
+                                          index: index,
+                                        ),
+                                    );
+                                  },
+                                  child: Text(
+                                    '${posts[index].values.single.userName}',
+                                    style: const TextStyle(
+                                      height: 1.4,
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w900,
+                                      fontFamily: 'Poppins',
+                                    ),
                                   ),
                                 ),
                                 const Icon(
