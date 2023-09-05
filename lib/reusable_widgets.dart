@@ -153,3 +153,34 @@ Widget showFlushBar({
   duration: Duration(seconds: 3),
   leftBarIndicatorColor: Colors.blue[300],
 )..show(context);
+
+
+
+
+
+
+PreferredSizeWidget defaultappbar({
+  required BuildContext context,
+  String? title,
+  List<Widget>? actions,
+})=> AppBar(
+  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+  titleSpacing: 5,
+  leading: IconButton(
+    onPressed: () {
+      Navigator.pop(context);
+    },
+    icon: const Icon(
+      Icons.keyboard_arrow_left,
+      size: 30,
+      // color: Colors.black,
+    ),
+  ),
+  title: Text(
+    title!,
+    style: const TextStyle(
+      //  color: Colors.black,
+    ),
+  ),
+  actions: actions,
+);

@@ -2,6 +2,7 @@ import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/add_posts/add_posts_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/profile_screen.dart';
+import 'package:alex_uni_new/screens/user_screens/settings_details_screen_layout.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +11,7 @@ import '../constants.dart';
 
 class UserLayout extends StatelessWidget {
   const UserLayout({Key? key}) : super(key: key);
-
+static String id='userlayout';
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
@@ -30,7 +31,7 @@ class UserLayout extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 10),
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(
                           '${AppCubit.get(context).user?.image}',
@@ -39,7 +40,7 @@ class UserLayout extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 5),
                       child: Text(
                         '${AppCubit.get(context).user?.name}',
                         style: const TextStyle(
@@ -48,19 +49,22 @@ class UserLayout extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(
-                      '${AppCubit.get(context).user?.email}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        '${AppCubit.get(context).user?.email}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     InkWell(
                       onTap: () {
-                        navigateTo(context: context, screen: ProfileScreen(),);
+                        navigateTo(context: context, screen: const ProfileScreen(),);
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
@@ -75,7 +79,7 @@ class UserLayout extends StatelessWidget {
                             Text(
                               lang == 'en' ? 'My Profile' : 'الملف الشخصي',
                             ),
-                            Spacer(),
+                            const Spacer(),
                             const Icon(
                               Icons.arrow_forward_ios,
                               size: 14,
@@ -84,7 +88,7 @@ class UserLayout extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       thickness: 1,
                     ),
                     InkWell(
@@ -111,7 +115,7 @@ class UserLayout extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       thickness: 1,
                     ),
                     InkWell(
@@ -138,7 +142,7 @@ class UserLayout extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Divider(
+                   const Divider(
                       thickness: 1,
                     ),
                     InkWell(
@@ -156,7 +160,7 @@ class UserLayout extends StatelessWidget {
                             Text(
                               lang == 'en' ? 'News' : 'الاخبار',
                             ),
-                            Spacer(),
+                          const Spacer(),
                             const Icon(
                               Icons.arrow_forward_ios,
                               size: 14,
@@ -165,11 +169,13 @@ class UserLayout extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Divider(
+                   const Divider(
                       thickness: 1,
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        navigateTo(context: context, screen: const SettingsLayoutScreen(),);
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Row(
@@ -183,7 +189,7 @@ class UserLayout extends StatelessWidget {
                             Text(
                               lang == 'en' ? 'Settings' : 'الاعدادات',
                             ),
-                            Spacer(),
+                            const  Spacer(),
                             const Icon(
                               Icons.arrow_forward_ios,
                               size: 14,
@@ -192,7 +198,7 @@ class UserLayout extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Divider(
+                    const  Divider(
                       thickness: 1,
                     ),
                     InkWell(
@@ -219,7 +225,7 @@ class UserLayout extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Divider(
+                    const  Divider(
                       thickness: 1,
                     ),
                     Padding(

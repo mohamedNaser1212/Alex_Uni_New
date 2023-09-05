@@ -26,7 +26,7 @@ class ProfileScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    SizedBox(
                       height: MediaQuery.of(context).size.height * 0.3,
                       child: Stack(
                         alignment: AlignmentDirectional.bottomStart,
@@ -36,7 +36,7 @@ class ProfileScreen extends StatelessWidget {
                             child: Container(
                               width: double.infinity,
                               height: MediaQuery.of(context).size.height * 0.25,
-                              decoration: BoxDecoration(
+                              decoration:const BoxDecoration(
                                 color: Colors.grey,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(6),
@@ -66,7 +66,7 @@ class ProfileScreen extends StatelessWidget {
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                      icon: Icon(
+                                      icon:const Icon(
                                         Icons.arrow_back,
                                       ),
                                     ),
@@ -77,7 +77,7 @@ class ProfileScreen extends StatelessWidget {
                                       onPressed: () {
                                         cubit.logout(context);
                                       },
-                                      icon: Icon(
+                                      icon:const Icon(
                                         Icons.logout,
 
                                         color: Colors.red,
@@ -93,6 +93,7 @@ class ProfileScreen extends StatelessWidget {
                             backgroundColor:
                                 Theme.of(context).scaffoldBackgroundColor,
                             child: Container(
+                              decoration: const BoxDecoration(),
                               child: CircleAvatar(
                                 backgroundColor:
                                     Theme.of(context).scaffoldBackgroundColor,
@@ -101,23 +102,29 @@ class ProfileScreen extends StatelessWidget {
                                 ),
                                 radius: 60,
                               ),
-                              decoration: BoxDecoration(),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const  SizedBox(
                       height: 5,
                     ),
-                    Text(
-                      '${userModel.name}',
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            fontSize: 18,
-                          ),
+
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      alignment: Alignment.center,
+                      height: 30,
+                      child: Text(
+                        '${userModel.name}',
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              fontSize: 18,
+                            ),
+                      ),
                     ),
-                    SizedBox(
+                    const   SizedBox(
                       height: 5,
+
                     ),
                     if(lang=='en')
                     Text(
@@ -139,7 +146,7 @@ class ProfileScreen extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
                                 children: [
-                                  Text(
+                                  const Text(
                                     '100',
                                     style: TextStyle(
                                       fontSize: 16,
@@ -159,7 +166,7 @@ class ProfileScreen extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
                                 children: [
-                                  Text(
+                                const  Text(
                                     '100',
                                     style: TextStyle(
                                       fontSize: 16,
@@ -179,7 +186,7 @@ class ProfileScreen extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
                                 children: [
-                                  Text(
+                                const  Text(
                                     '100',
                                     style: TextStyle(
                                       fontSize: 16,

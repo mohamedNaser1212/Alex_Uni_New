@@ -29,8 +29,8 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   modal_progress_hud_nsn: ^0.4.0
-  flutter_localization: ^0.1.13
   shared_preferences: ^2.2.0
+  flutter_localization: ^0.1.13
   firebase_core: ^2.15.0
   firebase_auth: ^4.7.2
   intl_phone_field: ^3.2.0
@@ -54,7 +54,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   another_flushbar: ^1.12.30
   sliver_tools: ^0.2.12
-  intl: ^0.18.1
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:

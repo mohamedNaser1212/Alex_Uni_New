@@ -47,7 +47,7 @@ class MyApp extends StatefulWidget {
   final Widget startPage;
 
   static void setLocale(BuildContext context, Locale newLocale) {
-    _MyAppState state = context.findAncestorStateOfType<_MyAppState>()!;
+    final _MyAppState state = context.findAncestorStateOfType<_MyAppState>()!;
     state.setLocale(newLocale);
   }
 
@@ -56,7 +56,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale _selectedLocale =  Locale(lang??'en'); // Default language is English
+  late Locale _selectedLocale;
+
+  _MyAppState() {
+    // Initialize _selectedLocale with the default language (English or your preferred default)
+    _selectedLocale = Locale(lang ?? 'en');
+  }
 
   void setLocale(Locale newLocale) {
     setState(() {
@@ -111,8 +116,8 @@ class _MyAppState extends State<MyApp> {
 
         locale: _selectedLocale,
         supportedLocales: const [
-          Locale('en', ''), // English
-          Locale('ar', ''), // Arabic
+          Locale('en', ''),
+          Locale('ar', ''),
         ],
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
@@ -122,6 +127,7 @@ class _MyAppState extends State<MyApp> {
         routes: {
           SplashScreen.id: (context) => const SplashScreen(),
           LoginScreen.id: (context) => const LoginScreen(),
+          UserLayout.id: (context) => const UserLayout(),
           // ... define other named routes if needed ...
         },
         home: widget.startPage,
