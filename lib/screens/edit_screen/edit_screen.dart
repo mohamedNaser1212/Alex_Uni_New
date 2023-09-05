@@ -19,11 +19,20 @@ class EditProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isArabic = lang == 'ar';
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is UserModelUpdateSuccessState)
+          {
+            showFlushBar(
+                context: context,
+                message: isArabic?'تم تحديث البيانات بنجاح':'Data updated successfully',
+            );
+          }
+      },
       builder: (context, state) {
         var userModel = AppCubit.get(context).user;
         var profileImage = AppCubit.get(context).profileImage;
         nameController.text = userModel!.name!;
+        phoneController.text = userModel.phone!;
         return Scaffold(
           backgroundColor: const Color(0xFF3E657B),
           appBar: defaultAppBar(
@@ -31,20 +40,11 @@ class EditProfile extends StatelessWidget {
             title: isArabic ? 'تعديل الحساب' : 'Edit Profile',
             action: [
               TextButton(
-                onPressed: () async {
-                  final success = await AppCubit.get(context).updateUser(
+                onPressed: (){
+                   AppCubit.get(context).updateUser(
                     name: nameController.text,
+                    phone: phoneController.text,
                   );
-
-                  if (success) {
-                    final currentContext = context; // Store the current context
-                    ScaffoldMessenger.of(currentContext).showSnackBar(
-                      const SnackBar(
-                        content: Text('Edit successful'),
-                        backgroundColor: Color(0xFF3E657B),
-                      ),
-                    );
-                  }
                 },
 
                 child: Text(
@@ -151,6 +151,19 @@ class EditProfile extends StatelessWidget {
                           }
                           return null;
                         },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      reusableTextFormField(
+                          label: 'Enter the number',
+                        prefixColor:Colors.white ,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                          onTap: (){},
+                          controller: phoneController,
+                          keyboardType: TextInputType.number,
                       ),
                     ],
                   ),

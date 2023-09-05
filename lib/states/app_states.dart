@@ -21,11 +21,15 @@ class AppChangeBottomNavBarState extends AppStates{}
 
 class UserModelUpdateLoadingState extends AppStates{}
 
+class UserModelUpdateSuccessState extends AppStates{}
+
 class UserModelUpdateErrorState extends AppStates{}
 
 class SelectImageSuccessState extends AppStates{}
 
 class SelectImageErrorState extends AppStates{}
+
+class UploadImageLoadingState extends AppStates{}
 
 class UploadProfileImageSuccessState extends AppStates{}
 
@@ -52,3 +56,11 @@ class LikePostSuccessState extends AppStates{}
 class LikePostErrorState extends AppStates{}
 
 class DeletePostSuccessState extends AppStates{}
+
+class SendMessageSuccessState extends AppStates{}
+
+class SendMessageErrorState extends AppStates{}
+
+class ReceiveMessageLoadingState extends AppStates{}
+
+class ReceiveMessageSuccessState extends AppStates{}
