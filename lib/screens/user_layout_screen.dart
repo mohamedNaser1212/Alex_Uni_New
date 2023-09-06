@@ -175,7 +175,7 @@ static String id='userlayout';
                     ),
                     InkWell(
                       onTap: () {
-                        navigateTo(context: context, screen: const SettingsLayoutScreen());
+                        navigateTo(context: context, screen:  SettingsLayoutScreen());
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
