@@ -3,6 +3,7 @@ import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/add_posts/add_posts_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/profile_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -242,34 +243,17 @@ static String id='userlayout';
               ],
             ),
           ),
-          body:
-              AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
-          bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: defaultColor,
-            currentIndex: AppCubit.get(context).currentIndex,
-            onTap: (index) {
-              AppCubit.get(context).changeBottomNavBar(index);
-            },
-            items: [
-              BottomNavigationBarItem(
-                icon: const Icon(
-                  Icons.home,
-                ),
-                label: lang == 'en' ? 'Home' : 'الرئيسية',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.chat,
-                ),
-                label: lang == 'en' ? 'Chat' : 'المحادثات',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.settings,
-                ),
-                label: lang == 'en' ? 'Settings' : 'الاعدادات',
-              ),
-            ],
+          body: AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
+          bottomNavigationBar: AnimatedBottomNavigationBar(
+              icons: AppCubit.get(context).bottomNavIcons,
+              backgroundColor: const Color(0xffE6EEFA),
+              elevation: 10,
+              activeColor: defaultColor,
+              activeIndex: AppCubit.get(context).currentIndex,
+              gapLocation: GapLocation.center,
+              onTap: (index){
+                AppCubit.get(context).changeBottomNavBar(index);
+              },
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
@@ -281,9 +265,51 @@ static String id='userlayout';
             child: const Icon(
               Icons.add,
             ),
+            backgroundColor: defaultColor,
           ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         );
       },
     );
   }
 }
+
+
+//          bottomNavigationBar: BottomNavigationBar(
+//             selectedItemColor: defaultColor,
+//             currentIndex: AppCubit.get(context).currentIndex,
+//             onTap: (index) {
+//               AppCubit.get(context).changeBottomNavBar(index);
+//             },
+//             items: [
+//               BottomNavigationBarItem(
+//                 icon: const Icon(
+//                   Icons.home,
+//                 ),
+//                 label: lang == 'en' ? 'Home' : 'الرئيسية',
+//               ),
+//               BottomNavigationBarItem(
+//                 icon: Icon(
+//                   Icons.chat,
+//                 ),
+//                 label: lang == 'en' ? 'Chat' : 'المحادثات',
+//               ),
+//               BottomNavigationBarItem(
+//                 icon: Icon(
+//                   Icons.settings,
+//                 ),
+//                 label: lang == 'en' ? 'Settings' : 'الاعدادات',
+//               ),
+//             ],
+//           ),
+//           floatingActionButton: FloatingActionButton(
+//             onPressed: () {
+//               navigateTo(
+//                 context: context,
+//                 screen: const AddPostsScreen(),
+//               );
+//             },
+//             child: const Icon(
+//               Icons.add,
+//             ),
+//           ),

@@ -6,6 +6,7 @@ import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/chat_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/home_screen.dart';
+import 'package:alex_uni_new/screens/user_screens/notification_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/settings_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,11 +30,19 @@ class AppCubit extends Cubit<AppStates>{
   List<Widget> screens = [
     const HomeScreen(),
     const ChatScreen(),
+    const NotificationScreen(),
     const SettingsScreen(),
+  ];
+  List<IconData> bottomNavIcons = [
+    Icons.home,
+    Icons.chat,
+    Icons.notifications,
+    Icons.settings,
   ];
   List<String> titles = [
     lang=='en'?'Home':'الرئيسية',
     lang=='en'?'Chat':'المحادثات',
+    lang=='en'?'Notifications':'الاشعارات',
     lang=='en'?'Settings':'الاعدادات',
   ];
 

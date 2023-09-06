@@ -77,7 +77,6 @@ class ChatDetailsScreen extends StatelessWidget {
                                     source: ImageSource.gallery,
                                     receiverId: chatUserModel!.userId!
                                 );
-
                               },
                             ),
                           ),
