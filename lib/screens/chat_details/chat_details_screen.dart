@@ -8,6 +8,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import '../../constants.dart';
 import '../../models/message_model.dart';
@@ -53,7 +54,7 @@ class ChatDetailsScreen extends StatelessWidget {
                           AppCubit.get(context).sendMessage(
                             receiverId: chatUserModel!.userId!,
                             text: value.toString(),
-                            dateTime: DateTime.now().toString(),
+                            dateTime: DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(DateTime.now().toUtc()).toString(),
 
                           );
 
