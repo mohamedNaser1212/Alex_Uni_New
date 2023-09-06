@@ -56,6 +56,7 @@ dependencies:
   sliver_tools: ^0.2.12
   intl: ^0.18.1
   chat_bubbles: ^1.5.0
+  gmt: ^0.7.1
 
 dev_dependencies:
   flutter_test:

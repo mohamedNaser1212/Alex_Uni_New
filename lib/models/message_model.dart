@@ -1,6 +1,6 @@
 class MessageModel{
   String?image;
-  String?dateTime;
+  String? dateTime;
   String?receiverId;
   String?senderId;
   String?message;

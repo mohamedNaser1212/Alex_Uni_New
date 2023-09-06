@@ -8,8 +8,6 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-
 import '../../constants.dart';
 import '../../models/message_model.dart';
 
@@ -27,7 +25,7 @@ class ChatDetailsScreen extends StatelessWidget {
           builder: (context, state) {
             return Scaffold(
               appBar: AppBar(
-                backgroundColor: Colors.red,
+                backgroundColor: defaultColor,
                 title: Text(
                   '${chatUserModel?.userName}',
                 ),
@@ -54,8 +52,6 @@ class ChatDetailsScreen extends StatelessWidget {
                           AppCubit.get(context).sendMessage(
                             receiverId: chatUserModel!.userId!,
                             text: value.toString(),
-                            dateTime: DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(DateTime.now().toUtc()).toString(),
-
                           );
 
                         },
@@ -103,7 +99,7 @@ Widget buildMessage(MessageModel messageModel,context,) {
     text: '${messageModel.message}',
     isSender: messageModel.senderId == uId ? true : false,
     color:
-    messageModel.senderId == uId ? Colors.red : Colors.grey,
+    messageModel.senderId == uId ? defaultColor : Colors.grey,
     tail: true,
     textStyle: const TextStyle(
       fontSize: 20,
@@ -112,7 +108,7 @@ Widget buildMessage(MessageModel messageModel,context,) {
   ):BubbleNormalImage(
     id: 'id001',
     image: Image(image: NetworkImage('${messageModel.image}')),
-    color: messageModel.senderId == uId ? Colors.red : Colors.grey,
+    color: messageModel.senderId == uId ? defaultColor : Colors.grey,
     isSender: messageModel.senderId == uId ? true : false,
     tail: true,
     delivered: true,

@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gmt/gmt.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../constants.dart';
@@ -235,15 +236,15 @@ class AppCubit extends Cubit<AppStates>{
 
   sendMessage({
     required String receiverId,
-    required String dateTime,
     required String text,
     String ? image,
-  }) {
+  }) async {
+    var now =await GMT.now();
     MessageModel messageModel = MessageModel(
       image: image?? '',
       senderId: user!.uId,
       receiverId: receiverId,
-      dateTime: dateTime,
+      dateTime: now.toString(),
       message: text,
     );
     FirebaseFirestore.instance
