@@ -1,7 +1,6 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/models/post_model.dart';
-import 'package:alex_uni_new/models/user_model.dart';
 import 'package:alex_uni_new/screens/chat_details/chat_details_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
@@ -192,7 +191,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
+                height: MediaQuery.of(context).size.height * 0.25,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) => buildFacultyItem(context),
@@ -222,7 +221,7 @@ class HomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 2.0),
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.34,
+                  height: MediaQuery.of(context).size.height * 0.37,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) => buidNewsItem(context),
@@ -306,6 +305,7 @@ class HomeScreen extends StatelessWidget {
   );
 
   Widget buidNewsItem(context)=>Container(
+
     clipBehavior: Clip.antiAliasWithSaveLayer,
     padding: const EdgeInsets.all(12),
     decoration: BoxDecoration(
@@ -316,6 +316,7 @@ class HomeScreen extends StatelessWidget {
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+
       children: [
         Container(
           width: MediaQuery.of(context).size.width * 0.7,
@@ -372,8 +373,12 @@ class HomeScreen extends StatelessWidget {
         ),
          SizedBox(
           width: MediaQuery.of(context).size.width * 0.7,
-          child:const Text(
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse volutpat imperdiet neque, sit amet semper arcu mattis sit amet. Proin accumsan lectus vel ullamcorper luctus. Aliquam a vestibulum elit. Morbi sapien ante, facilisis nec augue non, pretium accumsan',
+
+
+
+
+           child:const Text(
+            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic',
             maxLines: 2,
             style: TextStyle(
               color: Colors.black,
