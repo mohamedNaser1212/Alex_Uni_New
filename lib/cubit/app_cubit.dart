@@ -6,6 +6,7 @@ import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/chat_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/home_screen.dart';
+import 'package:alex_uni_new/screens/user_screens/notification_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/settings_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,9 +14,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gmt/gmt.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../constants.dart';
+import '../models/message_model.dart';
 import '../models/user_model.dart';
 
 class AppCubit extends Cubit<AppStates>{
@@ -25,13 +28,21 @@ class AppCubit extends Cubit<AppStates>{
 
   int currentIndex = 0;
   List<Widget> screens = [
-    HomeScreen(),
+    const HomeScreen(),
     const ChatScreen(),
+    const NotificationScreen(),
     const SettingsScreen(),
+  ];
+  List<IconData> bottomNavIcons = [
+    Icons.home,
+    Icons.chat,
+    Icons.notifications,
+    Icons.settings,
   ];
   List<String> titles = [
     lang=='en'?'Home':'الرئيسية',
     lang=='en'?'Chat':'المحادثات',
+    lang=='en'?'Notifications':'الاشعارات',
     lang=='en'?'Settings':'الاعدادات',
   ];
 
@@ -51,11 +62,11 @@ class AppCubit extends Cubit<AppStates>{
     });
   }
 
-  updateUser({required String name, String? image}) {
+  updateUser({required String name, String? image,String ?phone}) {
     emit(UserModelUpdateLoadingState());
     UserModel user2 = UserModel(
         name: name,
-        phone: user!.phone,
+        phone: phone,
         email: user!.email,
         uId: user!.uId,
         image: image ?? user!.image);
@@ -65,6 +76,7 @@ class AppCubit extends Cubit<AppStates>{
         .update(user2.toMap())
         .then((value) {
       getUserData();
+      emit(UserModelUpdateSuccessState());
     }).catchError((error) {
       emit(UserModelUpdateErrorState());
     });
@@ -164,6 +176,7 @@ class AppCubit extends Cubit<AppStates>{
   }
 
   List<Map<String,PostModel>> posts=[];
+  List<PostModel> post=[];
   List postsId=[];
   getPosts(){
     posts=[];
@@ -171,6 +184,7 @@ class AppCubit extends Cubit<AppStates>{
     emit(GetPostsLoadingState());
     FirebaseFirestore.instance.collection('posts').orderBy('date',descending: true).get().then((value){
       for (var element in value.docs) {
+        post.add(PostModel.fromJson(element.data()));
         posts.add(
           {
             element.reference.id: PostModel.fromJson(element.data()),
@@ -213,9 +227,133 @@ class AppCubit extends Cubit<AppStates>{
 
 
 
+  List<UserModel> users = [];
 
+  void getAllUsers() {
+    users = [];
+    FirebaseFirestore.instance.collection('users').get().then((value) {
+      for (var element in value.docs) {
+          users.add(UserModel.fromJson(element.data()));
+      }
+      emit(AppGetUserSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(AppGetUserErrorState(error.toString()));
+    });
+  }
+  List<MessageModel> messages=[];
 
+  sendMessage({
+    required String receiverId,
+    required String text,
+    String ? image,
+  }) async {
+    var now =await GMT.now();
+    MessageModel messageModel = MessageModel(
+      image: image?? '',
+      senderId: user!.uId,
+      receiverId: receiverId,
+      dateTime: now.toString(),
+      message: text,
+    );
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .add(messageModel.toMap())
+        .then((value) {
+      emit(SendMessageSuccessState());
+    }).catchError((error) {
+      emit(SendMessageErrorState());
+    });
 
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(receiverId)
+        .collection('chats')
+        .doc(user!.uId)
+        .collection('messages')
+        .add(messageModel.toMap())
+        .then((value) {
+      emit(SendMessageSuccessState());
+    }).catchError((error) {
+      emit(SendMessageErrorState());
+    });
+  }
+
+  receiveMessage({
+    required String receiverId,
+  }) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      messages = [];
+      event.docs.forEach((element) {
+        messages.add(MessageModel.fromJson(element.data()));
+      });
+      emit(ReceiveMessageSuccessState());
+    });
+  }
+
+  File ?image;
+  pickPhoto({
+    required ImageSource source,
+    required String receiverId,
+  }){
+    ImagePicker().pickImage(source: source).then((value){
+      image=File(value!.path);
+      uploadImage(receiverId);
+      emit(SelectImageSuccessState());
+    }).catchError((error){
+      emit(SelectImageErrorState());
+    });
+  }
+
+  sendImage({
+    required String image,
+    required String dateTime,
+    required String receiverId,
+    required String senderId,
+  }){
+    MessageModel messageModel=MessageModel(
+      message: '',
+      dateTime: dateTime,
+      image: image,
+      receiverId: receiverId,
+      senderId: senderId,
+    );
+    FirebaseFirestore.instance.collection('users').doc(senderId).collection('chats').doc(receiverId).collection('messages').add(messageModel.toMap()).then((value){
+      emit(SendMessageSuccessState());
+    }).catchError((error){
+      emit(SendMessageErrorState());
+    });
+  }
+
+  uploadImage(String receiverId){
+    emit(UploadImageErrorState());
+    FirebaseStorage.instance.ref().child('chats/${Uri.file(image!.path).pathSegments.last}').putFile(image!).then((value){
+      value.ref.getDownloadURL().then((value){
+        sendImage(
+          image: value,
+          dateTime: DateTime.now().toString(),
+          receiverId: receiverId,
+          senderId: uId!,
+        );
+      }).catchError((error){
+        emit(UploadImageErrorState());
+      });
+    }).catchError((error){
+      emit(UploadImageErrorState());
+    });
+  }
 
   logout(context){
     emit(AppLogoutLoadingState());
