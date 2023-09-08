@@ -11,81 +11,99 @@ import 'package:image_picker/image_picker.dart';
 import '../../constants.dart';
 import '../../models/message_model.dart';
 
-
 class ChatDetailsScreen extends StatelessWidget {
-  const ChatDetailsScreen({Key? key, required this.chatUserModel}) : super(key: key);
+  const ChatDetailsScreen({Key? key, required this.chatUserModel})
+      : super(key: key);
   final PostModel? chatUserModel;
   @override
   Widget build(BuildContext context) {
     return Builder(
       builder: (BuildContext context) {
-        AppCubit.get(context).receiveMessage(receiverId: chatUserModel!.userId!);
+        AppCubit.get(context)
+            .receiveMessage(receiverId: chatUserModel!.userId!);
         return BlocConsumer<AppCubit, AppStates>(
           listener: (context, state) {},
           builder: (context, state) {
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: defaultColor,
-                title: Text(
-                  '${chatUserModel?.userName}',
+                title: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        '${chatUserModel?.image}',
+                      ),
+                      radius: 25,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      '${chatUserModel?.userName}',
+                    ),
+                  ],
                 ),
               ),
               body: ConditionalBuilder(
-                  condition: state is ! UploadImageLoadingState,
-                  builder: (context)=>Column(
-                    children: [
-                      Expanded(
-                        child: ListView.separated(
-                          itemCount: AppCubit.get(context).messages.length,
-                          itemBuilder: (context, index) {
-                            return buildMessage(
-                                AppCubit.get(context).messages[index],context);
-                          },
-                          separatorBuilder: (BuildContext context, int index) =>
-                          const SizedBox(
-                            height: 5,
-                          ),
-                        ),
-                      ),
-                      MessageBar(
-                        onSend: (value) {
-                          AppCubit.get(context).sendMessage(
-                            receiverId: chatUserModel!.userId!,
-                            text: value.toString(),
-                          );
-
-                        },
-                        actions: [
-                          InkWell(
-                            child: const Icon(
-                              Icons.add,
-                              color: Colors.black,
-                              size: 24,
-                            ),
-                            onTap: () {},
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8, right: 8),
-                            child: InkWell(
-                              child: const Icon(
-                                Icons.camera_alt,
-                                color: Colors.green,
-                                size: 24,
-                              ),
-                              onTap: () {
-                                AppCubit.get(context).pickPhoto(
-                                    source: ImageSource.gallery,
-                                    receiverId: chatUserModel!.userId!
-                                );
+                  condition: state is! UploadImageLoadingState,
+                  builder: (context) => Column(
+                        children: [
+                          Expanded(
+                            child: ListView.separated(
+                              itemCount: AppCubit.get(context).messages.length,
+                              itemBuilder: (context, index) {
+                                return buildMessage(
+                                    AppCubit.get(context).messages[index],
+                                    context);
                               },
+                              separatorBuilder:
+                                  (BuildContext context, int index) =>
+                                      const SizedBox(
+                                height: 5,
+                              ),
                             ),
+                          ),
+                          MessageBar(
+                            onSend: (value) {
+                              AppCubit.get(context).sendMessage(
+                                receiverId: chatUserModel!.userId!,
+                                text: value.toString(),
+                              );
+                            },
+                            actions: [
+                              InkWell(
+                                child: const Icon(
+                                  Icons.add,
+                                  color: Colors.black,
+                                  size: 24,
+                                ),
+                                onTap: () {},
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 8, right: 8),
+                                child: InkWell(
+                                  child: const Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.green,
+                                    size: 24,
+                                  ),
+                                  onTap: () {
+                                    AppCubit.get(context).pickPhoto(
+                                        source: ImageSource.gallery,
+                                        receiverId: chatUserModel!.userId!);
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                  fallback: (context)=>const Center(child: CircularProgressIndicator(color: Colors.red,),)
-              ),
+                  fallback: (context) => const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.red,
+                        ),
+                      )),
             );
           },
         );
@@ -93,26 +111,28 @@ class ChatDetailsScreen extends StatelessWidget {
     );
   }
 }
-Widget buildMessage(MessageModel messageModel,context,) {
-  return messageModel.message!=''? BubbleNormal(
-    text: '${messageModel.message}',
-    isSender: messageModel.senderId == uId ? true : false,
-    color:
-    messageModel.senderId == uId ? defaultColor : Colors.grey,
-    tail: true,
-    textStyle: const TextStyle(
-      fontSize: 20,
-      color: Colors.white,
-    ),
-  ):BubbleNormalImage(
-    id: 'id001',
-    image: Image(image: NetworkImage('${messageModel.image}')),
-    color: messageModel.senderId == uId ? defaultColor : Colors.grey,
-    isSender: messageModel.senderId == uId ? true : false,
-    tail: true,
-    delivered: true,
-  );
+
+Widget buildMessage(
+  MessageModel messageModel,
+  context,
+) {
+  return messageModel.message != ''
+      ? BubbleNormal(
+          text: '${messageModel.message}',
+          isSender: messageModel.senderId == uId ? true : false,
+          color: messageModel.senderId == uId ? defaultColor : Colors.grey,
+          tail: true,
+          textStyle: const TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+          ),
+        )
+      : BubbleNormalImage(
+          id: 'id001',
+          image: Image(image: NetworkImage('${messageModel.image}')),
+          color: messageModel.senderId == uId ? defaultColor : Colors.grey,
+          isSender: messageModel.senderId == uId ? true : false,
+          tail: true,
+          delivered: true,
+        );
 }
-
-
-

@@ -4,7 +4,7 @@ import 'package:alex_uni_new/cache_helper.dart';
 import 'package:alex_uni_new/models/post_model.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
-import 'package:alex_uni_new/screens/user_screens/chat_screen.dart';
+import 'package:alex_uni_new/screens/chat_screens/chat_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/home_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/notification_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/settings_screen.dart';
@@ -18,10 +18,11 @@ import 'package:gmt/gmt.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../constants.dart';
+import '../main.dart';
 import '../models/message_model.dart';
 import '../models/user_model.dart';
 
-class AppCubit extends Cubit<AppStates>{
+class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitialState());
 
   static AppCubit get(context) => BlocProvider.of(context);
@@ -40,18 +41,46 @@ class AppCubit extends Cubit<AppStates>{
     Icons.settings,
   ];
   List<String> titles = [
-    lang=='en'?'Home':'الرئيسية',
-    lang=='en'?'Chat':'المحادثات',
-    lang=='en'?'Notifications':'الاشعارات',
-    lang=='en'?'Settings':'الاعدادات',
+    lang == 'en' ? 'Home' : 'الرئيسية',
+    lang == 'en' ? 'Chat' : 'المحادثات',
+    lang == 'en' ? 'Notifications' : 'الاشعارات',
+    lang == 'en' ? 'Settings' : 'الاعدادات',
   ];
 
-  void changeBottomNavBar(int index){
+  void changeBottomNavBar(int index) {
     currentIndex = index;
     emit(AppChangeBottomNavBarState());
   }
 
-  UserModel ?user ;
+  void changeAppLanguage({
+    required BuildContext context,
+    required Locale? newLocale,
+  }) {
+    if (newLocale != null) {
+      lang = newLocale.toString();
+      CacheHelper.saveData(
+        key: 'lang',
+        value: newLocale.toString(),
+      ).then((value) {
+        MyApp.setLocale(
+          context,
+          newLocale,
+        );
+        titles = [
+          lang == 'en' ? 'Home' : 'الرئيسية',
+          lang == 'en' ? 'Chat' : 'المحادثات',
+          lang == 'en' ? 'Notifications' : 'الاشعارات',
+          lang == 'en' ? 'Settings' : 'الاعدادات',
+        ];
+        emit(AppChangeLanguageState());
+      }).catchError((e) {
+        print(e.toString());
+        emit(AppChangeLanguageErrorState());
+      });
+    }
+  }
+
+  UserModel? user;
   void getUserData() {
     emit(AppGetUserLoadingState());
     FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
@@ -62,7 +91,7 @@ class AppCubit extends Cubit<AppStates>{
     });
   }
 
-  updateUser({required String name, String? image,String ?phone}) {
+  updateUser({required String name, String? image, String? phone}) {
     emit(UserModelUpdateLoadingState());
     UserModel user2 = UserModel(
         name: name,
@@ -134,8 +163,8 @@ class AppCubit extends Cubit<AppStates>{
         .then((value) {
       value.ref.getDownloadURL().then((value) {
         createPost(
-            text: text,
-            image: value,
+          text: text,
+          image: value,
           context: context,
         );
         postImage = null;
@@ -147,8 +176,8 @@ class AppCubit extends Cubit<AppStates>{
     });
   }
 
-  removePostImage(){
-    postImage=null;
+  removePostImage() {
+    postImage = null;
     emit(DeletePostImageSuccessState());
   }
 
@@ -156,44 +185,50 @@ class AppCubit extends Cubit<AppStates>{
     required String text,
     required String image,
     context,
-}){
+  }) {
     emit(CreatePostLoadingState());
-    PostModel postModel=PostModel(
-        text: text,
-        date: DateFormat('yyyy-MM-dd h:mm a').format(DateTime.now()),
-        userName: user!.name,
-        userImage: user!.image,
-        userId: user!.uId,
-        likes: [],
-        comments: [],
-        image: image,
+    PostModel postModel = PostModel(
+      text: text,
+      date: DateFormat('yyyy-MM-dd h:mm a').format(DateTime.now()),
+      userName: user!.name,
+      userImage: user!.image,
+      userId: user!.uId,
+      likes: [],
+      comments: [],
+      image: image,
     );
-    FirebaseFirestore.instance.collection('posts').add(postModel.toMap()).then((value){
+    FirebaseFirestore.instance
+        .collection('posts')
+        .add(postModel.toMap())
+        .then((value) {
       getPosts();
       emit(CreatePostSuccessState());
       Navigator.pop(context);
     });
   }
 
-  List<Map<String,PostModel>> posts=[];
-  List<PostModel> post=[];
-  List postsId=[];
-  getPosts(){
-    posts=[];
-    postsId=[];
+  List<Map<String, PostModel>> posts = [];
+  List<PostModel> post = [];
+  List postsId = [];
+  getPosts() {
+    posts = [];
+    postsId = [];
     emit(GetPostsLoadingState());
-    FirebaseFirestore.instance.collection('posts').orderBy('date',descending: true).get().then((value){
+    FirebaseFirestore.instance
+        .collection('posts')
+        .orderBy('date', descending: true)
+        .get()
+        .then((value) {
       for (var element in value.docs) {
         post.add(PostModel.fromJson(element.data()));
-        posts.add(
-          {
-            element.reference.id: PostModel.fromJson(element.data()),
-          }
-        );
+        posts.add({
+          element.reference.id: PostModel.fromJson(element.data()),
+        });
         postsId.add(element.id);
-      }}).then((value){
-        emit(GetPostsSuccessState());
-    }).catchError((error){
+      }
+    }).then((value) {
+      emit(GetPostsSuccessState());
+    }).catchError((error) {
       emit(GetPostsErrorState());
     });
   }
@@ -202,10 +237,8 @@ class AppCubit extends Cubit<AppStates>{
     if (post.values.single.likes!.any((element) => element == user!.uId)) {
       debugPrint('exist and remove');
 
-      post.values.single.likes
-          !.removeWhere((element) => element == user!.uId);
+      post.values.single.likes!.removeWhere((element) => element == user!.uId);
     } else {
-
       post.values.single.likes!.add(user!.uId!);
     }
 
@@ -218,14 +251,16 @@ class AppCubit extends Cubit<AppStates>{
     }).catchError((error) {});
   }
 
-  deletePost(String id){
-    FirebaseFirestore.instance.collection('posts').doc(id).delete().then((value){
+  deletePost(String id) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(id)
+        .delete()
+        .then((value) {
       getPosts();
       emit(DeletePostSuccessState());
     });
   }
-
-
 
   List<UserModel> users = [];
 
@@ -233,7 +268,7 @@ class AppCubit extends Cubit<AppStates>{
     users = [];
     FirebaseFirestore.instance.collection('users').get().then((value) {
       for (var element in value.docs) {
-          users.add(UserModel.fromJson(element.data()));
+        users.add(UserModel.fromJson(element.data()));
       }
       emit(AppGetUserSuccessState());
     }).catchError((error) {
@@ -241,16 +276,17 @@ class AppCubit extends Cubit<AppStates>{
       emit(AppGetUserErrorState(error.toString()));
     });
   }
-  List<MessageModel> messages=[];
+
+  List<MessageModel> messages = [];
 
   sendMessage({
     required String receiverId,
     required String text,
-    String ? image,
+    String? image,
   }) async {
-    var now =await GMT.now();
+    var now = await GMT.now();
     MessageModel messageModel = MessageModel(
-      image: image?? '',
+      image: image ?? '',
       senderId: user!.uId,
       receiverId: receiverId,
       dateTime: now.toString(),
@@ -303,16 +339,16 @@ class AppCubit extends Cubit<AppStates>{
     });
   }
 
-  File ?image;
+  File? image;
   pickPhoto({
     required ImageSource source,
     required String receiverId,
-  }){
-    ImagePicker().pickImage(source: source).then((value){
-      image=File(value!.path);
+  }) {
+    ImagePicker().pickImage(source: source).then((value) {
+      image = File(value!.path);
       uploadImage(receiverId);
       emit(SelectImageSuccessState());
-    }).catchError((error){
+    }).catchError((error) {
       emit(SelectImageErrorState());
     });
   }
@@ -322,51 +358,62 @@ class AppCubit extends Cubit<AppStates>{
     required String dateTime,
     required String receiverId,
     required String senderId,
-  }){
-    MessageModel messageModel=MessageModel(
+  }) {
+    MessageModel messageModel = MessageModel(
       message: '',
       dateTime: dateTime,
       image: image,
       receiverId: receiverId,
       senderId: senderId,
     );
-    FirebaseFirestore.instance.collection('users').doc(senderId).collection('chats').doc(receiverId).collection('messages').add(messageModel.toMap()).then((value){
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(senderId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .add(messageModel.toMap())
+        .then((value) {
       emit(SendMessageSuccessState());
-    }).catchError((error){
+    }).catchError((error) {
       emit(SendMessageErrorState());
     });
   }
 
-  uploadImage(String receiverId){
+  uploadImage(String receiverId) {
     emit(UploadImageErrorState());
-    FirebaseStorage.instance.ref().child('chats/${Uri.file(image!.path).pathSegments.last}').putFile(image!).then((value){
-      value.ref.getDownloadURL().then((value){
+    FirebaseStorage.instance
+        .ref()
+        .child('chats/${Uri.file(image!.path).pathSegments.last}')
+        .putFile(image!)
+        .then((value) {
+      value.ref.getDownloadURL().then((value) {
         sendImage(
           image: value,
           dateTime: DateTime.now().toString(),
           receiverId: receiverId,
           senderId: uId!,
         );
-      }).catchError((error){
+      }).catchError((error) {
         emit(UploadImageErrorState());
       });
-    }).catchError((error){
+    }).catchError((error) {
       emit(UploadImageErrorState());
     });
   }
 
-  logout(context){
+  logout(context) {
     emit(AppLogoutLoadingState());
     FirebaseAuth.instance.signOut().then((value) {
-      CacheHelper.removeData(key: 'uId').then((value){
-        currentIndex=0;
+      CacheHelper.removeData(key: 'uId').then((value) {
+        currentIndex = 0;
         navigateAndFinish(
-            context: context,
-            screen: const LoginScreen(),
+          context: context,
+          screen: const LoginScreen(),
         );
       });
       emit(AppLogoutSuccessState());
-    }).catchError((onError){
+    }).catchError((onError) {
       emit(AppLogoutErrorState());
     });
   }
@@ -374,10 +421,10 @@ class AppCubit extends Cubit<AppStates>{
   deleteUser({
     required context,
     required String id,
-  }){
-    FirebaseFirestore.instance.collection("users").doc(id).delete().then((_){
-      var user =  FirebaseAuth.instance.currentUser!;
-      user.delete().then((value){
+  }) {
+    FirebaseFirestore.instance.collection("users").doc(id).delete().then((_) {
+      var user = FirebaseAuth.instance.currentUser!;
+      user.delete().then((value) {
         logout(context);
         emit(DeleteAccountSuccessState());
       });

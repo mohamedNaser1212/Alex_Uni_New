@@ -1,7 +1,8 @@
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/add_posts/add_posts_screen.dart';
-import 'package:alex_uni_new/screens/user_screens/profile_screen.dart';
+import 'package:alex_uni_new/screens/chat_screens/chat_screen.dart';
+import 'package:alex_uni_new/screens/profile_screen/profile_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/settings_details_screen_layout.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
@@ -12,13 +13,12 @@ import '../constants.dart';
 
 class UserLayout extends StatelessWidget {
   const UserLayout({Key? key}) : super(key: key);
-static String id='userlayout';
+  static String id = 'userlayout';
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
-
         return Scaffold(
           appBar: AppBar(
             title: Text(
@@ -32,7 +32,8 @@ static String id='userlayout';
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 10),
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(
                           '${AppCubit.get(context).user?.image}',
@@ -41,7 +42,8 @@ static String id='userlayout';
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 5),
                       child: Text(
                         '${AppCubit.get(context).user?.name}',
                         style: const TextStyle(
@@ -65,7 +67,10 @@ static String id='userlayout';
                     ),
                     InkWell(
                       onTap: () {
-                        navigateTo(context: context, screen: const ProfileScreen(),);
+                        navigateTo(
+                          context: context,
+                          screen: const ProfileScreen(),
+                        );
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
@@ -143,7 +148,7 @@ static String id='userlayout';
                         ),
                       ),
                     ),
-                   const Divider(
+                    const Divider(
                       thickness: 1,
                     ),
                     InkWell(
@@ -161,7 +166,7 @@ static String id='userlayout';
                             Text(
                               lang == 'en' ? 'News' : 'الاخبار',
                             ),
-                          const Spacer(),
+                            const Spacer(),
                             const Icon(
                               Icons.arrow_forward_ios,
                               size: 14,
@@ -170,12 +175,13 @@ static String id='userlayout';
                         ),
                       ),
                     ),
-                   const Divider(
+                    const Divider(
                       thickness: 1,
                     ),
                     InkWell(
                       onTap: () {
-                        navigateTo(context: context, screen:  SettingsLayoutScreen());
+                        navigateTo(
+                            context: context, screen: SettingsLayoutScreen());
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
@@ -190,7 +196,7 @@ static String id='userlayout';
                             Text(
                               lang == 'en' ? 'Settings' : 'الاعدادات',
                             ),
-                            const  Spacer(),
+                            const Spacer(),
                             const Icon(
                               Icons.arrow_forward_ios,
                               size: 14,
@@ -199,7 +205,7 @@ static String id='userlayout';
                         ),
                       ),
                     ),
-                    const  Divider(
+                    const Divider(
                       thickness: 1,
                     ),
                     InkWell(
@@ -226,7 +232,7 @@ static String id='userlayout';
                         ),
                       ),
                     ),
-                    const  Divider(
+                    const Divider(
                       thickness: 1,
                     ),
                     Padding(
@@ -245,17 +251,22 @@ static String id='userlayout';
               ],
             ),
           ),
-          body: AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
+          body:
+              AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
           bottomNavigationBar: AnimatedBottomNavigationBar(
-              icons: AppCubit.get(context).bottomNavIcons,
-              backgroundColor: const Color(0xffE6EEFA),
-              elevation: 10,
-              activeColor: defaultColor,
-              activeIndex: AppCubit.get(context).currentIndex,
-              gapLocation: GapLocation.center,
-              onTap: (index){
+            icons: AppCubit.get(context).bottomNavIcons,
+            backgroundColor: const Color(0xffE6EEFA),
+            elevation: 10,
+            activeColor: defaultColor,
+            activeIndex: AppCubit.get(context).currentIndex,
+            gapLocation: GapLocation.center,
+            onTap: (index) {
+              if (index == 1) {
+                navigateTo(context: context, screen: ChatScreen());
+              } else {
                 AppCubit.get(context).changeBottomNavBar(index);
-              },
+              }
+            },
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
@@ -269,13 +280,13 @@ static String id='userlayout';
             ),
             backgroundColor: defaultColor,
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
         );
       },
     );
   }
 }
-
 
 //          bottomNavigationBar: BottomNavigationBar(
 //             selectedItemColor: defaultColor,

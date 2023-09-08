@@ -22,20 +22,20 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Widget startPage;
-  lang = await CacheHelper.getData(key: 'lang') ;
+  lang = await CacheHelper.getData(key: 'lang');
   uId = await CacheHelper.getData(key: 'uId');
-  if(lang==null) {
-    startPage=const SplashScreen();
-
+  if (lang == null) {
+    startPage = const SplashScreen();
   } else {
-    if(uId==null) {
-      startPage=const LoginScreen();
-    }
-    else {
-      startPage=const UserLayout();
+    if (uId == null) {
+      startPage = const LoginScreen();
+    } else {
+      startPage = const UserLayout();
     }
   }
-  runApp(MyApp(startPage: startPage,));
+  runApp(MyApp(
+    startPage: startPage,
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -74,7 +74,10 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (BuildContext context) => AppCubit()..getUserData()..getPosts()..getAllUsers(),
+          create: (BuildContext context) => AppCubit()
+            ..getUserData()
+            ..getPosts()
+            ..getAllUsers(),
         ),
         BlocProvider(
           create: (BuildContext context) => GuestCubit(),
@@ -101,19 +104,7 @@ class _MyAppState extends State<MyApp> {
               color: Colors.black,
             ),
           ),
-          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: Colors.blue,
-            elevation: 20,
-          ),
-          textTheme: const TextTheme(
-            bodyText1: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-            ),
-          ),),
-
+        ),
         locale: _selectedLocale,
         supportedLocales: const [
           Locale('en', ''),
