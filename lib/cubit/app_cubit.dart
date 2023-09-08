@@ -258,6 +258,7 @@ class AppCubit extends Cubit<AppStates> {
         .delete()
         .then((value) {
       getPosts();
+      getMyPosts();
       emit(DeletePostSuccessState());
     });
   }
@@ -401,6 +402,34 @@ class AppCubit extends Cubit<AppStates> {
       emit(UploadImageErrorState());
     });
   }
+
+  List<Map<String, PostModel>> myPosts = [];
+  List myPostsId = [];
+  getMyPosts() {
+    myPosts = [];
+    myPostsId = [];
+    emit(GetPostsLoadingState());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .orderBy('date', descending: true)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        if (element.data()['userId'] == uId) {
+          myPosts.add({
+            element.reference.id: PostModel.fromJson(element.data()),
+          });
+          myPostsId.add(element.id);
+        }
+      }
+    }).then((value) {
+      emit(GetPostsSuccessState());
+    }).catchError((error) {
+      emit(GetPostsErrorState());
+    });
+  }
+
+
 
   logout(context) {
     emit(AppLogoutLoadingState());

@@ -64,7 +64,7 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => buidNewsItem(context),
+                  itemBuilder: (context, index) => buildNewsItem(context),
                   separatorBuilder: (context, index) => const SizedBox(
                     width: 15,
                   ),
@@ -149,7 +149,7 @@ class HomeScreen extends StatelessWidget {
         ),
       );
 
-  Widget buidNewsItem(context) => Container(
+  Widget buildNewsItem(context) => Container(
         clipBehavior: Clip.antiAliasWithSaveLayer,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(

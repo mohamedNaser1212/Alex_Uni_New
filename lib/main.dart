@@ -77,7 +77,8 @@ class _MyAppState extends State<MyApp> {
           create: (BuildContext context) => AppCubit()
             ..getUserData()
             ..getPosts()
-            ..getAllUsers(),
+            ..getAllUsers()
+            ..getMyPosts(),
         ),
         BlocProvider(
           create: (BuildContext context) => GuestCubit(),

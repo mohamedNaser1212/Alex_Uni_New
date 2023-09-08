@@ -31,7 +31,7 @@ class ChatDetailsScreen extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       backgroundImage: NetworkImage(
-                        '${chatUserModel?.image}',
+                        '${chatUserModel?.userImage}',
                       ),
                       radius: 25,
                     ),
