@@ -233,14 +233,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Expanded(child: reusableElevatedButton(
                             label: lang == 'en'
                                 ? 'Edit Profile'
-                                : 'تعديل الملف الشخصي',
+                                : ' تعديل البيانات ',
                             backColor: defaultColor,
                             height: 40,
                             function: () {
-                              navigateTo(context: context, screen: EditProfile());
+                              navigateTo(context: context, screen: const EditProfile());
                             },
                           ),),
-                          SizedBox(
+                          const SizedBox(
                             width: 5,
                           ),
                           Expanded(child: reusableElevatedButton(
@@ -253,7 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               navigateTo(context: context, screen: PhotoScreen());
                             },
                           ),),
-                          SizedBox(
+                          const SizedBox(
                             width: 5,
                           ),
                           Expanded(child: reusableElevatedButton(
@@ -263,7 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             backColor: defaultColor,
                             height: 40,
                             function: () {
-                              navigateTo(context: context, screen: SavedScreen());
+                              navigateTo(context: context, screen: const SavedScreen());
                             },
                           ),),
                         ],

@@ -459,4 +459,95 @@ class AppCubit extends Cubit<AppStates> {
       });
     });
   }
+
+  // List<Map<String, PostModel>> savedPosts = [];
+  // List savedPostsId = [];
+  // updateSavedPosts() {
+  //   savedPosts = [];
+  //   savedPostsId = [];
+  //   emit(GetPostsLoadingState());
+  //   FirebaseFirestore.instance
+  //       .collection('posts')
+  //       .orderBy('date', descending: true)
+  //       .get()
+  //       .then((value) {
+  //     for (var element in value.docs) {
+  //       if (element.data()['likes'].contains(uId)) {
+  //         savedPosts.add({
+  //           element.reference.id: PostModel.fromJson(element.data()),
+  //         });
+  //         savedPostsId.add(element.id);
+  //       }
+  //     }
+  //   }).then((value) {
+  //     emit(AppSavedPostsUpdatedState());
+  //   }).catchError((error) {
+  //     emit(GetPostsErrorState());
+  //   });
+  // }
+
+  List<dynamic> savedPosts = [];
+  List savedPostsId = [];
+
+  updateMySavedPosts({
+    required String postId,
+  }) {
+    emit(GetPostsLoadingState());
+    final userSavedPostsCollection = FirebaseFirestore.instance.collection('users').doc(uId).collection('saved_posts');
+
+    userSavedPostsCollection.doc(postId).get().then((docSnapshot) {
+      if (docSnapshot.exists) {
+        userSavedPostsCollection.doc(postId).delete().then((value) {
+          getMySavedPosts();
+        });
+      } else {
+        userSavedPostsCollection.doc(postId).set({
+          'postId': postId,
+        }).then((value) {
+          getMySavedPosts();
+        });
+      }
+    }).catchError((error) {
+      emit(GetPostsErrorState());
+    });
+  }
+
+  getMySavedPosts() {
+    savedPosts = [];
+    savedPostsId = [];
+    emit(GetPostsLoadingState());
+
+    final userSavedPostsCollection = FirebaseFirestore.instance.collection('users').doc(uId).collection('saved_posts');
+
+    userSavedPostsCollection.get().then((value) {
+      final postIds = value.docs.map((doc) => doc['postId'] as String).toList();
+
+      if (postIds.isNotEmpty) {
+        FirebaseFirestore.instance
+            .collection('posts')
+            .where(FieldPath.documentId, whereIn: postIds)
+            .get()
+            .then((value) {
+          for (var element in value.docs) {
+            savedPosts.add({
+              element.reference.id: PostModel.fromJson(element.data()),
+            });
+            savedPostsId.add(element.id);
+          }
+          emit(GetPostsSuccessState());
+        }).catchError((error) {
+          print("Error fetching posts: $error"); // Add this line for error logging
+          emit(GetPostsErrorState());
+        });
+      } else {
+        // Handle the case where there are no saved posts.
+        emit(GetPostsSuccessState());
+      }
+    }).catchError((error) {
+      print("Error fetching saved post IDs: $error"); // Add this line for error logging
+      emit(GetPostsErrorState());
+    });
+  }
+
+
 }

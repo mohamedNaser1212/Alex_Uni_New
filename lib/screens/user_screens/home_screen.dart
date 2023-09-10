@@ -419,7 +419,14 @@ class HomeScreen extends StatelessWidget {
                               ),
                               const SizedBox(width: 20),
                               InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  AppCubit.get(context).updateMySavedPosts(
+                                    postId: AppCubit.get(context)
+                                        .postsId[index],
+
+                                  );
+                                  print('saved');
+                                },
                                 child: const Icon(
                                   Icons.bookmark_border_outlined,
                                   size: 18,

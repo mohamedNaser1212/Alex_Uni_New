@@ -68,3 +68,7 @@ class ReceiveMessageSuccessState extends AppStates {}
 class AppChangeLanguageState extends AppStates {}
 
 class AppChangeLanguageErrorState extends AppStates {}
+
+
+class GetSavedPostsLoadingState extends AppStates {}
+class GetSavedPostsSuccessState extends AppStates {}

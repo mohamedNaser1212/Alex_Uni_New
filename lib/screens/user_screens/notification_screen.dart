@@ -10,7 +10,7 @@ class NotificationScreen extends StatelessWidget {
     return  Center(
       child: Text(
         lang=='en'?'Notification Screen':'صفحه الاشعارات',
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
