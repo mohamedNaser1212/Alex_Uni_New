@@ -1,7 +1,6 @@
 import 'package:alex_uni_new/cache_helper.dart';
 import 'package:alex_uni_new/cubit/login_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
-import 'package:alex_uni_new/screens/guest_layout_screen.dart';
 import 'package:alex_uni_new/screens/user_layout_screen.dart';
 import 'package:alex_uni_new/states/login_states.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
@@ -38,6 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
           if (state is LoginSuccessState) {
             uId = state.uId;
             await CacheHelper.saveData(key: 'uId', value: uId);
+            isGuest = false;
             navigateAndFinish(
               context: context,
               screen: const UserLayout(),
@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         },
         builder: (context, state) {
+
           LoginCubit cubit = LoginCubit.get(context);
 
           return Scaffold(
@@ -184,10 +185,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                             children: [
                                               InkWell(
                                                 onTap: () {
+                                                  isGuest = true;
                                                   navigateAndFinish(
                                                     context: context,
                                                     screen:
-                                                        const GuestLayoutScreen(),
+                                                        const UserLayout(),
                                                   );
                                                 },
                                                 child: Container(
@@ -363,12 +365,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-}
-
-void showSnackBar(BuildContext context, String message) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Center(child: Text(message)),
-    ),
-  );
 }

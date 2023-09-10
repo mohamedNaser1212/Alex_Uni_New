@@ -373,11 +373,15 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               InkWell(
                                 onTap: () {
+                                  if(isGuest == false)
                                   AppCubit.get(context).updatePostLikes(
                                     AppCubit.get(context).posts[index],
                                   );
+                                  else{
+                                    showFlushBar(context: context, message: lang=='en'? 'You can\'t like posts as a guest': 'لا يمكنك الاعجاب بالمنشورات كزائر');
+                                  }
                                 },
-                                child: const Icon(
+                                child: Icon(
                                   Icons.favorite_outline_rounded,
                                   size: 18,
                                   color: Colors.white,

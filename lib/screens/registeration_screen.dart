@@ -37,7 +37,7 @@ class RegisterationScreenState extends State<RegisterationScreen> {
       child: BlocConsumer<RegisterCubit, RegisterStates>(
         listener: (context, state)async {
           if (state is RegisterErrorState) {
-            showSnackBar(context, state.error);
+            showFlushBar(context: context,message: state.error,);
           } else if (state is RegisterSuccessState) {
             uId = state.uId;
             print('uId is ' + uId!);

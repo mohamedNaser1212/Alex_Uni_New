@@ -25,7 +25,7 @@ class UserLayout extends StatelessWidget {
               AppCubit.get(context).titles[AppCubit.get(context).currentIndex],
             ),
           ),
-          drawer: Drawer(
+          drawer: isGuest==false? Drawer(
             child: ListView(
               children: [
                 Column(
@@ -250,7 +250,7 @@ class UserLayout extends StatelessWidget {
                 ),
               ],
             ),
-          ),
+          ): null,
           body:
               AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
           bottomNavigationBar: AnimatedBottomNavigationBar(
@@ -261,24 +261,36 @@ class UserLayout extends StatelessWidget {
             activeIndex: AppCubit.get(context).currentIndex,
             gapLocation: GapLocation.center,
             onTap: (index) {
-              if (index == 1) {
-                navigateTo(context: context, screen: ChatScreen());
-              } else {
-                AppCubit.get(context).changeBottomNavBar(index);
+              if (isGuest == false) {
+                if (index == 1) {
+                  navigateTo(context: context, screen: ChatScreen());
+                } else {
+                  AppCubit.get(context).changeBottomNavBar(index);
+                }
+              }else {
+                showFlushBar(
+                    context: context,
+                    message: lang == 'en'
+                        ? 'You must login first'
+                        : 'يجب عليك تسجيل الدخول اولا');
               }
             },
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              navigateTo(
+              if(isGuest==false) {
+                navigateTo(
                 context: context,
                 screen: const AddPostsScreen(),
               );
+              }else{
+                showFlushBar(context: context, message: lang=='en'?'You must login first':'يجب عليك تسجيل الدخول اولا');
+              }
             },
+            backgroundColor: defaultColor,
             child: const Icon(
               Icons.add,
             ),
-            backgroundColor: defaultColor,
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,

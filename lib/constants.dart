@@ -5,3 +5,5 @@ import 'package:flutter/material.dart';
 
  String? lang;
  String? uId;
+
+ bool isGuest=false;

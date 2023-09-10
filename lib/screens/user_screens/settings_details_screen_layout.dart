@@ -114,6 +114,7 @@ class _SettingsLayoutScreenState extends State<SettingsLayoutScreen> {
                               const SizedBox(
                                 height: 20,
                               ),
+                              if(isGuest == false)
                               Row(children: [
                                 Text(
                                   lang == 'en'
@@ -148,6 +149,7 @@ class _SettingsLayoutScreenState extends State<SettingsLayoutScreen> {
                               const SizedBox(
                                 height: 20,
                               ),
+                              if(isGuest == false)
                               reusableElevatedButton(
                                 label: lang == 'en' ? 'Logout' : 'تسجيل الخروج',
                                 function: () {
