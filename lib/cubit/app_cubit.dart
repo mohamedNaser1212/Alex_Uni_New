@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:alex_uni_new/cache_helper.dart';
+
 import 'package:alex_uni_new/models/post_model.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
@@ -548,6 +549,5 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetPostsErrorState());
     });
   }
-
 
 }

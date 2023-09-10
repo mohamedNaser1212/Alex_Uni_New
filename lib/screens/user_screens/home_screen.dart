@@ -2,6 +2,7 @@ import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/models/post_model.dart';
 import 'package:alex_uni_new/screens/chat_details/chat_details_screen.dart';
+
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -391,7 +392,9 @@ class HomeScreen extends StatelessWidget {
                               ),
                               const SizedBox(width: 20),
                               InkWell(
-                                onTap: () {},
+                                onTap: () {
+
+                                },
                                 child: const Icon(
                                   Icons.comment_outlined,
                                   size: 18,
