@@ -69,6 +69,26 @@ class AppChangeLanguageState extends AppStates {}
 
 class AppChangeLanguageErrorState extends AppStates {}
 
+class WriteCommentLoadingState extends AppStates {}
+
+class WriteCommentSuccessState extends AppStates {}
+
+class WriteCommentErrorState extends AppStates {}
+
+class GetCommentsLoadingState extends AppStates {}
+
+class GetCommentsSuccessState extends AppStates {}
+
+class GetCommentsErrorState extends AppStates{}
+
+class DeleteCommentLoadingState extends AppStates{}
+
+class DeleteCommentSuccessState extends AppStates{}
+
+class DeleteCommentErrorState extends AppStates{}
+
+
+
 
 class GetSavedPostsLoadingState extends AppStates {}
 class GetSavedPostsSuccessState extends AppStates {}

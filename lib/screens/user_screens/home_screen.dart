@@ -2,6 +2,7 @@ import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/models/post_model.dart';
 import 'package:alex_uni_new/screens/chat_details/chat_details_screen.dart';
+import 'package:alex_uni_new/screens/comments/comments_screen.dart';
 
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
@@ -397,22 +398,16 @@ class HomeScreen extends StatelessWidget {
                               const SizedBox(width: 20),
                               InkWell(
                                 onTap: () {
-
+                                  AppCubit.get(context).getComments(postId: AppCubit.get(context).postsId[index]);
+                                  navigateTo(
+                                      context: context,
+                                      screen: CommentsScreen(postId: AppCubit.get(context).postsId[index],),
+                                  );
                                 },
                                 child: const Icon(
                                   Icons.comment_outlined,
                                   size: 18,
                                   color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              InkWell(
-                                onTap: () {},
-                                child: Text(
-                                  '${posts[index].values.single.comments.length}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                  ),
                                 ),
                               ),
                               const Spacer(),
@@ -476,21 +471,17 @@ class HomeScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 20),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            AppCubit.get(context).getComments(postId: AppCubit.get(context).postsId[index]);
+                            navigateTo(
+                              context: context,
+                              screen: CommentsScreen(postId: AppCubit.get(context).postsId[index],),
+                            );
+                          },
                           child: const Icon(
                             Icons.comment_outlined,
                             size: 18,
                             color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        InkWell(
-                          onTap: () {},
-                          child: Text(
-                            '${posts[index].values.single.comments.length}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
                           ),
                         ),
                         const Spacer(),

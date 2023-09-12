@@ -75,7 +75,6 @@ class AppCubit extends Cubit<AppStates> {
         ];
         emit(AppChangeLanguageState());
       }).catchError((e) {
-        print(e.toString());
         emit(AppChangeLanguageErrorState());
       });
     }
@@ -252,6 +251,65 @@ class AppCubit extends Cubit<AppStates> {
     }).catchError((error) {});
   }
 
+  writeComment({
+    required String text,
+    required String postId,
+}){
+    emit(WriteCommentLoadingState());
+    CommentDataModel commentModel = CommentDataModel(
+      text: text,
+      time: DateFormat('yyyy-MM-dd h:mm a').format(DateTime.now()),
+      ownerName: user!.name!,
+      ownerImage: user!.image!,
+      ownerId: user!.uId!,
+    );
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .update({
+      'comments': FieldValue.arrayUnion([commentModel.toJson()])
+    }).then((value) {
+      getComments(postId: postId);
+      emit(WriteCommentSuccessState());
+    }).catchError((error) {
+      emit(WriteCommentErrorState());
+    });
+  }
+
+  deleteComment(index, postId){
+    emit(DeleteCommentLoadingState());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .update({
+      'comments': FieldValue.arrayRemove([comments[index].toJson()])
+    }).then((value) {
+      getComments(postId: postId);
+      emit(DeleteCommentSuccessState());
+    }).catchError((error) {
+      emit(DeleteCommentErrorState());
+    });
+  }
+
+  List<CommentDataModel> comments = [];
+  getComments({
+    required String postId,
+}){
+    emit(GetCommentsLoadingState());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .get()
+        .then((value) {
+      comments = [];
+      for (var element in value.data()!['comments']) {
+        comments.add(CommentDataModel.fromJson(element));
+      }
+      emit(GetCommentsSuccessState());
+    }).catchError((error) {
+      emit(GetCommentsErrorState());
+    });
+  }
   deletePost(String id) {
     FirebaseFirestore.instance
         .collection('posts')
@@ -274,7 +332,6 @@ class AppCubit extends Cubit<AppStates> {
       }
       emit(AppGetUserSuccessState());
     }).catchError((error) {
-      print(error.toString());
       emit(AppGetUserErrorState(error.toString()));
     });
   }
@@ -334,9 +391,9 @@ class AppCubit extends Cubit<AppStates> {
         .snapshots()
         .listen((event) {
       messages = [];
-      event.docs.forEach((element) {
+      for (var element in event.docs) {
         messages.add(MessageModel.fromJson(element.data()));
-      });
+      }
       emit(ReceiveMessageSuccessState());
     });
   }
@@ -537,7 +594,6 @@ class AppCubit extends Cubit<AppStates> {
           }
           emit(GetPostsSuccessState());
         }).catchError((error) {
-          print("Error fetching posts: $error"); // Add this line for error logging
           emit(GetPostsErrorState());
         });
       } else {
@@ -545,7 +601,6 @@ class AppCubit extends Cubit<AppStates> {
         emit(GetPostsSuccessState());
       }
     }).catchError((error) {
-      print("Error fetching saved post IDs: $error"); // Add this line for error logging
       emit(GetPostsErrorState());
     });
   }
