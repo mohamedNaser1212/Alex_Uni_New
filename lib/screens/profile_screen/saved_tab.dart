@@ -1,23 +1,13 @@
+import 'package:alex_uni_new/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../constants.dart';
 import '../../cubit/app_cubit.dart';
 import '../../states/app_states.dart';
 
-class SavedScreen extends StatefulWidget {
-  const SavedScreen({Key? key});
+class SavedScreen extends StatelessWidget {
+  const SavedScreen({Key? key}) : super(key: key);
 
-  @override
-  State<SavedScreen> createState() => _SavedScreenState();
-}
-
-class _SavedScreenState extends State<SavedScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    AppCubit.get(context).getMySavedPosts();
-  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
@@ -25,35 +15,15 @@ class _SavedScreenState extends State<SavedScreen> {
           // TODO: Implement listener if needed
         },
         builder: (context, state) {
-          final cubit = AppCubit.get(context);
-
           return Scaffold(
               appBar: AppBar(
                 title: const Text('Saved Posts'),
               ),
-              body: cubit.savedPosts.isEmpty
-                  ? const Center(
-                child: Text(
-                  'No Saved Posts',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              )
-                  : ListView.separated(
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Savedpostsitems(cubit.savedPosts
-                      , index, context);
-                },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(
-                    height: 10,
-                  );
-                },
-                itemCount: cubit.savedPosts.length,
-              )
+              body: ListView.separated(
+                  itemBuilder: (context,index)=>savedPostsItems(AppCubit.get(context).savedPosts, index, context),
+                  separatorBuilder: (context,index)=>const SizedBox(height: 10,),
+                  itemCount: AppCubit.get(context).savedPosts.length
+              ),
           );
         }
 
@@ -61,7 +31,7 @@ class _SavedScreenState extends State<SavedScreen> {
     );
   }
 
-  Widget Savedpostsitems(List posts, index, context) => Card(
+  Widget savedPostsItems(List<SavePostsModel> savedPosts, index, context) => Card(
     margin: const EdgeInsets.symmetric(horizontal: 14),
     color: const Color(0xffE6EEFA),
     elevation: 8,
@@ -75,7 +45,7 @@ class _SavedScreenState extends State<SavedScreen> {
             children: [
               CircleAvatar(
                 backgroundImage: NetworkImage(
-                  '${posts[index].values.single.userImage}',
+                  '${savedPosts[index].userImage}',
                 ),
                 radius: 25,
               ),
@@ -94,7 +64,7 @@ class _SavedScreenState extends State<SavedScreen> {
                             Row(
                               children: [
                                 Text(
-                                  '${posts[index].values.single.userName}',
+                                  '${savedPosts[index].userName}',
                                   style: const TextStyle(
                                     height: 1.4,
                                     fontSize: 16,
@@ -111,7 +81,7 @@ class _SavedScreenState extends State<SavedScreen> {
                               ],
                             ),
                             Text(
-                              '${posts[index].values.single.date}',
+                              '${savedPosts[index].date}',
                               style: const TextStyle(
                                 height: 1.4,
                                 fontSize: 12,
@@ -122,19 +92,6 @@ class _SavedScreenState extends State<SavedScreen> {
                             ),
                           ],
                         ),
-                        const Spacer(),
-                        if (posts[index].values.single.userId == uId)
-                          IconButton(
-                            onPressed: () {
-                              AppCubit.get(context).deletePost(
-                                  AppCubit.get(context).postsId[index]);
-                            },
-                            icon: const Icon(
-                              Icons.delete,
-                              size: 20,
-                              color: Colors.grey,
-                            ),
-                          ),
                       ],
                     ),
                   ],
@@ -150,12 +107,12 @@ class _SavedScreenState extends State<SavedScreen> {
             ),
           ),
           Text(
-            '${posts[index].values.single.text}',
+            '${savedPosts[index].text}',
           ),
           const SizedBox(
             height: 10,
           ),
-          if (posts[index].values.single.image != '')
+          if (savedPosts[index].image != '')
             Container(
               clipBehavior: Clip.antiAliasWithSaveLayer,
               decoration: BoxDecoration(
@@ -172,13 +129,13 @@ class _SavedScreenState extends State<SavedScreen> {
                       image: DecorationImage(
                         fit: BoxFit.cover,
                         image: NetworkImage(
-                          '${posts[index].values.single.image}',
+                          '${savedPosts[index].image}',
                         ),
                       ),
                     ),
                     child: Image(
                       image: NetworkImage(
-                          '${posts[index].values.single.image}'),
+                          '${savedPosts[index].image}'),
                       height: 120,
                       width: double.infinity,
                       fit: BoxFit.cover,
@@ -198,7 +155,7 @@ class _SavedScreenState extends State<SavedScreen> {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            '${posts[index].values.single.likes.length}',
+                            '${savedPosts[index].likes?.length}',
                             style: const TextStyle(
                               color: Colors.white,
                             ),
@@ -210,16 +167,6 @@ class _SavedScreenState extends State<SavedScreen> {
                               Icons.comment_outlined,
                               size: 18,
                               color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(width: 5),
-                          InkWell(
-                            onTap: () {},
-                            child: Text(
-                              '${posts[index].values.single.comments.length}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
                             ),
                           ),
                           const Spacer(),
@@ -247,7 +194,7 @@ class _SavedScreenState extends State<SavedScreen> {
                 ],
               ),
             ),
-          if (posts[index].values.single.image == '')
+          if (savedPosts[index].image == '')
             Container(
               width: double.infinity,
               color: Colors.black.withOpacity(0.6),
@@ -266,7 +213,7 @@ class _SavedScreenState extends State<SavedScreen> {
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      '${posts[index].values.single.likes.length}',
+                      '${savedPosts[index].likes?.length}',
                       style: const TextStyle(
                         color: Colors.white,
                       ),
@@ -278,16 +225,6 @@ class _SavedScreenState extends State<SavedScreen> {
                         Icons.comment_outlined,
                         size: 18,
                         color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    InkWell(
-                      onTap: () {},
-                      child: Text(
-                        '${posts[index].values.single.comments.length}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
                       ),
                     ),
                     const Spacer(),

@@ -87,8 +87,20 @@ class DeleteCommentSuccessState extends AppStates{}
 
 class DeleteCommentErrorState extends AppStates{}
 
+class AddSavePostLoadingState extends AppStates{}
 
+class AddSavePostSuccessState extends AppStates{}
 
+class AddSavePostErrorState extends AppStates{}
 
-class GetSavedPostsLoadingState extends AppStates {}
-class GetSavedPostsSuccessState extends AppStates {}
+class GetSavedPostsLoadingState extends AppStates{}
+
+class GetSavedPostsSuccessState extends AppStates{}
+
+class GetSavedPostsErrorState extends AppStates{}
+
+class DeleteSavedPostLoadingState extends AppStates{}
+
+class DeleteSavedPostSuccessState extends AppStates{}
+
+class DeleteSavedPostErrorState extends AppStates{}

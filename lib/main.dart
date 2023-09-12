@@ -17,13 +17,13 @@ import 'cubit/app_cubit.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
-  CacheHelper.init();
+  await CacheHelper.init();
+  uId = await CacheHelper.getData(key: 'uId');
+  lang = await CacheHelper.getData(key: 'lang');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Widget startPage;
-  lang = await CacheHelper.getData(key: 'lang');
-  uId = await CacheHelper.getData(key: 'uId');
   if (lang == null) {
     startPage = const SplashScreen();
   } else {

@@ -33,15 +33,16 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocProvider(
       create: (BuildContext context) => LoginCubit(),
       child: BlocConsumer<LoginCubit, LoginStates>(
-        listener: (context, state) async {
+        listener: (context, state)  {
           if (state is LoginSuccessState) {
-            uId = state.uId;
-            await CacheHelper.saveData(key: 'uId', value: uId);
-            isGuest = false;
-            navigateAndFinish(
-              context: context,
-              screen: const UserLayout(),
-            );
+            CacheHelper.saveData(key: 'uId', value: uId).then((value){
+              isGuest = false;
+              navigateAndFinish(
+                context: context,
+                screen: const UserLayout(),
+              );
+            });
+
           }
           if (state is LoginErrorState) {
             showFlushBar(

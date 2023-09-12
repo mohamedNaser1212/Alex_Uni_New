@@ -1,3 +1,4 @@
+import 'package:alex_uni_new/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../states/login_states.dart';
@@ -18,6 +19,7 @@ class LoginCubit extends Cubit<LoginStates> {
         email: email,
         password: password,
       );
+      uId=userCredential.user!.uid;
       emit(LoginSuccessState(userCredential.user!.uid));
     } on FirebaseAuthException catch (e) {
       String errorMessage = 'حدث خطأ ما';

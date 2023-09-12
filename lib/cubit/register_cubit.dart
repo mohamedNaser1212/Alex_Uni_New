@@ -73,6 +73,7 @@ class RegisterCubit extends Cubit<RegisterStates>{
       image: uploadedProfileImageLink,
       cover:'',
       bio: '',
+      savedPosts: [],
     );
 
     FirebaseFirestore.instance

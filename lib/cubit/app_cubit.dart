@@ -81,13 +81,14 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   UserModel? user;
-  void getUserData() {
+  getUserData(){
     emit(AppGetUserLoadingState());
-    FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
+    FirebaseFirestore.instance.collection('users').doc(uId).get().then((value){
+      user = UserModel.fromJson(value.data()!);
       emit(AppGetUserSuccessState());
-      user = UserModel.fromJson(value.data());
-    }).catchError((onError) {
-      emit(AppGetUserErrorState(onError.toString()));
+    }).catchError((error){
+      print(error.toString());
+      emit(AppGetUserErrorState(error.toString()));
     });
   }
 
@@ -487,8 +488,45 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+  addSavePosts({
+    required String postId,
+    required int index
+}){
+    emit(AddSavePostLoadingState());
+   SavePostsModel savePostsModel=SavePostsModel(
+       postId: postId,
+       text: posts[index].values.single.text,
+       date: posts[index].values.single.date,
+       userName: posts[index].values.single.userName,
+       userImage: posts[index].values.single.userImage,
+       userId: posts[index].values.single.userId,
+       likes: posts[index].values.single.likes,
+       comments: posts[index].values.single.comments,
+       image: posts[index].values.single.image,
+   );
+    FirebaseFirestore.instance.collection('users').doc(uId).update({
+      'savedPosts': FieldValue.arrayUnion([savePostsModel.toMap()]),
+    }).then((value) {
+      emit(AddSavePostSuccessState());
+    }).catchError((error) {
+      emit(AddSavePostErrorState());
+    });
+  }
 
+  List<SavePostsModel> savedPosts=[];
 
+  getSavePosts(){
+    emit(GetSavedPostsLoadingState());
+    FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
+      savedPosts=[];
+      for(var element in value.data()!['savedPosts']){
+        savedPosts.add(SavePostsModel.fromJson(element));
+      }
+      emit(GetSavedPostsSuccessState());
+    }).catchError((error) {
+      emit(GetSavedPostsErrorState());
+    });
+  }
   logout(context) {
     emit(AppLogoutLoadingState());
     FirebaseAuth.instance.signOut().then((value) {
@@ -518,91 +556,6 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  // List<Map<String, PostModel>> savedPosts = [];
-  // List savedPostsId = [];
-  // updateSavedPosts() {
-  //   savedPosts = [];
-  //   savedPostsId = [];
-  //   emit(GetPostsLoadingState());
-  //   FirebaseFirestore.instance
-  //       .collection('posts')
-  //       .orderBy('date', descending: true)
-  //       .get()
-  //       .then((value) {
-  //     for (var element in value.docs) {
-  //       if (element.data()['likes'].contains(uId)) {
-  //         savedPosts.add({
-  //           element.reference.id: PostModel.fromJson(element.data()),
-  //         });
-  //         savedPostsId.add(element.id);
-  //       }
-  //     }
-  //   }).then((value) {
-  //     emit(AppSavedPostsUpdatedState());
-  //   }).catchError((error) {
-  //     emit(GetPostsErrorState());
-  //   });
-  // }
 
-  List<dynamic> savedPosts = [];
-  List savedPostsId = [];
-
-  updateMySavedPosts({
-    required String postId,
-  }) {
-    emit(GetPostsLoadingState());
-    final userSavedPostsCollection = FirebaseFirestore.instance.collection('users').doc(uId).collection('saved_posts');
-
-    userSavedPostsCollection.doc(postId).get().then((docSnapshot) {
-      if (docSnapshot.exists) {
-        userSavedPostsCollection.doc(postId).delete().then((value) {
-          getMySavedPosts();
-        });
-      } else {
-        userSavedPostsCollection.doc(postId).set({
-          'postId': postId,
-        }).then((value) {
-          getMySavedPosts();
-        });
-      }
-    }).catchError((error) {
-      emit(GetPostsErrorState());
-    });
-  }
-
-  getMySavedPosts() {
-    savedPosts = [];
-    savedPostsId = [];
-    emit(GetPostsLoadingState());
-
-    final userSavedPostsCollection = FirebaseFirestore.instance.collection('users').doc(uId).collection('saved_posts');
-
-    userSavedPostsCollection.get().then((value) {
-      final postIds = value.docs.map((doc) => doc['postId'] as String).toList();
-
-      if (postIds.isNotEmpty) {
-        FirebaseFirestore.instance
-            .collection('posts')
-            .where(FieldPath.documentId, whereIn: postIds)
-            .get()
-            .then((value) {
-          for (var element in value.docs) {
-            savedPosts.add({
-              element.reference.id: PostModel.fromJson(element.data()),
-            });
-            savedPostsId.add(element.id);
-          }
-          emit(GetPostsSuccessState());
-        }).catchError((error) {
-          emit(GetPostsErrorState());
-        });
-      } else {
-        // Handle the case where there are no saved posts.
-        emit(GetPostsSuccessState());
-      }
-    }).catchError((error) {
-      emit(GetPostsErrorState());
-    });
-  }
 
 }

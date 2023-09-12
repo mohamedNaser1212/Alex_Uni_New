@@ -263,6 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             backColor: defaultColor,
                             height: 40,
                             function: () {
+                              AppCubit.get(context).getSavePosts();
                               navigateTo(context: context, screen: const SavedScreen());
                             },
                           ),),
