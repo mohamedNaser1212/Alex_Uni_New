@@ -104,3 +104,15 @@ class DeleteSavedPostLoadingState extends AppStates{}
 class DeleteSavedPostSuccessState extends AppStates{}
 
 class DeleteSavedPostErrorState extends AppStates{}
+
+class AddSharePostLoadingState extends AppStates{}
+
+class AddSharePostSuccessState extends AppStates{}
+
+class AddSharePostErrorState extends AppStates{}
+
+class GetSharedPostsLoadingState extends AppStates{}
+
+class GetSharedPostsSuccessState extends AppStates{}
+
+class GetSharedPostsErrorState extends AppStates{}

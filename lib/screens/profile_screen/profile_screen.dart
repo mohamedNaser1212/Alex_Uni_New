@@ -22,6 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // TODO: implement initState
     super.initState();
     AppCubit.get(context).getMyPosts();
+    AppCubit.get(context).getSharePosts();
   }
   @override
   Widget build(BuildContext context) {
@@ -169,9 +170,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: [
-                                    const Text(
-                                      '100',
-                                      style: TextStyle(
+                                     Text(
+                                      '${cubit.myPosts.length+ cubit.sharePosts.length}',
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -289,6 +290,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             height: 20,
                           ),
                           itemCount: AppCubit.get(context).myPosts.length,
+                        ),
+                      ),
+                      const SizedBox(height: 20,),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            90,
+                          ),
+                        ),
+                        child: ListView.separated(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) => buildShareItem(
+                              AppCubit.get(context).sharePosts,
+                              index,
+                              context),
+                          separatorBuilder: (context, index) => const SizedBox(
+                            height: 20,
+                          ),
+                          itemCount: AppCubit.get(context).sharePosts.length,
                         ),
                       ),
                     ],
@@ -526,6 +547,319 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: () {},
                       child: Text(
                         '${posts[index].values.single.comments.length}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    InkWell(
+                      onTap: () {},
+                      child: const Icon(
+                        Icons.share_outlined,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    InkWell(
+                      onTap: () {},
+                      child: const Icon(
+                        Icons.bookmark_border_outlined,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    ),
+  );
+  Widget buildShareItem(List<SharePostModel> posts, index, context) => Card(
+    margin: const EdgeInsets.symmetric(horizontal: 14),
+    color: const Color(0xffE6EEFA),
+    elevation: 8,
+    clipBehavior: Clip.none,
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(
+                  '${AppCubit.get(context).user!.image}',
+                ),
+                radius: 25,
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  '${AppCubit.get(context).user!.name}',
+                                  style: const TextStyle(
+                                    height: 1.4,
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w900,
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.verified,
+                                  size: 16,
+                                  color: Colors.blue,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Container(
+            height: 1,
+            color: Colors.grey,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(
+                  '${posts[index].userImage}',
+                ),
+                radius: 25,
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  '${posts[index].userName}',
+                                  style: const TextStyle(
+                                    height: 1.4,
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w900,
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.verified,
+                                  size: 16,
+                                  color: Colors.blue,
+                                ),
+                              ],
+                            ),
+                            Text(
+                              '${posts[index].date}',
+                              style: const TextStyle(
+                                height: 1.4,
+                                fontSize: 12,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        if (posts[index].userId == uId)
+                          IconButton(
+                            onPressed: () {
+                              AppCubit.get(context).deletePost(
+                                  AppCubit.get(context).postsId[index]);
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              size: 20,
+                              color: Colors.grey,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Divider(
+              color: Colors.grey[350],
+              height: 1,
+            ),
+          ),
+          Text(
+            '${posts[index].text}',
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          if (posts[index].image != '')
+            Container(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Stack(
+                alignment: AlignmentDirectional.bottomCenter,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(46),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(
+                          '${posts[index].image}',
+                        ),
+                      ),
+                    ),
+                    child: Image(
+                      image: NetworkImage(
+                          '${posts[index].image}'),
+                      height: 120,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    color: Colors.black.withOpacity(0.6),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.favorite_outline_rounded,
+                            size: 18,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            '${posts[index].likes?.length}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          InkWell(
+                            onTap: () {},
+                            child: const Icon(
+                              Icons.comment_outlined,
+                              size: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          InkWell(
+                            onTap: () {},
+                            child: Text(
+                              '${posts[index].comments?.length}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          InkWell(
+                            onTap: () {},
+                            child: const Icon(
+                              Icons.share_outlined,
+                              size: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          InkWell(
+                            onTap: () {},
+                            child: const Icon(
+                              Icons.bookmark_border_outlined,
+                              size: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          if (posts[index].image == '')
+            Container(
+              width: double.infinity,
+              color: Colors.black.withOpacity(0.6),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                      },
+                      child: const Icon(
+                        Icons.favorite_outline_rounded,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      '${posts[index].likes?.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    InkWell(
+                      onTap: () {},
+                      child: const Icon(
+                        Icons.comment_outlined,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    InkWell(
+                      onTap: () {},
+                      child: Text(
+                        '${posts[index].comments?.length}',
                         style: const TextStyle(
                           color: Colors.white,
                         ),

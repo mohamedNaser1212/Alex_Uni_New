@@ -323,19 +323,6 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  List<UserModel> users = [];
-
-  void getAllUsers() {
-    users = [];
-    FirebaseFirestore.instance.collection('users').get().then((value) {
-      for (var element in value.docs) {
-        users.add(UserModel.fromJson(element.data()));
-      }
-      emit(AppGetUserSuccessState());
-    }).catchError((error) {
-      emit(AppGetUserErrorState(error.toString()));
-    });
-  }
 
   List<MessageModel> messages = [];
 
@@ -527,6 +514,53 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetSavedPostsErrorState());
     });
   }
+
+  addSharedPosts({
+    required String postId,
+    required int index,
+    required context,
+}){
+    emit(AddSharePostLoadingState());
+   SharePostModel sharePostModel=SharePostModel(
+       postId: postId,
+       text: posts[index].values.single.text,
+       date: posts[index].values.single.date,
+       userName: posts[index].values.single.userName,
+       userImage: posts[index].values.single.userImage,
+       userId: posts[index].values.single.userId,
+       likes: posts[index].values.single.likes,
+       comments: posts[index].values.single.comments,
+       image: posts[index].values.single.image,
+   );
+    FirebaseFirestore.instance.collection('users').doc(uId).update({
+      'sharePosts': FieldValue.arrayUnion([sharePostModel.toMap()]),
+    }).then((value) {
+      showFlushBar(
+          context: context,
+          message: 'Shared Successfully',
+      );
+      emit(AddSharePostSuccessState());
+    }).catchError((error) {
+      emit(AddSharePostErrorState());
+    });
+  }
+
+  List<SharePostModel> sharePosts=[];
+
+  getSharePosts(){
+    emit(GetSharedPostsLoadingState());
+    FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
+      sharePosts=[];
+      for(var element in value.data()!['sharePosts']){
+        sharePosts.add(SharePostModel.fromJson(element));
+      }
+      emit(GetSharedPostsSuccessState());
+    }).catchError((error) {
+      emit(GetSharedPostsErrorState());
+    });
+  }
+
+
   logout(context) {
     emit(AppLogoutLoadingState());
     FirebaseAuth.instance.signOut().then((value) {

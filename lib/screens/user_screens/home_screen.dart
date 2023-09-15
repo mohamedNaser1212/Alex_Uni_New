@@ -412,7 +412,13 @@ class HomeScreen extends StatelessWidget {
                               ),
                               const Spacer(),
                               InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  AppCubit.get(context).addSharedPosts(
+                                      postId: AppCubit.get(context).postsId[index],
+                                      index: index,
+                                      context: context
+                                  );
+                                },
                                 child: const Icon(
                                   Icons.share_outlined,
                                   size: 18,
