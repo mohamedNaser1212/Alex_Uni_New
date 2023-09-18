@@ -116,3 +116,9 @@ class GetSharedPostsLoadingState extends AppStates{}
 class GetSharedPostsSuccessState extends AppStates{}
 
 class GetSharedPostsErrorState extends AppStates{}
+
+class GetUniversityLoadingState extends AppStates{}
+
+class GetUniversitySuccessState extends AppStates{}
+
+class GetUniversityErrorState extends AppStates{}

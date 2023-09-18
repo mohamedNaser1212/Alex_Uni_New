@@ -1,8 +1,10 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/models/post_model.dart';
+import 'package:alex_uni_new/models/university_model.dart';
 import 'package:alex_uni_new/screens/chat_details/chat_details_screen.dart';
 import 'package:alex_uni_new/screens/comments/comments_screen.dart';
+import 'package:alex_uni_new/screens/universties/university_details_screen.dart';
 
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
@@ -41,11 +43,11 @@ class HomeScreen extends StatelessWidget {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) => buildFacultyItem(context),
+                  itemBuilder: (context, index) => buildFacultyItem(context,AppCubit.get(context).universities[index]),
                   separatorBuilder: (context, index) => const SizedBox(
                     width: 10,
                   ),
-                  itemCount: 10,
+                  itemCount: AppCubit.get(context).universities.length,
                 ),
               ),
               Padding(
@@ -120,8 +122,11 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget buildFacultyItem(context) => InkWell(
-        onTap: () {},
+  Widget buildFacultyItem(context,UniversityModel model) => InkWell(
+        onTap: () {
+          print(model.id);
+          navigateTo(context: context, screen: UniversityDetailsScreen(university: model,),);
+        },
         child: Column(
           children: [
             CircleAvatar(
@@ -130,17 +135,14 @@ class HomeScreen extends StatelessWidget {
               child: CircleAvatar(
                 backgroundColor: Colors.white,
                 radius: MediaQuery.of(context).size.width / 8,
-                child: Image.asset(
-                  'assets/images/college.png',
-                  fit: BoxFit.cover,
-                ),
+                child: Image(image: NetworkImage('${model.image}',),fit: BoxFit.cover,),
               ),
             ),
             const SizedBox(
               height: 10,
             ),
             Text(
-              lang == 'en' ? 'Science' : ' العلوم',
+              'Faculty of\n${model.name}',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: MediaQuery.of(context).size.width / 20,

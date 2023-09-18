@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:alex_uni_new/cache_helper.dart';
 
 import 'package:alex_uni_new/models/post_model.dart';
+import 'package:alex_uni_new/models/university_model.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
 import 'package:alex_uni_new/screens/chat_screens/chat_screen.dart';
@@ -590,6 +591,27 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+
+
+  List<UniversityModel> universities = [];
+  getUniversities() {
+    emit(GetUniversityLoadingState());
+    FirebaseFirestore.instance
+        .collection('Universities')
+        .orderBy('name')
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        UniversityModel currentUniversity=UniversityModel.fromJson(element.data());
+        currentUniversity.id=element.id;
+        universities.add(currentUniversity);
+      }
+    }).then((value) {
+      emit(GetUniversitySuccessState());
+    }).catchError((error) {
+      emit(GetUniversityErrorState());
+    });
+  }
 
 
 }
