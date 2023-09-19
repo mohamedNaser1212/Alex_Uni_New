@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/states/register_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,7 +19,6 @@ class RegisterCubit extends Cubit<RegisterStates>{
     emit(RegisterChangePasswordVisibilityState());
   }
 
-  UserModel user = UserModel();
 
   void userRegister({
     required String name,
@@ -33,15 +33,14 @@ class RegisterCubit extends Cubit<RegisterStates>{
       password: password,
     )
         .then((value) {
-      emit(RegisterSuccessState(value.user!.uid));
-      print(value.user!.email);
-      print(value.user!.uid);
+          uId= value.user!.uid;
       userCreate(
         name: name,
         email: email,
         phone: phone,
         uId: value.user!.uid,
       );
+      emit(RegisterSuccessState(value.user!.uid));
     }).catchError((error) {
       if (error is FirebaseAuthException) {
         if (error.code == 'weak-password') {
@@ -65,7 +64,7 @@ class RegisterCubit extends Cubit<RegisterStates>{
     required String phone,
   }) {
     emit(CreateUserLoadingState());
-    user = UserModel(
+   UserModel user = UserModel(
       name: name,
       uId: uId,
       email: email,
@@ -74,6 +73,7 @@ class RegisterCubit extends Cubit<RegisterStates>{
       cover:'',
       bio: '',
       savedPosts: [],
+     sharePosts: [],
     );
 
     FirebaseFirestore.instance

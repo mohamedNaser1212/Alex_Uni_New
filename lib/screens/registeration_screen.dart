@@ -4,6 +4,7 @@ import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/register_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
+import 'package:alex_uni_new/screens/user_layout_screen.dart';
 import 'package:alex_uni_new/states/register_states.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
@@ -35,18 +36,13 @@ class RegisterationScreenState extends State<RegisterationScreen> {
     return BlocProvider(
       create: (context) => RegisterCubit(),
       child: BlocConsumer<RegisterCubit, RegisterStates>(
-        listener: (context, state)async {
+        listener: (context, state){
           if (state is RegisterErrorState) {
             showFlushBar(context: context,message: state.error,);
-          } else if (state is RegisterSuccessState) {
-            uId = state.uId;
-            print('uId is ' + uId!);
-           await CacheHelper.saveData(key: 'uId', value: uId);
           } else if (state is CreateUserSuccessState) {
-            Navigator.pushReplacementNamed(
-              context,
-              LoginScreen.id,
-            );
+            CacheHelper.saveData(key: 'uId', value: uId).then((value){
+              navigateAndFinish(context: context, screen: const UserLayout());
+            });
           }
         },
         builder: (context, state) {
@@ -427,26 +423,30 @@ class RegisterationScreenState extends State<RegisterationScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                reusableElevatedButton(
-                                  width: MediaQuery.of(context).size.width/2,
-                                  backColor: const Color(0xffEBEBEB),
-                                  textColor: const Color(0xff3E657B),
-                                  label: lang == 'ar'
-                                      ? 'انشاء الحساب'
-                                      : 'Create Account',
-                                  function: () async {
-                                    await cubit.uploadProfileImage();
-                                    cubit.userRegister(
-                                      name: nameController.text,
-                                      email: emailController.text,
-                                      password: passwordController.text,
-                                      phone: phone!,
-                                    );
-                                    nameController.clear();
-                                    emailController.clear();
-                                    passwordController.clear();
-                                    confirmPasswordController.clear();
-                                  },
+                                ConditionalBuilder(
+                                  condition: state is! RegisterLoadingState,
+                                  builder: (context)=> reusableElevatedButton(
+                                    width: MediaQuery.of(context).size.width/2,
+                                    backColor: const Color(0xffEBEBEB),
+                                    textColor: const Color(0xff3E657B),
+                                    label: lang == 'ar'
+                                        ? 'انشاء الحساب'
+                                        : 'Create Account',
+                                    function: () async {
+                                      await cubit.uploadProfileImage();
+                                      cubit.userRegister(
+                                        name: nameController.text,
+                                        email: emailController.text,
+                                        password: passwordController.text,
+                                        phone: phone!,
+                                      );
+                                      nameController.clear();
+                                      emailController.clear();
+                                      passwordController.clear();
+                                      confirmPasswordController.clear();
+                                    },
+                                  ),
+                                  fallback: (context)=>const Center(child: CircularProgressIndicator(),),
                                 ),
                               ],
                             ),
