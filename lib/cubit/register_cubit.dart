@@ -69,7 +69,7 @@ class RegisterCubit extends Cubit<RegisterStates>{
       uId: uId,
       email: email,
       phone: phone,
-      image: uploadedProfileImageLink,
+      image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
       cover:'',
       bio: '',
       savedPosts: [],
@@ -86,55 +86,5 @@ class RegisterCubit extends Cubit<RegisterStates>{
       emit(CreateUserErrorState());
       print(onError.toString());
     });
-  }
-
-  int selectedRadioValue = 1;
-  void changeRadioValue(int value) {
-    selectedRadioValue = value;
-    emit(RegisterChangeRadioValueState());
-  }
-
-  bool showEmailField = true;
-  void changeEmailFieldState(bool value) {
-    showEmailField = value;
-    emit(RegisterChangeRadioValueState());
-  }
-
-  File? profileImage;
-  final picker = ImagePicker();
-
-  Future getProfileImage() async {
-    var pickedImage = await picker.pickImage(
-      source: ImageSource.gallery,
-    );
-    if(pickedImage !=null){
-      profileImage=File(pickedImage.path);
-      emit(RegisterChangeImageProfileSuccessState());
-    }else{
-      emit(RegisterChangeImageProfileErrorState());
-      print('error');
-    }
-  }
-
-  String uploadedProfileImageLink='';
-
-  Future uploadProfileImage() async {
-    emit(RegisterUploadImageProfileLoadingState());
-    firebase_storage.FirebaseStorage storage =
-        firebase_storage.FirebaseStorage.instance;
-    firebase_storage.Reference ref = storage.ref().child('users/${Uri.file(profileImage!.path).pathSegments.last}');
-    firebase_storage.UploadTask uploadTask = ref.putFile(profileImage!);
-    await uploadTask.whenComplete(() async {
-      uploadedProfileImageLink = await ref.getDownloadURL();
-      emit(RegisterUploadImageProfileSuccessState());
-    });
-  }
-
-
-  bool showImagePicker=false;
-
-  void changeShowImagePicker(){
-    showImagePicker=!showImagePicker;
-    emit(RegisterShowImagePickerChangedState());
   }
 }
