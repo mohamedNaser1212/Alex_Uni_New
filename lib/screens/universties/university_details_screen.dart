@@ -1,6 +1,7 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
-import 'package:alex_uni_new/reusable_widgets.dart';
+import 'package:alex_uni_new/screens/universties/postgraduate_tab.dart';
+import 'package:alex_uni_new/screens/universties/undergraduate_tab.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,54 +15,49 @@ class UniversityDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppCubit,AppStates>(
+    return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
-      builder: (context, state){
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('University Details'),
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.25,
-                  width: double.infinity,
-                  child: Image.network(
-                    '${university.image}',
+      builder: (context, state) {
+        return DefaultTabController(
+          length: 2,
+          child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: defaultColor,
+                leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Faculty Of ${university.name} ',
+                title: Text(
+                  'Faculty of ${university.name}',
                   style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    '${university.description}',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
+                centerTitle: true,
+                bottom: TabBar(
+                  indicatorColor: Colors.white,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  tabs: [
+                    Tab(
+                      text: 'Undergraduate Stage',
                     ),
-                  ),
+                    Tab(
+                      text: 'Postgraduate Stage',
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: reusableElevatedButton(
-                label: 'show departments',
-                function: (){},
-              backColor: defaultColor,
-            ),
-          ),
+              ),
+              body: TabBarView(
+                children: [
+                  UnderGraduateTab(),
+                  PostGraduateTab(),
+                ],
+              )),
         );
       },
     );

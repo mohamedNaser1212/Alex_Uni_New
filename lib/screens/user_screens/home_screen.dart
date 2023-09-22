@@ -5,11 +5,9 @@ import 'package:alex_uni_new/models/university_model.dart';
 import 'package:alex_uni_new/screens/chat_details/chat_details_screen.dart';
 import 'package:alex_uni_new/screens/comments/comments_screen.dart';
 import 'package:alex_uni_new/screens/universties/university_details_screen.dart';
-
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../reusable_widgets.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -43,7 +41,8 @@ class HomeScreen extends StatelessWidget {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) => buildFacultyItem(context,AppCubit.get(context).universities[index]),
+                  itemBuilder: (context, index) => buildFacultyItem(
+                      context, AppCubit.get(context).universities[index]),
                   separatorBuilder: (context, index) => const SizedBox(
                     width: 10,
                   ),
@@ -98,7 +97,7 @@ class HomeScreen extends StatelessWidget {
                     90,
                   ),
                 ),
-                child: ListView.separated(
+                child: ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (context, index) => buildPostItem(
@@ -106,9 +105,10 @@ class HomeScreen extends StatelessWidget {
                       AppCubit.get(context).post[index],
                       index,
                       context),
-                  separatorBuilder: (context, index) => const SizedBox(
-                    height: 20,
-                  ),
+                  // separatorBuilder: (context, index) => Container(
+                  //   color: const Color(0xffE6EEFA),
+                  //   height: 20,
+                  // ),
                   itemCount: AppCubit.get(context).posts.length,
                 ),
               ),
@@ -122,10 +122,17 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget buildFacultyItem(context,UniversityModel model) => InkWell(
-        onTap: () {
-          print(model.id);
-          navigateTo(context: context, screen: UniversityDetailsScreen(university: model,),);
+  Widget buildFacultyItem(context, UniversityModel model) => InkWell(
+        onTap: () async {
+          await AppCubit.get(context).getDepartments(
+            universityId: model.id!,
+          );
+          navigateTo(
+            context: context,
+            screen: UniversityDetailsScreen(
+              university: model,
+            ),
+          );
         },
         child: Column(
           children: [
@@ -135,7 +142,12 @@ class HomeScreen extends StatelessWidget {
               child: CircleAvatar(
                 backgroundColor: Colors.white,
                 radius: MediaQuery.of(context).size.width / 8,
-                child: Image(image: NetworkImage('${model.image}',),fit: BoxFit.cover,),
+                child: Image(
+                  image: NetworkImage(
+                    '${model.image}',
+                  ),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             const SizedBox(
@@ -232,9 +244,7 @@ class HomeScreen extends StatelessWidget {
       );
 
   Widget buildPostItem(List posts, PostModel model, index, context) => Card(
-        margin: const EdgeInsets.symmetric(horizontal: 14),
         color: const Color(0xffE6EEFA),
-        elevation: 8,
         clipBehavior: Clip.none,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -376,12 +386,16 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  if(isGuest == false)
-                                  AppCubit.get(context).updatePostLikes(
-                                    AppCubit.get(context).posts[index],
-                                  );
-                                  else{
-                                    showFlushBar(context: context, message: lang=='en'? 'You can\'t like posts as a guest': 'لا يمكنك الاعجاب بالمنشورات كزائر');
+                                  if (isGuest == false)
+                                    AppCubit.get(context).updatePostLikes(
+                                      AppCubit.get(context).posts[index],
+                                    );
+                                  else {
+                                    showFlushBar(
+                                        context: context,
+                                        message: lang == 'en'
+                                            ? 'You can\'t like posts as a guest'
+                                            : 'لا يمكنك الاعجاب بالمنشورات كزائر');
                                   }
                                 },
                                 child: Icon(
@@ -400,10 +414,15 @@ class HomeScreen extends StatelessWidget {
                               const SizedBox(width: 20),
                               InkWell(
                                 onTap: () {
-                                  AppCubit.get(context).getComments(postId: AppCubit.get(context).postsId[index]);
+                                  AppCubit.get(context).getComments(
+                                      postId:
+                                          AppCubit.get(context).postsId[index]);
                                   navigateTo(
-                                      context: context,
-                                      screen: CommentsScreen(postId: AppCubit.get(context).postsId[index],),
+                                    context: context,
+                                    screen: CommentsScreen(
+                                      postId:
+                                          AppCubit.get(context).postsId[index],
+                                    ),
                                   );
                                 },
                                 child: const Icon(
@@ -416,10 +435,10 @@ class HomeScreen extends StatelessWidget {
                               InkWell(
                                 onTap: () {
                                   AppCubit.get(context).addSharedPosts(
-                                      postId: AppCubit.get(context).postsId[index],
+                                      postId:
+                                          AppCubit.get(context).postsId[index],
                                       index: index,
-                                      context: context
-                                  );
+                                      context: context);
                                 },
                                 child: const Icon(
                                   Icons.share_outlined,
@@ -431,9 +450,9 @@ class HomeScreen extends StatelessWidget {
                               InkWell(
                                 onTap: () {
                                   AppCubit.get(context).addSavePosts(
-                                    postId: AppCubit.get(context).postsId[index],
-                                    index: index
-                                  );
+                                      postId:
+                                          AppCubit.get(context).postsId[index],
+                                      index: index);
                                 },
                                 child: const Icon(
                                   Icons.bookmark_border_outlined,
@@ -478,10 +497,13 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(width: 20),
                         InkWell(
                           onTap: () {
-                            AppCubit.get(context).getComments(postId: AppCubit.get(context).postsId[index]);
+                            AppCubit.get(context).getComments(
+                                postId: AppCubit.get(context).postsId[index]);
                             navigateTo(
                               context: context,
-                              screen: CommentsScreen(postId: AppCubit.get(context).postsId[index],),
+                              screen: CommentsScreen(
+                                postId: AppCubit.get(context).postsId[index],
+                              ),
                             );
                           },
                           child: const Icon(
@@ -503,9 +525,8 @@ class HomeScreen extends StatelessWidget {
                         InkWell(
                           onTap: () {
                             AppCubit.get(context).addSavePosts(
-                              postId: AppCubit.get(context).postsId[index],
-                              index: index
-                            );
+                                postId: AppCubit.get(context).postsId[index],
+                                index: index);
                           },
                           child: const Icon(
                             Icons.bookmark_border_outlined,

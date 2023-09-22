@@ -122,3 +122,9 @@ class GetUniversityLoadingState extends AppStates{}
 class GetUniversitySuccessState extends AppStates{}
 
 class GetUniversityErrorState extends AppStates{}
+
+class GetDepartmentLoadingState extends AppStates{}
+
+class GetDepartmentSuccessState extends AppStates{}
+
+class GetDepartmentErrorState extends AppStates{}

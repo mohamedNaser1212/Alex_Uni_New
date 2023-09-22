@@ -1,7 +1,6 @@
 import 'dart:io';
-
 import 'package:alex_uni_new/cache_helper.dart';
-
+import 'package:alex_uni_new/models/department_model.dart';
 import 'package:alex_uni_new/models/post_model.dart';
 import 'package:alex_uni_new/models/university_model.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
@@ -610,6 +609,38 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetUniversitySuccessState());
     }).catchError((error) {
       emit(GetUniversityErrorState());
+    });
+  }
+
+  List<DepartmentModel> unGraduateDepartments = [];
+  List<DepartmentModel> postGraduateDepartments = [];
+  getDepartments({
+    required String universityId,
+  }) {
+    unGraduateDepartments = [];
+    postGraduateDepartments = [];
+    emit(GetDepartmentLoadingState());
+    FirebaseFirestore.instance
+        .collection('Universities')
+        .doc(universityId)
+        .collection('Departments')
+        .orderBy('name')
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        DepartmentModel currentDepartment=DepartmentModel.fromJson(element.data());
+        currentDepartment.id=element.id;
+        if(currentDepartment.underGraduate==true){
+          unGraduateDepartments.add(currentDepartment);
+        }
+          if(currentDepartment.postGraduate==true){
+            postGraduateDepartments.add(currentDepartment);
+          }
+      }
+    }).then((value) {
+      emit(GetDepartmentSuccessState());
+    }).catchError((error) {
+      emit(GetDepartmentErrorState());
     });
   }
 
