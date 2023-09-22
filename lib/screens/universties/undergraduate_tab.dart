@@ -95,6 +95,8 @@ class UnderGraduateTab extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(8,8,8,0,),
             child: Text(
               '${department.name}',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,

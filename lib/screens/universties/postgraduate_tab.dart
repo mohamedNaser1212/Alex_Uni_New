@@ -94,6 +94,8 @@ class PostGraduateTab extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(8,8,8,0,),
             child: Text(
               '${department.name}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
