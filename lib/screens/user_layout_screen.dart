@@ -11,9 +11,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../constants.dart';
 
-class UserLayout extends StatelessWidget {
+class UserLayout extends StatefulWidget {
   const UserLayout({Key? key}) : super(key: key);
   static String id = 'userlayout';
+
+  @override
+  State<UserLayout> createState() => _UserLayoutState();
+}
+
+class _UserLayoutState extends State<UserLayout> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    AppCubit.get(context).getUserData();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(

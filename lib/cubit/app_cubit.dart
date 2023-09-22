@@ -394,7 +394,6 @@ class AppCubit extends Cubit<AppStates> {
     ImagePicker().pickImage(source: source).then((value) {
       image = File(value!.path);
       uploadImage(receiverId);
-      emit(SelectImageSuccessState());
     }).catchError((error) {
       emit(SelectImageErrorState());
     });
@@ -428,23 +427,25 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   uploadImage(String receiverId) {
-    emit(UploadImageErrorState());
+    emit(UploadImageLoadingState());
     FirebaseStorage.instance
         .ref()
         .child('chats/${Uri.file(image!.path).pathSegments.last}')
         .putFile(image!)
         .then((value) {
-      value.ref.getDownloadURL().then((value) {
+      value.ref.getDownloadURL().then((value)async {
+        var now = await GMT.now();
         sendImage(
           image: value,
-          dateTime: DateTime.now().toString(),
           receiverId: receiverId,
           senderId: uId!,
+          dateTime: now.toString(),
         );
       }).catchError((error) {
         emit(UploadImageErrorState());
       });
     }).catchError((error) {
+      print(error.toString());
       emit(UploadImageErrorState());
     });
   }

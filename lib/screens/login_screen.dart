@@ -334,7 +334,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           onTap: () {
                                             navigateTo(
                                               context: context,
-                                              screen: RegisterationScreen(),
+                                              screen: const RegistrationScreen(),
                                             );
                                           },
                                           child: Text(
