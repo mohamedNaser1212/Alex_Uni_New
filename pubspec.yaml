@@ -58,6 +58,7 @@ dependencies:
   chat_bubbles: ^1.5.0
   gmt: ^0.7.1
   animated_bottom_navigation_bar: ^1.2.0
+  country_picker: ^2.0.21
 
 dev_dependencies:
   flutter_test:

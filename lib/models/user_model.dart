@@ -8,19 +8,27 @@ class UserModel {
   String? cover;
   String? bio;
   String? phone;
+  String? passportId;
+  String? address;
+  String? country;
+  String? college;
   List<SavePostsModel>?savedPosts;
   List<SharePostModel>? sharePosts;
 
   UserModel({
-    this.uId,
-    this.name,
-    this.email,
-    this.image,
-    this.cover,
-    this.bio,
-    this.phone,
-    this.savedPosts,
-    this.sharePosts,
+    required this.uId,
+    required this.name,
+    required this.email,
+    required this.image,
+    required this.cover,
+    required this.bio,
+    required this.phone,
+    required this.country,
+    required this.college,
+    required this.address,
+    required this.passportId,
+    required this.savedPosts,
+    required this.sharePosts,
   });
 
   UserModel.fromJson(Map<String,dynamic>? json){
@@ -31,6 +39,10 @@ class UserModel {
     uId=json['uId'];
     bio=json['bio'];
     phone=json['phone'];
+    country=json['country'];
+    college=json['college'];
+    address=json['address'];
+    passportId=json['passportId'];
     savedPosts = List.from(json['savedPosts']).map((e) => SavePostsModel.fromJson(e)).toList();
     sharePosts = List.from(json['sharePosts']).map((e) => SharePostModel.fromJson(e)).toList();
   }
@@ -44,6 +56,10 @@ class UserModel {
       'uId':uId,
       'bio':bio,
       'phone':phone,
+      'country':country,
+      'college':college,
+      'address':address,
+      'passportId':passportId,
       'savedPosts': savedPosts!.map((e) => e.toMap()).toList(),
       'sharePosts': sharePosts!.map((e) => e.toMap()).toList(),
     };

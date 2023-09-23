@@ -99,7 +99,16 @@ class AppCubit extends Cubit<AppStates> {
         phone: phone,
         email: user!.email,
         uId: user!.uId,
-        image: image ?? user!.image);
+        image: image ?? user!.image,
+        cover: user!.cover,
+        bio: user!.bio,
+        college: user!.college,
+        country: user!.country,
+        passportId: user!.passportId,
+        address: user!.address,
+        savedPosts: user!.savedPosts,
+        sharePosts: user!.sharePosts,
+    );
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId)

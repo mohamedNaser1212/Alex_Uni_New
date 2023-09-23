@@ -1,30 +1,24 @@
-import 'dart:io';
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/states/register_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import '../models/user_model.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class RegisterCubit extends Cubit<RegisterStates>{
   RegisterCubit() : super(RegisterInitialState());
 
   static RegisterCubit get(context) => BlocProvider.of(context);
 
-  bool obsecurePassword = true;
-  void changePasswordVisibility(){
-    obsecurePassword = !obsecurePassword;
-    emit(RegisterChangePasswordVisibilityState());
-  }
-
-
   void userRegister({
     required String name,
     required String email,
     required String password,
     required String phone,
+    required String passportId,
+    required String address,
+    required String college,
+    required String country,
   }) {
     emit(RegisterLoadingState());
     FirebaseAuth.instance
@@ -38,6 +32,10 @@ class RegisterCubit extends Cubit<RegisterStates>{
         name: name,
         email: email,
         phone: phone,
+        passportId: passportId,
+        address: address,
+        college: college,
+        country: country,
         uId: value.user!.uid,
       );
       emit(RegisterSuccessState(value.user!.uid));
@@ -53,7 +51,6 @@ class RegisterCubit extends Cubit<RegisterStates>{
       } else {
         emit(RegisterErrorState(error: 'An error occurred: $error'));
       }
-      print(error.toString());
     });
   }
 
@@ -62,6 +59,10 @@ class RegisterCubit extends Cubit<RegisterStates>{
     required String email,
     required String uId,
     required String phone,
+    required String passportId,
+    required String address,
+    required String college,
+    required String country,
   }) {
     emit(CreateUserLoadingState());
    UserModel user = UserModel(
@@ -72,6 +73,10 @@ class RegisterCubit extends Cubit<RegisterStates>{
       image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
       cover:'',
       bio: '',
+      passportId: passportId,
+      address: address,
+      college: college,
+      country: country,
       savedPosts: [],
      sharePosts: [],
     );
@@ -84,7 +89,6 @@ class RegisterCubit extends Cubit<RegisterStates>{
       emit(CreateUserSuccessState());
     }).catchError((onError) {
       emit(CreateUserErrorState());
-      print(onError.toString());
     });
   }
 }
