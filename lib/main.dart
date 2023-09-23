@@ -1,7 +1,6 @@
 import 'package:alex_uni_new/cache_helper.dart';
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/bloc_observer.dart';
-import 'package:alex_uni_new/cubit/guest_cubit.dart';
 import 'package:alex_uni_new/firebase_options.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
 import 'package:alex_uni_new/screens/user_layout_screen.dart';
@@ -79,9 +78,6 @@ class _MyAppState extends State<MyApp> {
             ..getPosts()
             ..getMyPosts()
             ..getUniversities(),
-        ),
-        BlocProvider(
-          create: (BuildContext context) => GuestCubit(),
         ),
       ],
       child: MaterialApp(

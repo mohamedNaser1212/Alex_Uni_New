@@ -187,6 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               InkWell(
                                                 onTap: () {
                                                   isGuest = true;
+                                                  uId=null;
                                                   navigateAndFinish(
                                                     context: context,
                                                     screen:

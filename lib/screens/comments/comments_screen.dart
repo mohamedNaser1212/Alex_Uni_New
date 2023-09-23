@@ -38,7 +38,7 @@ class CommentsScreen extends StatelessWidget {
                 separatorBuilder: (context,index)=>const SizedBox(height: 10,),
                 itemCount: AppCubit.get(context).comments.length
             ),
-            bottomNavigationBar: Padding(
+            bottomNavigationBar: !isGuest? Padding(
               padding: const EdgeInsets.all(15.0),
               child: Row(
                 children: [
@@ -98,7 +98,7 @@ class CommentsScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            )
+            ):null,
         );
       },
     );

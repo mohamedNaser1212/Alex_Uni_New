@@ -384,19 +384,12 @@ class HomeScreen extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
+                              if(isGuest==false)
                               InkWell(
                                 onTap: () {
-                                  if (isGuest == false)
                                     AppCubit.get(context).updatePostLikes(
                                       AppCubit.get(context).posts[index],
                                     );
-                                  else {
-                                    showFlushBar(
-                                        context: context,
-                                        message: lang == 'en'
-                                            ? 'You can\'t like posts as a guest'
-                                            : 'لا يمكنك الاعجاب بالمنشورات كزائر');
-                                  }
                                 },
                                 child: Icon(
                                   Icons.favorite_outline_rounded,
@@ -404,13 +397,16 @@ class HomeScreen extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                               ),
+                              if(isGuest==false)
                               const SizedBox(width: 5),
+                              if(isGuest==false)
                               Text(
                                 '${posts[index].values.single.likes.length}',
                                 style: const TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
+                              if(isGuest==false)
                               const SizedBox(width: 20),
                               InkWell(
                                 onTap: () {
@@ -432,6 +428,7 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                               const Spacer(),
+                              if(isGuest==false)
                               InkWell(
                                 onTap: () {
                                   AppCubit.get(context).addSharedPosts(
@@ -446,7 +443,9 @@ class HomeScreen extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                               ),
+                              if(isGuest==false)
                               const SizedBox(width: 20),
+                              if(isGuest==false)
                               InkWell(
                                 onTap: () {
                                   AppCubit.get(context).addSavePosts(
@@ -475,6 +474,7 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
+                        if(isGuest == false)
                         InkWell(
                           onTap: () {
                             AppCubit.get(context).updatePostLikes(
@@ -487,14 +487,17 @@ class HomeScreen extends StatelessWidget {
                             color: Colors.white,
                           ),
                         ),
-                        const SizedBox(width: 5),
+                        if(isGuest==false)
+                        const SizedBox(width: 5,),
+                        if(isGuest==false)
                         Text(
                           '${posts[index].values.single.likes.length}',
                           style: const TextStyle(
                             color: Colors.white,
                           ),
                         ),
-                        const SizedBox(width: 20),
+                        if(isGuest==false)
+                        const SizedBox(width: 20,),
                         InkWell(
                           onTap: () {
                             AppCubit.get(context).getComments(
@@ -513,6 +516,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         const Spacer(),
+                        if(isGuest==false)
                         InkWell(
                           onTap: () {},
                           child: const Icon(
@@ -521,7 +525,9 @@ class HomeScreen extends StatelessWidget {
                             color: Colors.white,
                           ),
                         ),
+                        if(isGuest==false)
                         const SizedBox(width: 20),
+                        if(isGuest==false)
                         InkWell(
                           onTap: () {
                             AppCubit.get(context).addSavePosts(

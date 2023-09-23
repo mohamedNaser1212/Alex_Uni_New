@@ -576,6 +576,7 @@ class AppCubit extends Cubit<AppStates> {
     FirebaseAuth.instance.signOut().then((value) {
       CacheHelper.removeData(key: 'uId').then((value) {
         currentIndex = 0;
+        uId = null;
         navigateAndFinish(
           context: context,
           screen: const LoginScreen(),

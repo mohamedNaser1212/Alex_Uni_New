@@ -8,8 +8,8 @@ import 'package:alex_uni_new/states/app_states.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../constants.dart';
+import 'login_screen.dart';
 
 class UserLayout extends StatefulWidget {
   const UserLayout({Key? key}) : super(key: key);
@@ -24,7 +24,9 @@ class _UserLayoutState extends State<UserLayout> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    AppCubit.get(context).getUserData();
+    if(isGuest==false) {
+      AppCubit.get(context).getUserData();
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,21 @@ class _UserLayoutState extends State<UserLayout> {
             title: Text(
               AppCubit.get(context).titles[AppCubit.get(context).currentIndex],
             ),
+              actions: [
+                if(isGuest)
+                IconButton(
+                  onPressed: () {
+                    isGuest=false;
+                    navigateTo(
+                      context: context,
+                      screen: LoginScreen(),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.login,
+                  ),
+                ),
+              ],
           ),
           drawer: isGuest==false? Drawer(
             child: ListView(
@@ -263,9 +280,8 @@ class _UserLayoutState extends State<UserLayout> {
               ],
             ),
           ): null,
-          body:
-              AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
-          bottomNavigationBar: AnimatedBottomNavigationBar(
+          body: AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
+          bottomNavigationBar: !isGuest? AnimatedBottomNavigationBar(
             icons: AppCubit.get(context).bottomNavIcons,
             backgroundColor: const Color(0xffE6EEFA),
             elevation: 10,
@@ -273,37 +289,25 @@ class _UserLayoutState extends State<UserLayout> {
             activeIndex: AppCubit.get(context).currentIndex,
             gapLocation: GapLocation.center,
             onTap: (index) {
-              if (isGuest == false) {
                 if (index == 1) {
                   navigateTo(context: context, screen: ChatScreen());
                 } else {
                   AppCubit.get(context).changeBottomNavBar(index);
                 }
-              }else {
-                showFlushBar(
-                    context: context,
-                    message: lang == 'en'
-                        ? 'You must login first'
-                        : 'يجب عليك تسجيل الدخول اولا');
-              }
             },
-          ),
-          floatingActionButton: FloatingActionButton(
+          ):null,
+          floatingActionButton: !isGuest? FloatingActionButton(
             onPressed: () {
-              if(isGuest==false) {
                 navigateTo(
                 context: context,
                 screen: const AddPostsScreen(),
               );
-              }else{
-                showFlushBar(context: context, message: lang=='en'?'You must login first':'يجب عليك تسجيل الدخول اولا');
-              }
             },
             backgroundColor: defaultColor,
             child: const Icon(
               Icons.add,
             ),
-          ),
+          ):null,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
         );
