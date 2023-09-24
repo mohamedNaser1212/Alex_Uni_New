@@ -28,3 +28,19 @@ class RegisterUploadImageProfileLoadingState extends RegisterStates {}
 
 class RegisterShowImagePickerChangedState extends RegisterStates {}
 
+
+
+class GetUniversitiesLoadingState extends RegisterStates {}
+class GetUniversitiesSuccessState extends RegisterStates {}
+class GetUniversitiesErrorState extends RegisterStates {
+  final String error;
+  GetUniversitiesErrorState({required this.error});
+}
+
+class GetDepartmentsLoadingState extends RegisterStates {}
+class GetDepartmentsSuccessState extends RegisterStates {}
+class GetDepartmentsErrorState extends RegisterStates {
+  final String error;
+  GetDepartmentsErrorState({required this.error});
+}
+

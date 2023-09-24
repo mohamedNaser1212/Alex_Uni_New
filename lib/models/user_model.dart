@@ -7,11 +7,14 @@ class UserModel {
   String? image;
   String? cover;
   String? bio;
+  String? universityname;
   String? phone;
   String? passportId;
   String? address;
   String? country;
-  String? college;
+  bool? underGraduate;
+  bool? postGraduate;
+
   List<SavePostsModel>?savedPosts;
   List<SharePostModel>? sharePosts;
 
@@ -24,7 +27,9 @@ class UserModel {
     required this.bio,
     required this.phone,
     required this.country,
-    required this.college,
+    required this.universityname,
+    required this.underGraduate,
+    required this.postGraduate,
     required this.address,
     required this.passportId,
     required this.savedPosts,
@@ -40,7 +45,10 @@ class UserModel {
     bio=json['bio'];
     phone=json['phone'];
     country=json['country'];
-    college=json['college'];
+    universityname=json['universityname'];
+    underGraduate=json['underGraduate'];
+    postGraduate=json['postGraduate'];
+
     address=json['address'];
     passportId=json['passportId'];
     savedPosts = List.from(json['savedPosts']).map((e) => SavePostsModel.fromJson(e)).toList();
@@ -57,7 +65,10 @@ class UserModel {
       'bio':bio,
       'phone':phone,
       'country':country,
-      'college':college,
+      'universityname':universityname,
+      'underGraduate':underGraduate,
+      'postGraduate':postGraduate,
+
       'address':address,
       'passportId':passportId,
       'savedPosts': savedPosts!.map((e) => e.toMap()).toList(),

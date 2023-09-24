@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:alex_uni_new/constants.dart';
+import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/cubit/register_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/states/register_states.dart';
@@ -11,42 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
-
-TextEditingController nameController = TextEditingController();
-TextEditingController emailController = TextEditingController();
-TextEditingController passwordController = TextEditingController();
-TextEditingController confirmPasswordController = TextEditingController();
-TextEditingController idController = TextEditingController();
-TextEditingController addressController = TextEditingController();
-TextEditingController countryController = TextEditingController();
-String? phone;
-List<String>colleges=[
-  'Faculty of Arts',
-  'Faculty of Law',
-  'Faculty of business',
-  'Faculty of Engineering',
-  'Faculty of Science',
-  'Faculty of Agriculture',
-  'Faculty of Medicine',
-  'Faculty of Pharmacy',
-  'Faculty of Nursing',
-  'Faculty of Physical Education for Girls',
-  'Faculty of Physical Education for Boys',
-  'High Institute of Public Health',
-  'Faculty of Fine Arts',
-  'Faculty of Agriculture (Saba Basha) ',
-  'Faculty of Education',
-  'Faculty of Dentistry',
-  'Institute of Graduate Studies and Research',
-  'Faculty of Veterinary Medicine',
-  'Institute of Medical Research',
-  'Faculty of Tourism and Hotels',
-  'Faculty of Specific Education',
-  'Faculty of Education for Early Childhood',
-  'Faculty of Economic Studies & Political Science',
-  'Faculty of Computing and Data Science'
-];
-String begin=colleges[0];
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
 
@@ -55,23 +20,41 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController idController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController countryController = TextEditingController();
+  String? phone;
+  bool underGraduateCheckbox = false;
+  String? universityError;
+  String? departmentError;
+  bool postGraduateCheckbox = false;
+  bool isUndergraduateSelected = true;
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     bool isArabic = lang == 'ar';
     TextDirection textDirection =
-    isArabic ? TextDirection.rtl : TextDirection.ltr;
+        isArabic ? TextDirection.rtl : TextDirection.ltr;
     return BlocProvider(
       create: (context) => RegisterCubit(),
       child: BlocConsumer<RegisterCubit, RegisterStates>(
-        listener: (context, state){
+        listener: (context, state) {
           if (state is RegisterErrorState) {
-            showFlushBar(context: context,message: state.error,);
+            showFlushBar(
+              context: context,
+              message: state.error,
+            );
           } else if (state is CreateUserSuccessState) {
             Navigator.pop(context);
           }
         },
         builder: (context, state) {
+          RegisterCubit cubit = RegisterCubit.get(context);
           return Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -92,8 +75,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           height: MediaQuery.of(context).size.height / 2.5,
                           decoration: const BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage(
-                                  'assets/images/Waiting-image.png'),
+                              image:
+                                  AssetImage('assets/images/Waiting-image.png'),
                               fit: BoxFit.fitWidth,
                             ),
                           ),
@@ -140,8 +123,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 ),
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(15),
                                     borderSide: const BorderSide(
                                       color: Colors.white,
                                     ),
@@ -162,9 +144,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 height: 10,
                               ),
                               Text(
-                                isArabic
-                                    ? 'البريد الألكتروني'
-                                    : 'Your Email',
+                                isArabic ? 'البريد الألكتروني' : 'Your Email',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Inter',
@@ -184,8 +164,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     borderSide: const BorderSide(
                                       color: Color(0xffFFFFFF),
                                     ),
-                                    borderRadius:
-                                    BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(15),
                                   ),
                                 ),
                                 textDirection: textDirection,
@@ -222,7 +201,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   color: Color(0xffffffff),
                                 ),
                                 decoration: const InputDecoration(
-
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(20),
@@ -234,11 +212,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 ),
                                 initialCountryCode: 'EG',
                                 onChanged: (data) {
-
-                                  phone = data.completeNumber ;
-
-
-
+                                  phone = data.completeNumber;
                                 },
                               ),
                               const SizedBox(
@@ -262,8 +236,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 controller: passwordController,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(15),
                                   ),
                                 ),
                                 obscureText: true,
@@ -303,8 +276,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     borderSide: const BorderSide(
                                       color: Color(0xffFFFFFF),
                                     ),
-                                    borderRadius:
-                                    BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(15),
                                   ),
                                 ),
                                 obscureText: true,
@@ -343,8 +315,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 controller: idController,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(15),
                                   ),
                                 ),
                                 obscureText: false,
@@ -379,8 +350,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 controller: addressController,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(15),
                                   ),
                                 ),
                                 obscureText: false,
@@ -412,20 +382,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 style: const TextStyle(
                                   color: Color(0xffffffff),
                                 ),
-                                onTap: (){
-                                  FocusScope.of(context).requestFocus( FocusNode());
+                                onTap: () {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
                                   showCountryPicker(
                                     context: context,
                                     onSelect: (Country country) {
-                                      countryController.text=country.flagEmoji+country.displayNameNoCountryCode;
+                                      countryController.text =
+                                          country.flagEmoji +
+                                              country.displayNameNoCountryCode;
                                     },
                                   );
                                 },
                                 controller: countryController,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(15),
                                   ),
                                 ),
                                 obscureText: false,
@@ -454,48 +426,108 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 height: 10,
                               ),
                               Container(
-                                height: 40,
                                 decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    border: Border.all(
-                                        width: 2, color: Colors.blue),
-                                    borderRadius: BorderRadius.circular(88)),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 20.0, right: 20),
-                                  child: DropdownButton(
-                                    alignment: Alignment.center,
-                                    underline: const SizedBox(),
-                                    iconSize: 35,
-                                    iconDisabledColor: Colors.blue,
-                                    iconEnabledColor: Colors.blue,
-                                    icon: const Icon(
-                                      Icons.arrow_drop_down_sharp,
-                                      size: 28,
-                                    ),
-                                    value: begin,
-                                    items: colleges
-                                        .map(
-                                          (e) => DropdownMenuItem(
-                                        value: e,
-                                        child: SizedBox(
-                                          width: MediaQuery.of(context).size.width * 0.7,
-                                          child: Text(
-                                              e,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                          ),
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 2.0,
+                                  ),
+                                ),
+                                child: DropdownButton(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  underline: const SizedBox(),
+                                  alignment: Alignment.center,
+                                  isExpanded: true,
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  iconSize: 35,
+                                  icon: const Icon(
+                                    Icons.arrow_drop_down_sharp,
+                                    size: 28,
+                                  ),
+                                  value: cubit.currentSelectedUniversity,
+                                  items: cubit.universities
+                                      .map(
+                                        (e) => DropdownMenuItem(
+                                          value: e,
+                                          child: Text(e.name!),
                                         ),
-                                      ),
-                                    )
-                                        .toList(),
-                                    onChanged: (String? value) {
+                                      )
+                                      .toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      cubit.currentSelectedUniversity = value;
+
+                                      // Clear the university error when a selection is made
+                                      universityError = null;
+                                    });
+                                  },
+                                ),
+                              ),
+                              if (universityError !=
+                                  null) // Display error message if no university is selected
+                                Text(
+                                  universityError!,
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+
+                              //make a radio botton to choose between post and under graduate
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                isArabic
+                                    ? 'المرحلة الدراسية'
+                                    : 'Academic Level',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xffffffff),
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+
+                              Row(
+                                children: [
+                                  Radio<bool>(
+                                    value: true,
+                                    groupValue: isUndergraduateSelected,
+                                    onChanged: (bool? value) {
                                       setState(() {
-                                        begin = value!;
+                                        isUndergraduateSelected = value!;
                                       });
                                     },
                                   ),
-                                ),
+                                  Text(
+                                    isArabic ? 'البكالوريوس' : 'Undergraduate',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xffffffff),
+                                      fontFamily: 'Inter',
+                                    ),
+                                  ),
+                                  Radio<bool>(
+                                    value: false,
+                                    groupValue: isUndergraduateSelected,
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        isUndergraduateSelected = value!;
+                                      });
+                                    },
+                                  ),
+                                  Text(
+                                    isArabic ? 'الماجستير' : 'Postgraduate',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xffffffff),
+                                      fontFamily: 'Inter',
+                                    ),
+                                  ),
+                                ],
                               ),
+
                               const SizedBox(
                                 height: 10,
                               ),
@@ -511,9 +543,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                       Navigator.pop(context);
                                     },
                                     child: Text(
-                                      lang == 'ar'
-                                          ? 'تسجيل الدخول'
-                                          : 'Login',
+                                      lang == 'ar' ? 'تسجيل الدخول' : 'Login',
                                     ),
                                   ),
                                 ],
@@ -523,24 +553,30 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               ),
                               ConditionalBuilder(
                                 condition: state is! RegisterLoadingState,
-                                builder: (context)=>reusableElevatedButton(
+                                builder: (context) => reusableElevatedButton(
                                     label: 'Sign Up',
-                                    function: (){
-                                      if (formKey.currentState!.validate()&&phone!.isNotEmpty) {
+                                    function: () {
+                                      if (formKey.currentState!.validate() &&
+                                          phone!.isNotEmpty) {
                                         RegisterCubit.get(context).userRegister(
                                           name: nameController.text,
                                           email: emailController.text,
                                           password: passwordController.text,
                                           phone: phone!,
+                                          universityname: cubit
+                                              .currentSelectedUniversity!.name!,
                                           passportId: idController.text,
                                           address: addressController.text,
                                           country: countryController.text,
-                                          college: begin,
+                                          underGraduate: isUndergraduateSelected,
+                                          postGraduate: !isUndergraduateSelected,
                                         );
                                       }
-                                    }
-                                ),
-                                fallback: (context)=> Center(child: Platform.isIOS?const CupertinoActivityIndicator():const CircularProgressIndicator()),
+                                    }),
+                                fallback: (context) => Center(
+                                    child: Platform.isIOS
+                                        ? const CupertinoActivityIndicator()
+                                        : const CircularProgressIndicator()),
                               )
                             ],
                           ),
@@ -557,4 +593,3 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 }
-

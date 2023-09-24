@@ -103,13 +103,16 @@ class AppCubit extends Cubit<AppStates> {
         image: image ?? user!.image,
         cover: user!.cover,
         bio: user!.bio,
-        college: user!.college,
+        universityname: user!.universityname,
         country: user!.country,
         passportId: user!.passportId,
         address: user!.address,
         savedPosts: user!.savedPosts,
         sharePosts: user!.sharePosts,
+        underGraduate: user!.underGraduate,
+        postGraduate: user!.postGraduate
     );
+
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
@@ -623,6 +626,20 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetUniversityErrorState());
     });
   }
+// List<PostModel> likedPosts=[];
+// getLikedPosts(){
+//   likedPosts=[];
+//   emit(GetLikedPostsLoadingState());
+//   FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
+//     for(var element in value.data()!['likedPosts']){
+//       likedPosts.add(PostModel.fromJson(element));
+//     }
+//     emit(GetLikedPostsSuccessState());
+//   }).catchError((error) {
+//     emit(GetLikedPostsErrorState());
+//   });
+//
+// }
 
   List<DepartmentModel> unGraduateDepartments = [];
   List<DepartmentModel> postGraduateDepartments = [];

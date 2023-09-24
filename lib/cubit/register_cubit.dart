@@ -3,12 +3,22 @@ import 'package:alex_uni_new/states/register_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../models/department_model.dart';
+import '../models/university_model.dart';
 import '../models/user_model.dart';
+import '../states/app_states.dart';
 
 class RegisterCubit extends Cubit<RegisterStates>{
-  RegisterCubit() : super(RegisterInitialState());
+  RegisterCubit() : super(RegisterInitialState()){
+    getUniversities();
+  }
 
   static RegisterCubit get(context) => BlocProvider.of(context);
+  UniversityModel? currentSelectedUniversity = null;
+  DepartmentModel? currentSelectedDepartment = null;
+  bool selecteddegree=false;
+
 
   void userRegister({
     required String name,
@@ -17,7 +27,10 @@ class RegisterCubit extends Cubit<RegisterStates>{
     required String phone,
     required String passportId,
     required String address,
-    required String college,
+    required String universityname,
+    required bool underGraduate,
+    required bool postGraduate,
+
     required String country,
   }) {
     emit(RegisterLoadingState());
@@ -32,9 +45,12 @@ class RegisterCubit extends Cubit<RegisterStates>{
         name: name,
         email: email,
         phone: phone,
+        underGraduate: underGraduate,
+        postGraduate: postGraduate,
         passportId: passportId,
         address: address,
-        college: college,
+        universityname: universityname,
+
         country: country,
         uId: value.user!.uid,
       );
@@ -61,7 +77,10 @@ class RegisterCubit extends Cubit<RegisterStates>{
     required String phone,
     required String passportId,
     required String address,
-    required String college,
+    required String universityname,
+    required bool underGraduate,
+    required bool postGraduate,
+
     required String country,
   }) {
     emit(CreateUserLoadingState());
@@ -74,8 +93,11 @@ class RegisterCubit extends Cubit<RegisterStates>{
       cover:'',
       bio: '',
       passportId: passportId,
+      underGraduate: underGraduate,
+      postGraduate: postGraduate,
       address: address,
-      college: college,
+      universityname: universityname,
+
       country: country,
       savedPosts: [],
      sharePosts: [],
@@ -91,4 +113,74 @@ class RegisterCubit extends Cubit<RegisterStates>{
       emit(CreateUserErrorState());
     });
   }
+  List<UniversityModel> universities = [];
+  getUniversities() {
+    emit(GetUniversitiesLoadingState());
+    FirebaseFirestore.instance
+        .collection('Universities')
+        .orderBy('name')
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        UniversityModel currentUniversity=UniversityModel.fromJson(element.data());
+        currentUniversity.id=element.id;
+        universities.add(currentUniversity);
+      }
+    }).then((value) {
+      emit(GetUniversitiesSuccessState());
+    }).catchError((error) {
+      emit(GetUniversitiesErrorState(error: error.toString()));
+    });
+  }
+// List<PostModel> likedPosts=[];
+// getLikedPosts(){
+//   likedPosts=[];
+//   emit(GetLikedPostsLoadingState());
+//   FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
+//     for(var element in value.data()!['likedPosts']){
+//       likedPosts.add(PostModel.fromJson(element));
+//     }
+//     emit(GetLikedPostsSuccessState());
+//   }).catchError((error) {
+//     emit(GetLikedPostsErrorState());
+//   });
+//
+// }
+
+  List<DepartmentModel> unGraduateDepartments = [];
+  List<DepartmentModel> postGraduateDepartments = [];
+  getDepartments({
+    required String universityId,
+  }) {
+    unGraduateDepartments = [];
+    postGraduateDepartments = [];
+    emit(GetDepartmentsLoadingState());
+    FirebaseFirestore.instance
+        .collection('Universities')
+        .doc(universityId)
+        .collection('Departments')
+        .orderBy('name')
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        DepartmentModel currentDepartment=DepartmentModel.fromJson(element.data());
+        currentDepartment.id=element.id;
+        if(currentDepartment.underGraduate==true){
+          unGraduateDepartments.add(currentDepartment);
+        }
+        if(currentDepartment.postGraduate==true){
+          postGraduateDepartments.add(currentDepartment);
+        }
+      }
+    }).then((value) {
+      emit(GetDepartmentsSuccessState());
+    }).catchError((error) {
+      emit(GetDepartmentsErrorState(
+        error: error.toString(),
+      ));
+    });
+  }
+
+
+
 }
