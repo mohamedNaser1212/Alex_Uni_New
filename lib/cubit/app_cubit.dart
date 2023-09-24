@@ -20,6 +20,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../constants.dart';
 import '../main.dart';
+import '../models/admin_model.dart';
 import '../models/message_model.dart';
 import '../models/user_model.dart';
 
@@ -655,5 +656,31 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+  List<AdminModel> admins = [];
+  getDepartmentAdmins({
+    required String universityId,
+    required String departmentId,
+  }) {
+    emit(GetDepartmentLoadingState());
+    FirebaseFirestore.instance
+        .collection('Universities')
+        .doc(universityId)
+        .collection('Departments')
+        .doc(departmentId)
+        .collection('Admins')
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        AdminModel currentAdmin=AdminModel.fromJson(element.data());
+        currentAdmin.id=element.id;
+        admins.add(currentAdmin);
+      }
+    }).then((value) {
+      emit(GetDepartmentSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(GetDepartmentErrorState());
+    });
+  }
 
 }
