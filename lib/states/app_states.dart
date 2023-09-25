@@ -130,3 +130,7 @@ class GetDepartmentErrorState extends AppStates{}
 class GetDepartmentAdminsLoadingState extends AppStates{}
 class GetDepartmentAdminsSuccessState extends AppStates{}
 class GetDepartmentAdminsErrorState extends AppStates{}
+
+class GetNewsLoadingState extends AppStates{}
+class GetNewsSuccessState extends AppStates{}
+class GetNewsErrorState extends AppStates{}

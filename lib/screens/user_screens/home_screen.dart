@@ -1,9 +1,11 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/models/news_model.dart';
 import 'package:alex_uni_new/models/post_model.dart';
 import 'package:alex_uni_new/models/university_model.dart';
 import 'package:alex_uni_new/screens/chat_details/chat_details_screen.dart';
 import 'package:alex_uni_new/screens/comments/comments_screen.dart';
+import 'package:alex_uni_new/screens/news_screen/news_details_screen.dart';
 import 'package:alex_uni_new/screens/universties/university_details_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,8 @@ class HomeScreen extends StatelessWidget {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        AppCubit cubit = AppCubit.get(context);
+
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,11 +72,14 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => buildNewsItem(context),
+                  itemBuilder: (context, index) => buildNewsItem(
+                    context: context,
+                    model: cubit.news[index],
+                  ),
                   separatorBuilder: (context, index) => const SizedBox(
                     width: 15,
                   ),
-                  itemCount: 10,
+                  itemCount: cubit.news.length,
                 ),
               ),
               const SizedBox(
@@ -166,81 +173,81 @@ class HomeScreen extends StatelessWidget {
         ),
       );
 
-  Widget buildNewsItem(context) => Container(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: const Color(0xffE6EEFA),
-          borderRadius: BorderRadius.circular(
-            16,
+  Widget buildNewsItem({
+    required BuildContext context,
+    required NewsModel model,
+  }) =>
+      InkWell(
+        onTap: () {
+          navigateTo(
+            context: context,
+            screen: NewsDetailsScreen(
+              newsModel: model,
+            ),
+          );
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.7,
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color(0xffE6EEFA),
+            borderRadius: BorderRadius.circular(16),
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width * 0.7,
-              height: MediaQuery.of(context).size.height * 0.2,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                image: const DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                    'https://img.freepik.com/free-photo/stylish-korean-woman-calling-phone-talking-smartphone-looking-happy-upper-right-corner_1258-166198.jpg?w=1060&t=st=1691521908~exp=1691522508~hmac=7bb0edd5b037bcd7102d523d5f4bbd5074be8e8db3c2cc9e5c54bb87ed93d9b5',
-                  ),
-                ),
-              ),
-              child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                height: MediaQuery.of(context).size.height * 0.2,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(80),
-                  color: Colors.black.withOpacity(0.6),
+                  borderRadius: BorderRadius.circular(25),
                 ),
-                child: const Image(
-                  image: NetworkImage(
-                    'https://img.freepik.com/free-photo/stylish-korean-woman-calling-phone-talking-smartphone-looking-happy-upper-right-corner_1258-166198.jpg?w=1060&t=st=1691521908~exp=1691522508~hmac=7bb0edd5b037bcd7102d523d5f4bbd5074be8e8db3c2cc9e5c54bb87ed93d9b5',
+                child: Container(
+                  child: Image(
+                    image: NetworkImage(model.headlineImage!),
+                    height: 120,
+                    width: double.infinity,
                   ),
-                  height: 120,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
                 ),
               ),
-            ),
-            const Text(
-              'Just Now',
-              style: TextStyle(
-                color: Color(0xff7C7A7A),
-              ),
-            ),
-            const SizedBox(
-              height: 3,
-            ),
-            const Text(
-              'Title',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: const Text(
-                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic',
-                maxLines: 2,
+              const Text(
+                'Just Now',
                 style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Inter',
-                  overflow: TextOverflow.ellipsis,
+                  color: Color(0xff7C7A7A),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(
+                height: 3,
+              ),
+              Text(
+                '${model.title}',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: Text(
+                  '${model.headline}',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       );
 
@@ -366,8 +373,21 @@ class HomeScreen extends StatelessWidget {
                         crossAxisSpacing: 10,
                         childAspectRatio: 1 / 1,
                         children: List.generate(
-                          AppCubit.get(context).posts[index].values.single.image!.length>4?4:AppCubit.get(context).posts[index].values.single.image!.length,
-                              (index1) => Container(
+                          AppCubit.get(context)
+                                      .posts[index]
+                                      .values
+                                      .single
+                                      .image!
+                                      .length >
+                                  4
+                              ? 4
+                              : AppCubit.get(context)
+                                  .posts[index]
+                                  .values
+                                  .single
+                                  .image!
+                                  .length,
+                          (index1) => Container(
                             color: Colors.white,
                             child: Column(
                               children: [
@@ -376,36 +396,59 @@ class HomeScreen extends StatelessWidget {
                                     onTap: () {
                                       navigateTo(
                                           context: context,
-                                          screen:  ViewImagesScreen(
+                                          screen: ViewImagesScreen(
                                               view: AppCubit.get(context).posts,
                                               index1: index,
                                               index2: index1,
                                               id: AppCubit.get(context)
                                                   .postsId));
                                     },
-                                    child:AppCubit.get(context).posts[index].values.single.image!.length>4? index1==3? Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Image.network(
-                                          AppCubit.get(context).posts[index].values.single.image![index1],
-                                          width: double.infinity,
-                                        ),
-                                        Text(
-                                          '${AppCubit.get(context).posts[index].values.single.image!.length-4}+',
-                                          style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        ),
-                                      ],
-                                    ):Image.network(
-                                      AppCubit.get(context).posts[index].values.single.image![index1],
-                                      width: double.infinity,
-                                    ): Image.network(
-                                      AppCubit.get(context).posts[index].values.single.image![index1],
-                                      width: double.infinity,
-                                    ),
+                                    child: AppCubit.get(context)
+                                                .posts[index]
+                                                .values
+                                                .single
+                                                .image!
+                                                .length >
+                                            4
+                                        ? index1 == 3
+                                            ? Stack(
+                                                alignment: Alignment.center,
+                                                children: [
+                                                  Image.network(
+                                                    AppCubit.get(context)
+                                                        .posts[index]
+                                                        .values
+                                                        .single
+                                                        .image![index1],
+                                                    width: double.infinity,
+                                                  ),
+                                                  Text(
+                                                    '${AppCubit.get(context).posts[index].values.single.image!.length - 4}+',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 25,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Image.network(
+                                                AppCubit.get(context)
+                                                    .posts[index]
+                                                    .values
+                                                    .single
+                                                    .image![index1],
+                                                width: double.infinity,
+                                              )
+                                        : Image.network(
+                                            AppCubit.get(context)
+                                                .posts[index]
+                                                .values
+                                                .single
+                                                .image![index1],
+                                            width: double.infinity,
+                                          ),
                                   ),
                                 ),
                               ],
@@ -420,30 +463,28 @@ class HomeScreen extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
-                              if(isGuest==false)
-                              InkWell(
-                                onTap: () {
+                              if (isGuest == false)
+                                InkWell(
+                                  onTap: () {
                                     AppCubit.get(context).updatePostLikes(
                                       AppCubit.get(context).posts[index],
                                     );
-                                },
-                                child: Icon(
-                                  Icons.favorite_outline_rounded,
-                                  size: 18,
-                                  color: Colors.white,
+                                  },
+                                  child: const Icon(
+                                    Icons.favorite_outline_rounded,
+                                    size: 18,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                              if(isGuest==false)
-                              const SizedBox(width: 5),
-                              if(isGuest==false)
-                              Text(
-                                '${posts[index].values.single.likes.length}',
-                                style: const TextStyle(
-                                  color: Colors.white,
+                              if (isGuest == false) const SizedBox(width: 5),
+                              if (isGuest == false)
+                                Text(
+                                  '${posts[index].values.single.likes.length}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                              if(isGuest==false)
-                              const SizedBox(width: 20),
+                              if (isGuest == false) const SizedBox(width: 20),
                               InkWell(
                                 onTap: () {
                                   AppCubit.get(context).getComments(
@@ -464,37 +505,36 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                               const Spacer(),
-                              if(isGuest==false)
-                              InkWell(
-                                onTap: () {
-                                  AppCubit.get(context).addSharedPosts(
-                                      postId:
-                                          AppCubit.get(context).postsId[index],
-                                      index: index,
-                                      context: context);
-                                },
-                                child: const Icon(
-                                  Icons.share_outlined,
-                                  size: 18,
-                                  color: Colors.white,
+                              if (isGuest == false)
+                                InkWell(
+                                  onTap: () {
+                                    AppCubit.get(context).addSharedPosts(
+                                        postId: AppCubit.get(context)
+                                            .postsId[index],
+                                        index: index,
+                                        context: context);
+                                  },
+                                  child: const Icon(
+                                    Icons.share_outlined,
+                                    size: 18,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                              if(isGuest==false)
-                              const SizedBox(width: 20),
-                              if(isGuest==false)
-                              InkWell(
-                                onTap: () {
-                                  AppCubit.get(context).addSavePosts(
-                                      postId:
-                                          AppCubit.get(context).postsId[index],
-                                      index: index);
-                                },
-                                child: const Icon(
-                                  Icons.bookmark_border_outlined,
-                                  size: 18,
-                                  color: Colors.white,
+                              if (isGuest == false) const SizedBox(width: 20),
+                              if (isGuest == false)
+                                InkWell(
+                                  onTap: () {
+                                    AppCubit.get(context).addSavePosts(
+                                        postId: AppCubit.get(context)
+                                            .postsId[index],
+                                        index: index);
+                                  },
+                                  child: const Icon(
+                                    Icons.bookmark_border_outlined,
+                                    size: 18,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -510,30 +550,34 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        if(isGuest == false)
-                        InkWell(
-                          onTap: () {
-                            AppCubit.get(context).updatePostLikes(
-                              AppCubit.get(context).posts[index],
-                            );
-                          },
-                          child: const Icon(
-                            Icons.favorite_outline_rounded,
-                            size: 18,
-                            color: Colors.white,
+                        if (isGuest == false)
+                          InkWell(
+                            onTap: () {
+                              AppCubit.get(context).updatePostLikes(
+                                AppCubit.get(context).posts[index],
+                              );
+                            },
+                            child: const Icon(
+                              Icons.favorite_outline_rounded,
+                              size: 18,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        if(isGuest==false)
-                        const SizedBox(width: 5,),
-                        if(isGuest==false)
-                        Text(
-                          '${posts[index].values.single.likes.length}',
-                          style: const TextStyle(
-                            color: Colors.white,
+                        if (isGuest == false)
+                          const SizedBox(
+                            width: 5,
                           ),
-                        ),
-                        if(isGuest==false)
-                        const SizedBox(width: 20,),
+                        if (isGuest == false)
+                          Text(
+                            '${posts[index].values.single.likes.length}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        if (isGuest == false)
+                          const SizedBox(
+                            width: 20,
+                          ),
                         InkWell(
                           onTap: () {
                             AppCubit.get(context).getComments(
@@ -552,30 +596,29 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         const Spacer(),
-                        if(isGuest==false)
-                        InkWell(
-                          onTap: () {},
-                          child: const Icon(
-                            Icons.share_outlined,
-                            size: 18,
-                            color: Colors.white,
+                        if (isGuest == false)
+                          InkWell(
+                            onTap: () {},
+                            child: const Icon(
+                              Icons.share_outlined,
+                              size: 18,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        if(isGuest==false)
-                        const SizedBox(width: 20),
-                        if(isGuest==false)
-                        InkWell(
-                          onTap: () {
-                            AppCubit.get(context).addSavePosts(
-                                postId: AppCubit.get(context).postsId[index],
-                                index: index);
-                          },
-                          child: const Icon(
-                            Icons.bookmark_border_outlined,
-                            size: 18,
-                            color: Colors.white,
+                        if (isGuest == false) const SizedBox(width: 20),
+                        if (isGuest == false)
+                          InkWell(
+                            onTap: () {
+                              AppCubit.get(context).addSavePosts(
+                                  postId: AppCubit.get(context).postsId[index],
+                                  index: index);
+                            },
+                            child: const Icon(
+                              Icons.bookmark_border_outlined,
+                              size: 18,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),

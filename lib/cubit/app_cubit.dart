@@ -22,6 +22,7 @@ import '../constants.dart';
 import '../main.dart';
 import '../models/admin_model.dart';
 import '../models/message_model.dart';
+import '../models/news_model.dart';
 import '../models/user_model.dart';
 
 class AppCubit extends Cubit<AppStates> {
@@ -689,6 +690,24 @@ class AppCubit extends Cubit<AppStates> {
     }).catchError((error) {
       print(error.toString());
       emit(GetDepartmentErrorState());
+    });
+  }
+
+  List<NewsModel> news = [];
+  getNews(){
+    emit(GetNewsLoadingState());
+    FirebaseFirestore.instance
+        .collection('News')
+        // .orderBy('date', descending: true)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        news.add(NewsModel.fromJson(element.data()));
+      }
+    }).then((value) {
+      emit(GetNewsSuccessState());
+    }).catchError((error) {
+      emit(GetNewsErrorState());
     });
   }
 
