@@ -9,6 +9,7 @@ import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../reusable_widgets.dart';
+import '../view_image_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -348,7 +349,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              if (posts[index].values.single.image != '')
+              if (posts[index].values.single.image.isNotEmpty)
                 Container(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   decoration: BoxDecoration(
@@ -357,24 +358,59 @@ class HomeScreen extends StatelessWidget {
                   child: Stack(
                     alignment: AlignmentDirectional.bottomCenter,
                     children: [
-                      Container(
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(46),
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                              '${posts[index].values.single.image}',
+                      GridView.count(
+                        physics: const BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        childAspectRatio: 1 / 1,
+                        children: List.generate(
+                          AppCubit.get(context).posts[index].values.single.image!.length>4?4:AppCubit.get(context).posts[index].values.single.image!.length,
+                              (index1) => Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      navigateTo(
+                                          context: context,
+                                          screen:  ViewImagesScreen(
+                                              view: AppCubit.get(context).posts,
+                                              index1: index,
+                                              index2: index1,
+                                              id: AppCubit.get(context)
+                                                  .postsId));
+                                    },
+                                    child:AppCubit.get(context).posts[index].values.single.image!.length>4? index1==3? Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Image.network(
+                                          AppCubit.get(context).posts[index].values.single.image![index1],
+                                          width: double.infinity,
+                                        ),
+                                        Text(
+                                          '${AppCubit.get(context).posts[index].values.single.image!.length-4}+',
+                                          style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        ),
+                                      ],
+                                    ):Image.network(
+                                      AppCubit.get(context).posts[index].values.single.image![index1],
+                                      width: double.infinity,
+                                    ): Image.network(
+                                      AppCubit.get(context).posts[index].values.single.image![index1],
+                                      width: double.infinity,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                        child: Image(
-                          image: NetworkImage(
-                              '${posts[index].values.single.image}'),
-                          height: 120,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
                         ),
                       ),
                       Container(

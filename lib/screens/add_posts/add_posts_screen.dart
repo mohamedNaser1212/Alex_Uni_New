@@ -1,127 +1,199 @@
+import 'dart:io';
+
 import 'package:alex_uni_new/cubit/app_cubit.dart';
-import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/states/app_states.dart';
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
+import 'package:intl/intl.dart';
 
-var textController=TextEditingController();
+import '../../models/post_model.dart';
 
-class AddPostsScreen extends StatelessWidget {
+
+class AddPostsScreen extends StatefulWidget {
   const AddPostsScreen({Key? key}) : super(key: key);
 
   @override
+  State<AddPostsScreen> createState() => _AddPostsScreenState();
+}
+
+class _AddPostsScreenState extends State<AddPostsScreen> {
+
+
+
+  uploadWithoutImage(){
+    DateTime now = DateTime.now();
+    String formattedDate =
+    DateFormat('yyyy-MM-dd hh:mm a').format(now);
+
+    PostModel model = PostModel(
+      comments: [],
+      image: [],
+      likes: [],
+      userImage: AppCubit.get(context).user!.image!,
+      userName: AppCubit.get(context).user!.name!,
+      userId: AppCubit.get(context).user!.uId!,
+      text: postTextController.text,
+      date: formattedDate,
+    );
+    return FirebaseFirestore.instance.collection('posts').add(model.toMap()).then((value){
+
+      AppCubit.get(context).getPosts();
+      Navigator.pop(context);
+      return value.path;
+    });
+  }
+
+  TextEditingController postTextController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppCubit,AppStates>(
+    return BlocConsumer<AppCubit, AppStates>(
       listener: (context,state){
-        if(state is CreatePostSuccessState){
-          textController.clear();
-          showFlushBar(
-              context: context,
-              message: 'Post Successfully added',
-          );
+        if (state is CreatePostSuccessState){
+          AppCubit.get(context).getPosts();
+          Navigator.pop(context);
         }
       },
-      builder: (context,state){
+      builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.blue,
+            centerTitle: false,
             title: const Text(
-              'Add New Post',
+              'Add new post',
             ),
-
           ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: textController,
-                    decoration: InputDecoration(
-                      hintText:
-                      'What is on your mind , ${AppCubit.get(context).user!.name}',
-                      border: InputBorder.none,
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Form(
+              key: formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextFormField(
+                      controller: postTextController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+
+                          return 'post body must not be empty';
+                        }
+
+                        return null;
+                      },
+                      keyboardType: TextInputType.text,
+                      maxLines: null,
+                      autofocus: true,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'What\'s in your mind?',
+                      ),
                     ),
-                  ),
-                  if(AppCubit.get(context).postImage!=null)
-                    Stack(
-                      alignment: AlignmentDirectional.topEnd,
-                      children: [
-                        Container(
-                          height: 200,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              image: DecorationImage(
-                                image:FileImage(AppCubit.get(context).postImage!),
-                                fit: BoxFit.fill,
-                              )),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            AppCubit.get(context).removePostImage();
-                          },
-                          icon: const CircleAvatar(
-                            child: Icon(
-                              Icons.close,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ],
+                    const SizedBox(
+                      height: 30,
                     ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Row(
+                    GridView.builder(
+                        shrinkWrap: true,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: AppCubit.get(context).imageFileList.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                        itemBuilder: (context,index){
+                          return Padding(
+                            padding: const EdgeInsets.all(7.0),
+                            child: FullScreenWidget(child: Image.file(File(AppCubit.get(context).imageFileList[index].path),)),
+                          );
+                        }
+                    ),
+                    Row(
                       children: [
                         Expanded(
                           child: TextButton(
+                            onPressed: () {
+                              AppCubit.get(context).selectImages();
+                            },
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.add,
+                                ),
+                                Text(
+                                  'Add photo',
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        if (AppCubit.get(context).imageFileList.isNotEmpty)
+                          Expanded(
+                            child: TextButton(
                               onPressed: () {
-                                AppCubit.get(context).getPostImage();
+                                setState(() {
+                                  AppCubit.get(context).imageFileList=[];
+                                });
                               },
                               child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.image),
-                                  SizedBox(
-                                    width: 5,
+                                  Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
                                   ),
-                                  Text('Add Photo'),
+                                  Text(
+                                    'delete photo',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                    ),
+                                  ),
                                 ],
-                              )),
-                        ),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-          bottomNavigationBar: ConditionalBuilder(
-            condition: state is! UserModelUpdateLoadingState,
-            builder: (context){
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 25),
-                child: reusableElevatedButton(
-                    label: 'Add Post',
-                    function: (){
-                      if(AppCubit.get(context).postImage!=null){
-                        AppCubit.get(context).uploadPostImage(
-                          text: textController.text,
-                          context: context,
-                        );
-                      }else{
-                        AppCubit.get(context).createPost(
-                          text: textController.text,
-                          image: '',
-                          context: context,
-                        );
-                      }
-                    }
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+              height: 42.0,
+              width: double.infinity,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(
+                  15.0,
                 ),
-              );
-            },
-            fallback: (context)=>const Center(child: CircularProgressIndicator(),),
+              ),
+              child: MaterialButton(
+                height: 42.0,
+                onPressed: () {
+                  if(AppCubit.get(context).imageFileList.isEmpty){
+                    if(formKey.currentState!.validate()){
+                      uploadWithoutImage();
+                    }
+                  }
+                  else {
+                    AppCubit.get(context).uploadImages(AppCubit.get(context).imageFileList,context,postTextController.text);
+                  }
+                },
+                child:state is! CreatePostLoadingState? const Text(
+                  'Post',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ):const Center(child: CupertinoActivityIndicator(
+                  color: Colors.white,
+                )),
+              ),
+            ),
           ),
         );
       },

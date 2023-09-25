@@ -155,70 +155,62 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  File? postImage;
-  var picker1 = ImagePicker();
-  Future<void> getPostImage() async {
-    final pickedFile = await picker1.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      postImage = File(pickedFile.path);
-      emit(SelectImageSuccessState());
-    } else {}
-  }
+  final ImagePicker imagePicker=ImagePicker();
+  List<XFile>imageFileList=[];
+  List<String>imageUrl=[];
+  FirebaseStorage storageRef=FirebaseStorage.instance;
+  void selectImages()async{
+    List<XFile>?selectedImages=await imagePicker.pickMultiImage();
+    if(selectedImages.isNotEmpty){
+      imageFileList.addAll(selectedImages);
+    }
+    emit(SelectImageSuccessState());
 
-  void uploadPostImage({
-    required String text,
-    context,
-  }) {
-    emit(UserModelUpdateLoadingState());
-    FirebaseStorage.instance
-        .ref()
-        .child('posts/${Uri.file(postImage!.path).pathSegments.last}')
-        .putFile(postImage!)
-        .then((value) {
-      value.ref.getDownloadURL().then((value) {
-        createPost(
-          text: text,
-          image: value,
-          context: context,
-        );
-        postImage = null;
-      }).catchError((error) {
-        emit(UploadImageErrorState());
-      });
-    }).catchError((error) {
-      emit(UploadImageErrorState());
-    });
   }
+  List<String> list=[];
+  Future<void> uploadImages(List<XFile> images,context, String text) async {
+    try {
+      emit(CreatePostLoadingState());
+      List<String> imageUrls = []; // Store download URLs of all images
+      DateTime now = DateTime.now();
+      String formattedDate = DateFormat('yyyy-MM-dd hh:mm a').format(now);
 
-  removePostImage() {
-    postImage = null;
-    emit(DeletePostImageSuccessState());
-  }
+      for (XFile image in images) {
+        Reference reference = storageRef.ref().child('posts').child(image.name);
 
-  createPost({
-    required String text,
-    required String image,
-    context,
-  }) {
-    emit(CreatePostLoadingState());
-    PostModel postModel = PostModel(
-      text: text,
-      date: DateFormat('yyyy-MM-dd h:mm a').format(DateTime.now()),
-      userName: user!.name,
-      userImage: user!.image,
-      userId: user!.uId,
-      likes: [],
-      comments: [],
-      image: image,
-    );
-    FirebaseFirestore.instance
-        .collection('posts')
-        .add(postModel.toMap())
-        .then((value) {
-      getPosts();
+        UploadTask uploadTask = reference.putData(await image.readAsBytes());
+
+        // Wait for the upload task to complete
+        TaskSnapshot taskSnapshot = await uploadTask;
+
+        // Get the download URL for the current image
+        String downloadURL = await taskSnapshot.ref.getDownloadURL();
+        imageUrls.add(downloadURL); // Add to the array
+      }
+
+      PostModel model = PostModel(
+        image: imageUrls, // Store all download URLs
+        likes: [],
+        userImage: AppCubit.get(context).user!.image!,
+        userName: AppCubit.get(context).user!.name!,
+        userId: AppCubit.get(context).user!.uId!,
+        text: text,
+        date: formattedDate,
+        comments: [],
+      );
+
+      // Add the model to Firestore
+      await FirebaseFirestore.instance.collection('posts').add(model.toMap());
+      imageFileList=[];
       emit(CreatePostSuccessState());
-      Navigator.pop(context);
-    });
+
+
+      // Return a success message or value if needed
+    } catch (error) {
+      // Handle any errors here
+      print('Error uploading images: $error');
+      // You can throw the error or return an error message if needed
+    }
   }
 
   List<Map<String, PostModel>> posts = [];

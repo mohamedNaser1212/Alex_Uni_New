@@ -341,6 +341,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  full_screen_image_null_safe:
+    dependency: "direct main"
+    description:
+      name: full_screen_image_null_safe
+      sha256: "0731bf7bb6c3b94f4e2c78d530315d2ee552b62339cef228a191c09119ab6f94"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   gmt:
     dependency: "direct main"
     description:
@@ -541,6 +549,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  photo_view:
+    dependency: "direct main"
+    description:
+      name: photo_view
+      sha256: "8036802a00bae2a78fc197af8a158e3e2f7b500561ed23b4c458107685e645bb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.14.0"
   platform:
     dependency: transitive
     description:

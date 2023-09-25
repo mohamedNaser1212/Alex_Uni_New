@@ -6,7 +6,7 @@ class PostModel{
   String? userId;
   List<String>?likes;
   List<CommentDataModel>?comments;
-  String ?image;
+  List<String> ?image;
 
   PostModel({
     required this.text,
@@ -27,7 +27,7 @@ class PostModel{
     userId=json['userId']??'';
     likes=List.from(json['likes']).map((e) => e.toString()).toList();
     comments = List.from(json['comments']).map((e) => CommentDataModel.fromJson(e)).toList();
-    image=json['image']??'';
+    image=List.from(json['image']).map((e) => e.toString()).toList();
   }
 
   Map<String,dynamic>toMap(){
@@ -39,7 +39,7 @@ class PostModel{
       'userId':userId,
       'likes':likes!.map((element) => element).toList(),
       'comments': comments!.map((element) => element.toJson()).toList(),
-      'image':image,
+      'image':image!.map((element) => element).toList(),
     };
   }
 }

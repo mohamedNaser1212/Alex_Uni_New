@@ -86,7 +86,7 @@ class SavePostsModel{
   String? userId;
   List<String>?likes;
   List<CommentDataModel>?comments;
-  String ?image;
+  List<String> ?image;
   SavePostsModel({
     required this.postId,
     required this.text,
@@ -107,7 +107,7 @@ class SavePostsModel{
     userId=json['userId']??'';
     likes=List.from(json['likes']).map((e) => e.toString()).toList();
     comments = List.from(json['comments']).map((e) => CommentDataModel.fromJson(e)).toList();
-    image=json['image']??'';
+    image=List.from(json['image']).map((e) => e.toString()).toList();
   }
   Map<String,dynamic> toMap(){
     return {
@@ -119,7 +119,7 @@ class SavePostsModel{
       'userId':userId,
       'likes':likes!.map((element) => element).toList(),
       'comments': comments!.map((element) => element.toJson()).toList(),
-      'image':image,
+      'image':image!.map((element) => element).toList(),
     };
   }
 }
@@ -132,7 +132,7 @@ class SharePostModel{
   String? userId;
   List<String>?likes;
   List<CommentDataModel>?comments;
-  String ?image;
+  List<String> ?image;
   SharePostModel({
     required this.postId,
     required this.text,
@@ -153,7 +153,7 @@ class SharePostModel{
     userId=json['userId']??'';
     likes=List.from(json['likes']).map((e) => e.toString()).toList();
     comments = List.from(json['comments']).map((e) => CommentDataModel.fromJson(e)).toList();
-    image=json['image']??'';
+    image=List.from(json['image']).map((e) => e.toString()).toList();
   }
   Map<String,dynamic> toMap(){
     return {
@@ -165,7 +165,7 @@ class SharePostModel{
       'userId':userId,
       'likes':likes!.map((element) => element).toList(),
       'comments': comments!.map((element) => element.toJson()).toList(),
-      'image':image,
+      'image':image!.map((element) => element).toList(),
     };
   }
 }
