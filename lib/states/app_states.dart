@@ -49,7 +49,13 @@ class GetPostsLoadingState extends AppStates {}
 
 class GetPostsSuccessState extends AppStates {}
 
-class GetPostsErrorState extends AppStates {}
+class GetPostsErrorState extends AppStates {
+  final String error;
+
+  GetPostsErrorState(this.error){
+    print(error);
+  }
+}
 
 class LikePostSuccessState extends AppStates {}
 

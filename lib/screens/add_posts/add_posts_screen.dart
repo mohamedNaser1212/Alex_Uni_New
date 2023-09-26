@@ -38,6 +38,7 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
       text: postTextController.text,
       date: formattedDate,
       showPost: !AppCubit.get(context).settings!.reviewPosts!,
+      isReviewed: !AppCubit.get(context).settings!.reviewPosts!,
     );
     return FirebaseFirestore.instance.collection('posts').add(model.toMap()).then((value){
 

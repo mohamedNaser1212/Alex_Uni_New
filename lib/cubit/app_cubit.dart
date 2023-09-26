@@ -200,6 +200,7 @@ class AppCubit extends Cubit<AppStates> {
         date: formattedDate,
         comments: [],
         showPost: !AppCubit.get(context).settings!.reviewPosts!,
+        isReviewed: AppCubit.get(context).settings!.reviewPosts!,
       );
 
       // Add the model to Firestore
@@ -238,7 +239,7 @@ class AppCubit extends Cubit<AppStates> {
     }).then((value) {
       emit(GetPostsSuccessState());
     }).catchError((error) {
-      emit(GetPostsErrorState());
+      emit(GetPostsErrorState(error.toString()));
     });
   }
 
@@ -481,7 +482,7 @@ class AppCubit extends Cubit<AppStates> {
     }).then((value) {
       emit(GetPostsSuccessState());
     }).catchError((error) {
-      emit(GetPostsErrorState());
+      emit(GetPostsErrorState(error.toString()));
     });
   }
 
