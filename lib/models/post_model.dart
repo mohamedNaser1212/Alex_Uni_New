@@ -7,6 +7,8 @@ class PostModel{
   List<String>?likes;
   List<CommentDataModel>?comments;
   List<String> ?image;
+  bool? showPost=false;
+  bool isReviewed=false;
 
   PostModel({
     required this.text,
@@ -17,6 +19,7 @@ class PostModel{
     required this.likes,
     required this.comments,
     required this.image,
+    this.showPost,
 });
 
   PostModel.fromJson(Map<String,dynamic>json){
@@ -28,6 +31,7 @@ class PostModel{
     likes=List.from(json['likes']).map((e) => e.toString()).toList();
     comments = List.from(json['comments']).map((e) => CommentDataModel.fromJson(e)).toList();
     image=List.from(json['image']).map((e) => e.toString()).toList();
+    showPost=json['showPost'];
   }
 
   Map<String,dynamic>toMap(){
@@ -40,6 +44,8 @@ class PostModel{
       'likes':likes!.map((element) => element).toList(),
       'comments': comments!.map((element) => element.toJson()).toList(),
       'image':image!.map((element) => element).toList(),
+      'showPost':showPost,
+      'isReviewed':isReviewed,
     };
   }
 }

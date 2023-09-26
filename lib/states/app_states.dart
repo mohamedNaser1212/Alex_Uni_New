@@ -134,3 +134,11 @@ class GetDepartmentAdminsErrorState extends AppStates{}
 class GetNewsLoadingState extends AppStates{}
 class GetNewsSuccessState extends AppStates{}
 class GetNewsErrorState extends AppStates{}
+
+class GetSettingsLoadingState extends AppStates {}
+class GetSettingsSuccessState extends AppStates {}
+class GetSettingsErrorState extends AppStates {
+  final String error;
+
+  GetSettingsErrorState(this.error);
+}

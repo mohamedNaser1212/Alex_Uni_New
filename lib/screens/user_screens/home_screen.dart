@@ -24,6 +24,7 @@ class HomeScreen extends StatelessWidget {
         AppCubit cubit = AppCubit.get(context);
 
         return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -71,6 +72,7 @@ class HomeScreen extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.37,
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: ListView.separated(
+                  physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) => buildNewsItem(
                     context: context,
@@ -149,12 +151,11 @@ class HomeScreen extends StatelessWidget {
               radius: MediaQuery.of(context).size.width / 7.7,
               child: CircleAvatar(
                 backgroundColor: Colors.white,
-                radius: MediaQuery.of(context).size.width / 8,
+                radius: MediaQuery.of(context).size.width / 8.5,
                 child: Image(
                   image: NetworkImage(
                     '${model.image}',
                   ),
-                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -176,8 +177,7 @@ class HomeScreen extends StatelessWidget {
   Widget buildNewsItem({
     required BuildContext context,
     required NewsModel model,
-  }) =>
-      InkWell(
+  }) => InkWell(
         onTap: () {
           navigateTo(
             context: context,
@@ -251,7 +251,7 @@ class HomeScreen extends StatelessWidget {
         ),
       );
 
-  Widget buildPostItem(List posts, PostModel model, index, context) => Card(
+  Widget? buildPostItem(List posts, PostModel model, index, context) => model.showPost!? Card(
         color: const Color(0xffE6EEFA),
         clipBehavior: Clip.none,
         child: Padding(
@@ -542,7 +542,7 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-              if (posts[index].values.single.image == '')
+              if (posts[index].values.single.image.isEmpty)
                 Container(
                   width: double.infinity,
                   color: Colors.black.withOpacity(0.6),
@@ -626,5 +626,5 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-      );
+      ):null;
 }

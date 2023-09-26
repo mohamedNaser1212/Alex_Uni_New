@@ -23,6 +23,7 @@ import '../main.dart';
 import '../models/admin_model.dart';
 import '../models/message_model.dart';
 import '../models/news_model.dart';
+import '../models/settings_model.dart';
 import '../models/user_model.dart';
 
 class AppCubit extends Cubit<AppStates> {
@@ -198,6 +199,7 @@ class AppCubit extends Cubit<AppStates> {
         text: text,
         date: formattedDate,
         comments: [],
+        showPost: !AppCubit.get(context).settings!.reviewPosts!,
       );
 
       // Add the model to Firestore
@@ -317,6 +319,7 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetCommentsErrorState());
     });
   }
+
   deletePost(String id) {
     FirebaseFirestore.instance
         .collection('posts')
@@ -708,6 +711,23 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetNewsSuccessState());
     }).catchError((error) {
       emit(GetNewsErrorState());
+    });
+  }
+
+  SettingsModel? settings;
+
+  getSettings(){
+    emit(GetSettingsLoadingState());
+    FirebaseFirestore.instance
+        .collection('Settings')
+        .doc('settings')
+        .get()
+        .then((value) {
+      settings = SettingsModel.fromJson(value.data()!);
+      print(settings!.reviewPosts);
+      emit(GetSettingsSuccessState());
+    }).catchError((onError) {
+      emit(GetSettingsErrorState(onError.toString()));
     });
   }
 

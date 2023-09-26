@@ -78,6 +78,7 @@ class _MyAppState extends State<MyApp> {
             ..getPosts()
             ..getMyPosts()
             ..getNews()
+            ..getSettings()
             ..getUniversities(),
         ),
       ],

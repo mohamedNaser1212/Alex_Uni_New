@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,9 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:intl/intl.dart';
-
 import '../../models/post_model.dart';
-
 
 class AddPostsScreen extends StatefulWidget {
   const AddPostsScreen({Key? key}) : super(key: key);
@@ -23,7 +21,9 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
 
 
 
-  uploadWithoutImage(){
+  uploadWithoutImage({
+    required BuildContext context,
+}){
     DateTime now = DateTime.now();
     String formattedDate =
     DateFormat('yyyy-MM-dd hh:mm a').format(now);
@@ -37,6 +37,7 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
       userId: AppCubit.get(context).user!.uId!,
       text: postTextController.text,
       date: formattedDate,
+      showPost: !AppCubit.get(context).settings!.reviewPosts!,
     );
     return FirebaseFirestore.instance.collection('posts').add(model.toMap()).then((value){
 
@@ -61,10 +62,22 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.blue,
-            centerTitle: false,
+            backgroundColor: defaultColor,
+            centerTitle: true,
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+            ),
             title: const Text(
               'Add new post',
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
           ),
           body: Padding(
@@ -160,39 +173,37 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
               ),
             ),
           ),
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Container(
-              height: 42.0,
-              width: double.infinity,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(
-                  15.0,
-                ),
+          bottomNavigationBar: Container(
+            height: MediaQuery.of(context).size.height * 0.07,
+            width: double.infinity,
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            decoration: BoxDecoration(
+              color: defaultColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0),
               ),
-              child: MaterialButton(
-                height: 42.0,
-                onPressed: () {
-                  if(AppCubit.get(context).imageFileList.isEmpty){
-                    if(formKey.currentState!.validate()){
-                      uploadWithoutImage();
-                    }
+            ),
+            child: MaterialButton(
+              onPressed: () {
+                if(AppCubit.get(context).imageFileList.isEmpty){
+                  if(formKey.currentState!.validate()){
+                    uploadWithoutImage(context: context);
                   }
-                  else {
-                    AppCubit.get(context).uploadImages(AppCubit.get(context).imageFileList,context,postTextController.text);
-                  }
-                },
-                child:state is! CreatePostLoadingState? const Text(
-                  'Post',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ):const Center(child: CupertinoActivityIndicator(
+                }
+                else {
+                  AppCubit.get(context).uploadImages(AppCubit.get(context).imageFileList,context,postTextController.text);
+                }
+              },
+              child:state is! CreatePostLoadingState? const Text(
+                'Post',
+                style: TextStyle(
                   color: Colors.white,
-                )),
-              ),
+                  fontSize: 16.0,
+                ),
+              ):const Center(child: CupertinoActivityIndicator(
+                color: Colors.white,
+              )),
             ),
           ),
         );
