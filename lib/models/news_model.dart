@@ -3,6 +3,8 @@ class NewsModel{
   String? title;
   String? headline;
   String? headlineImage;
+  DateTime? date; // Add this field
+
   List<String?> sectionTitles= [];
   List<String?> images= [];
   List<String?> imageDescription= [];
@@ -14,6 +16,8 @@ class NewsModel{
     this.headlineImage,
     this.sectionTitles= const [],
     this.images= const [],
+    this.date, // Initialize it in the constructor if needed
+
     this.imageDescription= const [],
     this.descriptions= const [],
   });
@@ -34,6 +38,9 @@ class NewsModel{
     json['descriptions'].forEach((element){
       descriptions.add(element);
     });
+    if (json['date'] != null) {
+      date = DateTime.parse(json['date']); // Modify the date parsing logic as needed
+    }
   }
 
   Map<String, dynamic> toMap(){
@@ -45,6 +52,7 @@ class NewsModel{
       'images': images,
       'imageDescription': imageDescription,
       'descriptions': descriptions,
+
     };
   }
 }

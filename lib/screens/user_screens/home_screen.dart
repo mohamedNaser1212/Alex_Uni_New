@@ -211,9 +211,9 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const Text(
-                'Just Now',
-                style: TextStyle(
+               Text(
+                '${model.date}',
+                style:const TextStyle(
                   color: Color(0xff7C7A7A),
                 ),
               ),
