@@ -606,6 +606,7 @@ class AppCubit extends Cubit<AppStates> {
 
   List<UniversityModel> universities = [];
   getUniversities() {
+    universities = [];
     emit(GetUniversityLoadingState());
     FirebaseFirestore.instance
         .collection('Universities')
