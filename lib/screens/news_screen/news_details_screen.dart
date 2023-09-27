@@ -61,12 +61,13 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                   alignment: Alignment.topCenter,
                   child: SizedBox(
                     width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.3,
+                    height: MediaQuery.of(context).size.height * 0.26,
                     child: Stack(
                       children: [
                         Image.network(
                           widget.newsModel.images[index]!,
                           width: double.infinity,
+                          fit: BoxFit.cover,
                         ),
                         if (hasPreviousImage)
                           Align(
@@ -133,7 +134,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                         topRight: Radius.circular(30.0),
                       ),
                     ),
-                    height: MediaQuery.of(context).size.height * 0.65,
+                    height: MediaQuery.of(context).size.height * 0.55,
                     width: double.infinity,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -159,6 +160,45 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                   ),
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Divider(
+            height: 1.0,
+            color: Colors.grey,
+          ),
+          Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    '${index+1}',
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Image.asset(
+                    'assets/images/University.png',
+                    width: MediaQuery.of(context).size.width * 0.08,
+                  ),
+                  Text(
+                    '${widget.newsModel.images!.length}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

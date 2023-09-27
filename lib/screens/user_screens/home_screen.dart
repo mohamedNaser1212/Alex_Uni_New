@@ -163,7 +163,7 @@ class HomeScreen extends StatelessWidget {
               height: 10,
             ),
             Text(
-              'Faculty of\n${model.name}',
+              '${model.name}',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: MediaQuery.of(context).size.width / 20,
