@@ -211,12 +211,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-               Text(
-                '${model.date}',
-                style:const TextStyle(
-                  color: Color(0xff7C7A7A),
-                ),
-              ),
+
               const SizedBox(
                 height: 3,
               ),
@@ -229,6 +224,7 @@ class HomeScreen extends StatelessWidget {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
+                textDirection: TextDirection.rtl,
               ),
               const SizedBox(
                 height: 5,
@@ -236,7 +232,7 @@ class HomeScreen extends StatelessWidget {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: Text(
-                  '${model.headline}',
+                  '${model.mainDescription}',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -244,6 +240,7 @@ class HomeScreen extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),
+                  textDirection: TextDirection.rtl,
                 ),
               ),
             ],

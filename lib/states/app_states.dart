@@ -146,7 +146,14 @@ class GetDepartmentAdminsErrorState extends AppStates{}
 
 class GetNewsLoadingState extends AppStates{}
 class GetNewsSuccessState extends AppStates{}
-class GetNewsErrorState extends AppStates{}
+class GetNewsErrorState extends AppStates{
+  final String error;
+
+  GetNewsErrorState(this.error){
+    print(error);
+  }
+
+}
 
 class GetSettingsLoadingState extends AppStates {}
 class GetSettingsSuccessState extends AppStates {}

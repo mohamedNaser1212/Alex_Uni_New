@@ -1,3 +1,4 @@
+import 'package:alex_uni_new/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:alex_uni_new/models/news_model.dart';
 
@@ -49,7 +50,12 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.newsModel.title!),
+        title: Text(
+            widget.newsModel.title!,
+          textDirection: TextDirection.rtl,
+
+
+        ),
         centerTitle: true,
       ),
       body: Column(
@@ -138,23 +144,45 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                     width: double.infinity,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-                          Text(
-                            widget.newsModel.imageDescription[index]!,
-                            style: const TextStyle(
-                              fontSize: 20.0,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 10.0,
                             ),
-                            textAlign: TextAlign.start,
-                          ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-                        ],
+                            if(index==0)
+                            Text(
+                              widget.newsModel.title!,
+                              style:  TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                color: defaultColor,
+                              ),
+                              textDirection: TextDirection.rtl,
+                            ),
+                            if(index==0)
+                            Divider(
+                              height: 0.5,
+                              color: Colors.grey,
+                            ),
+                            if(index==0)
+                            SizedBox(
+                              height: 10.0,
+                            ),
+
+                            Text(
+                              widget.newsModel.descriptions[index]!,
+                              style: const TextStyle(
+                                fontSize: 20.0,
+                              ),
+                             textDirection: TextDirection.rtl,
+                            ),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

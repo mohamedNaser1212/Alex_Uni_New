@@ -712,7 +712,7 @@ class AppCubit extends Cubit<AppStates> {
     }).then((value) {
       emit(GetNewsSuccessState());
     }).catchError((error) {
-      emit(GetNewsErrorState());
+      emit(GetNewsErrorState(error.toString()));
     });
   }
 
