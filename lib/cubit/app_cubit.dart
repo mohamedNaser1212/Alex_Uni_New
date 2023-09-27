@@ -656,17 +656,17 @@ class AppCubit extends Cubit<AppStates> {
       for (var element in value.docs) {
         DepartmentModel currentDepartment=DepartmentModel.fromJson(element.data());
         currentDepartment.id=element.id;
-        if(currentDepartment.underGraduate==true){
+        if(currentDepartment.isUnderGraduate==true){
           unGraduateDepartments.add(currentDepartment);
         }
-          if(currentDepartment.postGraduate==true){
+          if(currentDepartment.isPostGraduate==true){
             postGraduateDepartments.add(currentDepartment);
           }
       }
     }).then((value) {
       emit(GetDepartmentSuccessState());
     }).catchError((error) {
-      emit(GetDepartmentErrorState());
+      emit(GetDepartmentErrorState(error.toString()));
     });
   }
 
@@ -693,7 +693,7 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetDepartmentSuccessState());
     }).catchError((error) {
       print(error.toString());
-      emit(GetDepartmentErrorState());
+      emit(GetDepartmentErrorState(error.toString()));
     });
   }
 

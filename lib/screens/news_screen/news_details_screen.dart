@@ -128,7 +128,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                         ),
                       ],
                       color: Colors.white,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(30.0),
                         topRight: Radius.circular(30.0),
                       ),

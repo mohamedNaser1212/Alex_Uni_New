@@ -131,7 +131,14 @@ class GetUniversityErrorState extends AppStates{}
 
 class GetDepartmentLoadingState extends AppStates{}
 class GetDepartmentSuccessState extends AppStates{}
-class GetDepartmentErrorState extends AppStates{}
+class GetDepartmentErrorState extends AppStates{
+  final String error;
+
+  GetDepartmentErrorState(this.error){
+    print(error);
+  }
+
+}
 
 class GetDepartmentAdminsLoadingState extends AppStates{}
 class GetDepartmentAdminsSuccessState extends AppStates{}

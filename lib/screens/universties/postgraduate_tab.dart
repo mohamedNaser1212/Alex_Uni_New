@@ -1,5 +1,7 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/reusable_widgets.dart';
+import 'package:alex_uni_new/screens/universties/department_details_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
@@ -76,51 +78,57 @@ class PostGraduateTab extends StatelessWidget {
   Widget buildDepartmentItem({
     required BuildContext context,
     required DepartmentModel department,
-  })=>Container(
-    clipBehavior: Clip.hardEdge,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(10,),
-      color: defaultColor,
-    ),
-    child: Column(
-      children: [
-        Container(
-          height: 35,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: defaultColor,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(8,8,8,0,),
-            child: Text(
-              '${department.name}',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8,0,8,8,),
-          child: Container(
-            height: MediaQuery.of(context).size.height / 7,
+  })=>InkWell(
+    onTap: (){
+      AppCubit.get(context).getDepartmentAdmins(departmentId: department.id!, universityId:department.universityId!);
+      navigateTo(context: context, screen: DepartmentDetailsScreen(department: department,));
+    },
+    child: Container(
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10,),
+        color: defaultColor,
+      ),
+      child: Column(
+        children: [
+          Container(
+            height: 35,
             width: double.infinity,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: NetworkImage(
-                  '${department.departmentImage}',
+              color: defaultColor,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8,8,8,0,),
+              child: Text(
+                '${department.name}',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
-                fit: BoxFit.cover,
               ),
             ),
           ),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8,0,8,8,),
+            child: Container(
+              height: MediaQuery.of(context).size.height / 7,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    '${department.mainImage}',
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 

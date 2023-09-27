@@ -165,10 +165,10 @@ class RegisterCubit extends Cubit<RegisterStates>{
       for (var element in value.docs) {
         DepartmentModel currentDepartment=DepartmentModel.fromJson(element.data());
         currentDepartment.id=element.id;
-        if(currentDepartment.underGraduate==true){
+        if(currentDepartment.isUnderGraduate==true){
           unGraduateDepartments.add(currentDepartment);
         }
-        if(currentDepartment.postGraduate==true){
+        if(currentDepartment.isPostGraduate==true){
           postGraduateDepartments.add(currentDepartment);
         }
       }
