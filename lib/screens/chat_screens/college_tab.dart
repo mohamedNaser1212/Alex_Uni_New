@@ -1,3 +1,4 @@
+import 'package:alex_uni_new/models/university_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,19 +15,24 @@ class CollegeTab extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         AppCubit cubit = AppCubit.get(context);
-        UserModel userModel = cubit.user!;
+        UserModel universityModel = cubit.user!;
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListView.separated(
             physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) => buildChatItem(
-              context: context,
-              userModel: userModel,
+            itemBuilder: (context, index) => InkWell(
+              onTap: (){
+
+              },
+              child: buildChatItem(
+                context: context,
+                universityModel: AppCubit.get(context).universities[index],
+              ),
             ),
             separatorBuilder: (context, index) => const SizedBox(
               height: 10,
             ),
-            itemCount: 10,
+            itemCount: AppCubit.get(context).universities.length,
           ),
         );
       },
@@ -35,59 +41,56 @@ class CollegeTab extends StatelessWidget {
 
   Widget buildChatItem({
     required BuildContext context,
-    required UserModel userModel,
+    required UniversityModel universityModel,
   }) =>
-      InkWell(
-        onTap: () {},
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(
-                  '${userModel.image}',
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              backgroundImage: NetworkImage(
+                '${universityModel.image}',
+              ),
+              radius: 25,
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  child:  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        '${universityModel.name}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        'Date',
+                      ),
+                    ],
+                  ),
                 ),
-                radius: 25,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.75,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Text(
-                          'College Name',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          'Date',
-                        ),
-                      ],
-                    ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.76,
+                  child: const Text(
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.76,
-                    child: Text(
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       );
 }

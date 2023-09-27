@@ -1,5 +1,4 @@
 import 'package:alex_uni_new/cubit/app_cubit.dart';
-import 'package:alex_uni_new/models/user_model.dart';
 import 'package:alex_uni_new/screens/chat_screens/chat_tab.dart';
 import 'package:alex_uni_new/screens/chat_screens/college_tab.dart';
 import 'package:alex_uni_new/states/app_states.dart';
@@ -7,9 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../constants.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
 
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    AppCubit.get(context).getUniversities();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
@@ -57,7 +67,7 @@ class ChatScreen extends StatelessWidget {
                     topRight: Radius.circular(30),
                   ),
                 ),
-                child: TabBarView(
+                child: const TabBarView(
                   children: [
                     ChatTab(),
                     CollegeTab(),
