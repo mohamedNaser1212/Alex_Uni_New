@@ -335,7 +335,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           onTap: () {
                                             navigateTo(
                                               context: context,
-                                              screen: const ResetPasswordScreen(),
+                                              screen: ResetPasswordScreen(),
                                             );
                                           },
                                           child: Text(
