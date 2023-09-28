@@ -6,7 +6,7 @@ class PostModel{
   String? userId;
   List<String>?likes;
   List<CommentDataModel>?comments;
-  List<String> ?image;
+  List<String> ?image=[];
   bool? showPost=false;
   bool? isReviewed=false;
 

@@ -23,7 +23,13 @@ class UserModelUpdateLoadingState extends AppStates {}
 
 class UserModelUpdateSuccessState extends AppStates {}
 
-class UserModelUpdateErrorState extends AppStates {}
+class UserModelUpdateErrorState extends AppStates {
+  final String error;
+
+  UserModelUpdateErrorState(this.error){
+    print(error);
+  }
+}
 
 class SelectImageSuccessState extends AppStates {}
 
@@ -33,7 +39,13 @@ class UploadImageLoadingState extends AppStates {}
 
 class UploadProfileImageSuccessState extends AppStates {}
 
-class UploadImageErrorState extends AppStates {}
+class UploadImageErrorState extends AppStates {
+  final String error;
+
+  UploadImageErrorState(this.error){
+    print(error);
+  }
+}
 
 class DeleteAccountSuccessState extends AppStates {}
 

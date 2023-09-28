@@ -95,7 +95,7 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  updateUser({required String name, String? image, String? phone}) {
+  updateUser({required String name, String? image, String? phone,String? cover}) {
     emit(UserModelUpdateLoadingState());
     UserModel user2 = UserModel(
         name: name,
@@ -103,7 +103,7 @@ class AppCubit extends Cubit<AppStates> {
         email: user!.email,
         uId: user!.uId,
         image: image ?? user!.image,
-        cover: user!.cover,
+        cover: cover ?? user!.cover,
         bio: user!.bio,
         universityname: user!.universityname,
         country: user!.country,
@@ -115,15 +115,19 @@ class AppCubit extends Cubit<AppStates> {
         postGraduate: user!.postGraduate
     );
 
+
+
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
         .update(user2.toMap())
         .then((value) {
+
       getUserData();
+
       emit(UserModelUpdateSuccessState());
     }).catchError((error) {
-      emit(UserModelUpdateErrorState());
+      emit(UserModelUpdateErrorState(error.toString()));
     });
   }
 
@@ -137,8 +141,39 @@ class AppCubit extends Cubit<AppStates> {
     } else {}
   }
 
+  File? coverImage;
+  var coverPicker = ImagePicker();
+  Future<void> getCoverImage() async {
+    final pickedFile = await coverPicker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      coverImage = File(pickedFile.path);
+      emit(SelectImageSuccessState());
+    } else {}
+  }
+  void uploadCoverImage({
+    required String name,
+    required String phone,
+  }) {
+    emit(UserModelUpdateLoadingState());
+    FirebaseStorage.instance
+        .ref()
+        .child('users/${Uri.file(coverImage!.path).pathSegments.last}')
+        .putFile(coverImage!)
+        .then((value) {
+      value.ref.getDownloadURL().then((value) {
+        updateUser(name: name, cover: value,phone: phone);
+        coverImage = null;
+      }).catchError((error) {
+        emit(UploadImageErrorState(error.toString()));
+
+      });
+    }).catchError((error) {
+      emit(UploadImageErrorState(error.toString()));
+    });
+  }
   void uploadProfileImage({
     required String name,
+    required String phone,
   }) {
     emit(UserModelUpdateLoadingState());
     FirebaseStorage.instance
@@ -147,13 +182,13 @@ class AppCubit extends Cubit<AppStates> {
         .putFile(profileImage!)
         .then((value) {
       value.ref.getDownloadURL().then((value) {
-        updateUser(name: name, image: value);
+        updateUser(name: name, image: value,phone: phone);
         profileImage = null;
       }).catchError((error) {
-        emit(UploadImageErrorState());
+        emit(UploadImageErrorState(error().toString()));
       });
     }).catchError((error) {
-      emit(UploadImageErrorState());
+      emit(UploadImageErrorState(error().toString()));
     });
   }
 
@@ -200,7 +235,7 @@ class AppCubit extends Cubit<AppStates> {
         date: formattedDate,
         comments: [],
         showPost: !AppCubit.get(context).settings!.reviewPosts!,
-        isReviewed: AppCubit.get(context).settings!.reviewPosts!,
+        isReviewed: !AppCubit.get(context).settings!.reviewPosts!,
       );
 
       // Add the model to Firestore
@@ -453,11 +488,11 @@ class AppCubit extends Cubit<AppStates> {
           dateTime: now.toString(),
         );
       }).catchError((error) {
-        emit(UploadImageErrorState());
+        emit(UploadImageErrorState(error().toString()));
       });
     }).catchError((error) {
       print(error.toString());
-      emit(UploadImageErrorState());
+      emit(UploadImageErrorState(error().toString()));
     });
   }
 
@@ -486,6 +521,34 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetPostsErrorState(error.toString()));
     });
   }
+  List<Map<String, PostModel>> myphotos = [];
+
+  getMyphotos() {
+    myphotos = [];
+    myPostsId = [];
+    emit(GetPostsLoadingState());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .orderBy('date', descending: true)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        if (element.data()['userId'] == uId) {
+          if(element.data()['image'].length>0){
+            myphotos.add({
+              element.reference.id: PostModel.fromJson(element.data()),
+            });
+            myPostsId.add(element.id);
+          }
+        }
+      }
+    }).then((value) {
+      emit(GetPostsSuccessState());
+    }).catchError((error) {
+      emit(GetPostsErrorState(error.toString()));
+    });
+  }
+
 
   addSavePosts({
     required String postId,

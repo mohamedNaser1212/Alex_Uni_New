@@ -100,7 +100,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                                 ),
                                 child: IconButton(
                                   onPressed: goToPreviousImage,
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.arrow_back_ios_new,
                                     color: Color(0xffFFFFFF),
                                   ),

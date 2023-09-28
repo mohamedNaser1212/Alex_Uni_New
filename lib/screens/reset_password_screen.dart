@@ -118,13 +118,14 @@ class ResetPasswordScreen extends StatelessWidget {
                                       condition: state is! LoginLoadingState,
                                       builder: (context) {
                                         return Center(
-                                          child: GestureDetector(
+                                          child: InkWell(
                                             onTap: () {
                                               if (formKey.currentState!
                                                   .validate()) {
                                                 cubit.resetPassword(
                                                   email: emailController.text,
                                                 );
+                                                Navigator.pop(context);
                                               }
                                             },
                                             child: Container(
