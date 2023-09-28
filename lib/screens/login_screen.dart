@@ -1,13 +1,13 @@
 import 'package:alex_uni_new/cache_helper.dart';
 import 'package:alex_uni_new/cubit/login_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
+import 'package:alex_uni_new/screens/reset_password_screen.dart';
 import 'package:alex_uni_new/screens/user_layout_screen.dart';
 import 'package:alex_uni_new/states/login_states.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:alex_uni_new/screens/registeration_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../constants.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -321,6 +321,44 @@ class _LoginScreenState extends State<LoginScreen> {
                                       children: [
                                         Text(
                                           isArabic
+                                              ? 'نسيت كلمة المرور؟'
+                                              : 'Forgot Password?',
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Color(0xff124460),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            navigateTo(
+                                              context: context,
+                                              screen: const ResetPasswordScreen(),
+                                            );
+                                          },
+                                          child: Text(
+                                            isArabic
+                                                ? 'تغيير كلمة المرور'
+                                                : 'Reset Password',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w900,
+                                              color: Color(0xff124460),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 25,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          isArabic
                                               ? 'ليس لدي حساب؟'
                                               : 'Don\'t have an account?',
                                           style: const TextStyle(
@@ -349,7 +387,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                         ),
                                       ],
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
