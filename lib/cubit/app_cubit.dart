@@ -223,6 +223,7 @@ class AppCubit extends Cubit<AppStates> {
   getPosts() {
     posts = [];
     postsId = [];
+    post=[];
     emit(GetPostsLoadingState());
     FirebaseFirestore.instance
         .collection('posts')
