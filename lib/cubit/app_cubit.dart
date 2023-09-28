@@ -521,11 +521,10 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetPostsErrorState(error.toString()));
     });
   }
-  List<Map<String, PostModel>> myphotos = [];
+  List<String> myphotos = [];
 
   getMyphotos() {
     myphotos = [];
-    myPostsId = [];
     emit(GetPostsLoadingState());
     FirebaseFirestore.instance
         .collection('posts')
@@ -534,12 +533,9 @@ class AppCubit extends Cubit<AppStates> {
         .then((value) {
       for (var element in value.docs) {
         if (element.data()['userId'] == uId) {
-          if(element.data()['image'].length>0){
-            myphotos.add({
-              element.reference.id: PostModel.fromJson(element.data()),
-            });
-            myPostsId.add(element.id);
-          }
+          element.data()['image'].forEach((element) {
+            myphotos.add(element);
+          });
         }
       }
     }).then((value) {
