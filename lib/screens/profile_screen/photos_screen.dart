@@ -16,7 +16,6 @@ class _PhotoScreenState extends State<PhotoScreen> {
   @override
   void initState() {
     super.initState();
-    AppCubit.get(context).getMyphotos();
   }
 
   @override
@@ -34,34 +33,26 @@ class _PhotoScreenState extends State<PhotoScreen> {
           appBar: AppBar(
             title: const Text('Photos'),
           ),
-          body: ConditionalBuilder(
-            condition: state is! GetPostsLoadingState,
-            builder: (context) => cubit.myphotos.length > 0
-                ? GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 1,
-                    crossAxisSpacing: 1,
-                    childAspectRatio: 1 / 1.69,
-                    children:
-                        cubit.myphotos.map((e) => buildPhotoItem(e)).toList(),
-                  )
-                : const Center(
-                    child: Text(
-                      'No Photos',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+          body: cubit.myphotos.length > 0
+              ? GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 1,
+                  crossAxisSpacing: 1,
+                  childAspectRatio: 1 / 1.69,
+                  children:
+                      cubit.myphotos.map((e) => buildPhotoItem(e)).toList(),
+                )
+              : const Center(
+                  child: Text(
+                    'No Photos',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-            fallback: (context) => Center(
-              child: CircularProgressIndicator(
-                color: defaultColor,
-              ),
-            ),
-          ),
+                ),
         );
       },
     );

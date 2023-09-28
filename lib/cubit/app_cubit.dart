@@ -262,6 +262,7 @@ class AppCubit extends Cubit<AppStates> {
     emit(GetPostsLoadingState());
     FirebaseFirestore.instance
         .collection('posts')
+        .where('showPost',isEqualTo: true)
         .orderBy('date', descending: true)
         .get()
         .then((value) {
@@ -497,13 +498,16 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   List<Map<String, PostModel>> myPosts = [];
+  List<String> myphotos = [];
   List myPostsId = [];
   getMyPosts() {
     myPosts = [];
+    myphotos = [];
     myPostsId = [];
     emit(GetPostsLoadingState());
     FirebaseFirestore.instance
         .collection('posts')
+        .where('showPost',isEqualTo: true)
         .orderBy('date', descending: true)
         .get()
         .then((value) {
@@ -513,26 +517,6 @@ class AppCubit extends Cubit<AppStates> {
             element.reference.id: PostModel.fromJson(element.data()),
           });
           myPostsId.add(element.id);
-        }
-      }
-    }).then((value) {
-      emit(GetPostsSuccessState());
-    }).catchError((error) {
-      emit(GetPostsErrorState(error.toString()));
-    });
-  }
-  List<String> myphotos = [];
-
-  getMyphotos() {
-    myphotos = [];
-    emit(GetPostsLoadingState());
-    FirebaseFirestore.instance
-        .collection('posts')
-        .orderBy('date', descending: true)
-        .get()
-        .then((value) {
-      for (var element in value.docs) {
-        if (element.data()['userId'] == uId) {
           element.data()['image'].forEach((element) {
             myphotos.add(element);
           });
@@ -544,7 +528,6 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetPostsErrorState(error.toString()));
     });
   }
-
 
   addSavePosts({
     required String postId,

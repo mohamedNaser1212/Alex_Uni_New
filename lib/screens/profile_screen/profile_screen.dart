@@ -20,7 +20,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     AppCubit.get(context).getMyPosts();
     AppCubit.get(context).getSharePosts();
@@ -328,7 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget buildMyPostItem(List posts, index, context) => Card(
+  Card? buildMyPostItem(List posts, index, context) =>  Card(
         margin: const EdgeInsets.symmetric(horizontal: 14),
         color: const Color(0xffE6EEFA),
         elevation: 8,
