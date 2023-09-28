@@ -16,6 +16,8 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
   List<GlobalKey> leftIconButtonKeys = [];
   List<GlobalKey> rightIconButtonKeys = [];
 
+  ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +33,11 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
     if (index > 0) {
       setState(() {
         index--;
+        scrollController.animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
       });
     }
   }
@@ -39,6 +46,11 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
     if (index < widget.newsModel.images!.length - 1) {
       setState(() {
         index++;
+        scrollController.animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
       });
     }
   }
@@ -145,6 +157,8 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: SingleChildScrollView(
+                        controller: scrollController,
+                        physics: const BouncingScrollPhysics(),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
