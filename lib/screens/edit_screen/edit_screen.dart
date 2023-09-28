@@ -43,17 +43,24 @@ class EditProfile extends StatelessWidget {
           },
           child: Scaffold(
             backgroundColor: const Color(0xFF3E657B),
-            appBar: defaultAppBar(
-              context: context,
-              title: isArabic ? 'تعديل الحساب' : 'Edit Profile',
-              action: [
+            appBar: AppBar(
+              backgroundColor: defaultColor,
+              iconTheme: const IconThemeData(
+                color: Colors.white,
+              ),
+              title: Text(
+                isArabic ? 'تعديل البيانات' : 'Edit Profile',
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              actions: [
                 TextButton(
                   onPressed: () {
                     AppCubit.get(context).updateUser(
                       name: nameController.text,
                       phone: phoneController.text,
                     );
-
                   },
                   child: Text(
                     isArabic ? 'تحديث' : 'Update',
