@@ -1,4 +1,6 @@
 import 'package:alex_uni_new/models/university_model.dart';
+import 'package:alex_uni_new/reusable_widgets.dart';
+import 'package:alex_uni_new/screens/chat_screens/choose_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,7 +24,8 @@ class CollegeTab extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) => InkWell(
               onTap: (){
-
+                cubit.getAllAdmins(index);
+                navigateTo(context: context, screen: const ChooseScreen());
               },
               child: buildChatItem(
                 context: context,

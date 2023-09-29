@@ -174,3 +174,9 @@ class GetSettingsErrorState extends AppStates {
 
   GetSettingsErrorState(this.error);
 }
+
+class GetAllAdminsLoadingState extends AppStates {}
+
+class GetAllAdminsSuccessState extends AppStates {}
+
+class GetAllAdminsErrorState extends AppStates {}

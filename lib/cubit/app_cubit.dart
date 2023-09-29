@@ -776,4 +776,24 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+  List<AdminModel> admin=[];
+  getAllAdmins(index){
+    admin=[];
+    emit(GetAllAdminsLoadingState());
+    FirebaseFirestore.instance
+        .collection('Admins')
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        if(element.data()['universityId']==universities[index].id) {
+          admin.add(AdminModel.fromJson(element.data()));
+        }
+      }
+    }).then((value) {
+      emit(GetAllAdminsSuccessState());
+    }).catchError((error) {
+      emit(GetAllAdminsErrorState());
+    });
+  }
+
 }
