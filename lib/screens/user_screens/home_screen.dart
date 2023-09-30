@@ -9,152 +9,180 @@ import 'package:alex_uni_new/screens/news_screen/news_details_screen.dart';
 import 'package:alex_uni_new/screens/universties/university_details_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../reusable_widgets.dart';
 import '../view_image_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    AppCubit.get(context).getPosts();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(
-                  12,
-                ),
-                child: Text(
-                  lang == 'en' ? 'Faculties' : 'الكليات',
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.25,
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('Universities')
-                      .snapshots(),
-                  builder: (context,snapshot){
-                    if(snapshot.hasData) {
-                      return ListView.separated(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          DocumentSnapshot ds = snapshot.data!.docs[index];
-                          UniversityModel model = UniversityModel.fromJson(ds.data()! as Map<String, dynamic>?);
-                          model.id = ds.id;
-                          return buildFacultyItem(
-                            context,
-                            model,
-
-                          );
-                        },
-                        separatorBuilder: (context, index) => const SizedBox(
-                          width: 15,
-                        ),
-                        itemCount: snapshot.data!.docs.length,
-                      );
-                    } else {
-                      return const Center(child:Text('No Data Found'),);
-                    }
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(
-                  12,
-                ),
-                child: Text(
-                  lang == 'en' ? 'News' : 'الاخبار',
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.37,
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('News')
-                      .snapshots(),
-                  builder: (context,snapshot){
-                    if(snapshot.hasData) {
-                      return ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot ds = snapshot.data!.docs[index];
-                        NewsModel model = NewsModel.fromJson(ds.data()! as Map<String, dynamic>?);
-                        return buildNewsItem(
-                        context: context,
-                        model: model,
-                      );
-                      },
-                      separatorBuilder: (context, index) => const SizedBox(
-                        width: 15,
+        return RefreshIndicator(
+          color: Colors.white,
+          backgroundColor: defaultColor,
+          onRefresh: () async {
+            await AppCubit.get(context).getPosts();
+          },
+          child: ConditionalBuilder(
+            condition: state is! GetPostsLoadingState,
+            builder: (context)=>SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(
+                      12,
+                    ),
+                    child: Text(
+                      lang == 'en' ? 'Faculties' : 'الكليات',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
                       ),
-                      itemCount: snapshot.data!.docs.length,
-                    );
-                    } else {
-                      return const Center(child:Text('No Data Found'),);
-                    }
-        },
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  lang == 'en' ? 'Posts' : 'المنشورات',
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Inter',
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    90,
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('Universities')
+                          .snapshots(),
+                      builder: (context,snapshot){
+                        if(snapshot.hasData) {
+                          return ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot ds = snapshot.data!.docs[index];
+                              UniversityModel model = UniversityModel.fromJson(ds.data()! as Map<String, dynamic>?);
+                              model.id = ds.id;
+                              return buildFacultyItem(
+                                context,
+                                model,
+
+                              );
+                            },
+                            separatorBuilder: (context, index) => const SizedBox(
+                              width: 15,
+                            ),
+                            itemCount: snapshot.data!.docs.length,
+                          );
+                        } else {
+                          return const Center(child:Text('No Data Found'),);
+                        }
+                      },
+                    ),
                   ),
-                ),
-                child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) => buildPostItem(
-                      AppCubit.get(context).posts,
-                      AppCubit.get(context).post[index],
-                      index,
-                      context),
-                  itemCount: AppCubit.get(context).posts.length,
-                ),
+                  Padding(
+                    padding: const EdgeInsets.all(
+                      12,
+                    ),
+                    child: Text(
+                      lang == 'en' ? 'News' : 'الاخبار',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.37,
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('News')
+                          .snapshots(),
+                      builder: (context,snapshot){
+                        if(snapshot.hasData) {
+                          return ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot ds = snapshot.data!.docs[index];
+                              NewsModel model = NewsModel.fromJson(ds.data()! as Map<String, dynamic>?);
+                              return buildNewsItem(
+                                context: context,
+                                model: model,
+                              );
+                            },
+                            separatorBuilder: (context, index) => const SizedBox(
+                              width: 15,
+                            ),
+                            itemCount: snapshot.data!.docs.length,
+                          );
+                        } else {
+                          return const Center(child:Text('No Data Found'),);
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      lang == 'en' ? 'Posts' : 'المنشورات',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        90,
+                      ),
+                    ),
+                    child: ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) => buildPostItem(
+                          AppCubit.get(context).posts,
+                          AppCubit.get(context).post[index],
+                          index,
+                          context),
+                      itemCount: AppCubit.get(context).posts.length,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                ],
               ),
-              const SizedBox(
-                height: 30,
-              ),
-            ],
+            ),
+            fallback: (context)=>Center(
+              child: CircularProgressIndicator(
+              color: defaultColor,
+            ),
+            ),
           ),
         );
       },

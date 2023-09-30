@@ -75,11 +75,8 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(
           create: (BuildContext context) => AppCubit()
             ..getUserData()
-            ..getPosts()
             ..getMyPosts()
-            ..getNews()
-            ..getSettings()
-            ..getUniversities(),
+            ..getSettings(),
         ),
       ],
       child: MaterialApp(

@@ -2,7 +2,7 @@ import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/profile_screen/photos_screen.dart';
-import 'package:alex_uni_new/screens/profile_screen/saved_tab.dart';
+import 'package:alex_uni_new/screens/profile_screen/saved_posts_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -119,24 +119,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   topRight: Radius.circular(30),
                                 ),
                               ),
-                              child: Padding(
-                                padding:  EdgeInsetsDirectional.only(start: MediaQuery.of(context).size.width * 0.37,
-                                top: 5,
-                                ),
-                                child: Text(
-                                  '${userModel.name}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .copyWith(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                            padding: EdgeInsetsDirectional.only(
+                              start: MediaQuery.of(context).size.width * 0.035,
+                            ),
                             child: CircleAvatar(
                               radius: MediaQuery.of(context).size.width * 0.15,
                               backgroundColor:
@@ -157,30 +145,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            height: 30,
-                            child: Align(
-                              alignment: AlignmentDirectional.centerStart,
-                              child: Text(
-                                'Faculty of ${userModel.universityname}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(
-                                  fontSize: 18,
-                                ),
+                    Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsetsDirectional.only(
+                            top: 10,
+                        start: MediaQuery.of(context).size.width * 0.06,),
+                          alignment: Alignment.center,
+                          height: 30,
+                          child: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(
+                              '${userModel.name}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                fontSize: 18,
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Expanded(
@@ -197,80 +188,118 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   },
                                 ),
                               ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: reusableElevatedButton(
-                                  label: lang == 'en' ? 'photos' : 'الصور',
-                                  backColor: defaultColor,
-                                  height: 40,
-                                  function: () {
-                                    navigateTo(
-                                        context: context, screen: PhotoScreen());
-                                  },
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                    'posts',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                    fontSize: 18,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: reusableElevatedButton(
-                                  label: lang == 'en' ? 'Saved' : 'المحفوظات',
-                                  backColor: defaultColor,
-                                  height: 40,
-                                  function: () {
-                                    AppCubit.get(context).getSavePosts();
-                                    navigateTo(
-                                        context: context,
-                                        screen: const SavedScreen());
-                                  },
+                                const SizedBox(
+                                  height: 3,
                                 ),
+                                Container(
+                                  width: 45,
+                                  height: 3,
+                                  color: defaultColor,
+                                ),
+                              ],
+                            ),
+                            InkWell(
+                              onTap: (){
+                                navigateTo(context: context, screen: PhotoScreen(),);
+                              },
+                              child: Column(
+                                children: [
+                                  Text(
+                                      'photos',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Container(
+                                    width: 45,
+                                    height: 3,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onTap: (){
+                                AppCubit.get(context).getSavePosts();
+                                navigateTo(context: context, screen: const SavedScreen(),);
+                              },
+                              child: Column(
+                                children: [
+                                  Text(
+                                      'saved',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Container(
+                                    width: 45,
+                                    height: 3,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              90,
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) => buildMyPostItem(
+                                    AppCubit.get(context).myPosts, index, context),
+                                itemCount: AppCubit.get(context).myPosts.length,
+                              ),
+                              ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) => buildShareItem(
+                                    AppCubit.get(context).sharePosts, index, context),
+                                itemCount: AppCubit.get(context).sharePosts.length,
                               ),
                             ],
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                90,
-                              ),
-                            ),
-                            child: ListView.separated(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) => buildMyPostItem(
-                                  AppCubit.get(context).myPosts, index, context),
-                              separatorBuilder: (context, index) => const SizedBox(
-                                height: 20,
-                              ),
-                              itemCount: AppCubit.get(context).myPosts.length,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                90,
-                              ),
-                            ),
-                            child: ListView.separated(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) => buildShareItem(
-                                  AppCubit.get(context).sharePosts, index, context),
-                              separatorBuilder: (context, index) => const SizedBox(
-                                height: 20,
-                              ),
-                              itemCount: AppCubit.get(context).sharePosts.length,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     )
                   ],
                 ),
@@ -282,10 +311,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Card? buildMyPostItem(List posts, index, context) =>  Card(
-        margin: const EdgeInsets.symmetric(horizontal: 14),
+  Card? buildMyPostItem(List posts, index, context) => Card(
         color: const Color(0xffE6EEFA),
-        elevation: 8,
         clipBehavior: Clip.none,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -396,68 +423,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           posts[index].values.single.image.length > 4
                               ? 4
                               : posts[index].values.single.image!.length,
-                          (index1) => Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      navigateTo(
-                                          context: context,
-                                          screen: ViewImagesScreen(
-                                              view: posts,
-                                              index1: index,
-                                              index2: index1,
-                                              id: AppCubit.get(context)
-                                                  .myPostsId));
-                                    },
-                                    child: posts[index]
-                                                .values
-                                                .single
-                                                .image!
-                                                .length >
-                                            4
-                                        ? index1 == 3
-                                            ? Stack(
-                                                alignment: Alignment.center,
-                                                children: [
-                                                  Image.network(
-                                                    posts[index]
-                                                        .values
-                                                        .single
-                                                        .image![index1],
-                                                    width: double.infinity,
+                          (index1) => Column(
+                            children: [
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    navigateTo(
+                                        context: context,
+                                        screen: ViewImagesScreen(
+                                            view: posts,
+                                            index1: index,
+                                            index2: index1,
+                                            id: AppCubit.get(context)
+                                                .myPostsId));
+                                  },
+                                  child: posts[index]
+                                              .values
+                                              .single
+                                              .image!
+                                              .length >
+                                          4
+                                      ? index1 == 3
+                                          ? Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                Image.network(
+                                                  posts[index]
+                                                      .values
+                                                      .single
+                                                      .image![index1],
+                                                  fit: BoxFit.cover,
+                                                  width: double.infinity,
+                                                ),
+                                                Text(
+                                                  '${posts[index].values.single.image!.length - 4}+',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 25,
+                                                    fontWeight:
+                                                        FontWeight.bold,
                                                   ),
-                                                  Text(
-                                                    '${posts[index].values.single.image!.length - 4}+',
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 25,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            : Image.network(
-                                                posts[index]
-                                                    .values
-                                                    .single
-                                                    .image![index1],
-                                                width: double.infinity,
-                                              )
-                                        : Image.network(
-                                            posts[index]
-                                                .values
-                                                .single
-                                                .image![index1],
-                                            width: double.infinity,
-                                          ),
-                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Image.network(
+                                              posts[index]
+                                                  .values
+                                                  .single
+                                                  .image![index1],
+                                              fit: BoxFit.cover,
+                                              width: double.infinity,
+                                            )
+                                      : Image.network(
+                                          posts[index]
+                                              .values
+                                              .single
+                                              .image![index1],
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                        ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -593,9 +620,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
   Widget buildShareItem(List<SharePostModel> posts, index, context) => Card(
-        margin: const EdgeInsets.symmetric(horizontal: 14),
         color: const Color(0xffE6EEFA),
-        elevation: 8,
         clipBehavior: Clip.none,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -764,54 +789,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           posts[index].image!.length > 4
                               ? 4
                               : posts[index].image!.length,
-                          (index1) => Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      navigateTo(
-                                          context: context,
-                                          screen: ViewImagesScreen(
-                                              view: posts,
-                                              index1: index,
-                                              index2: index1,
-                                              id: AppCubit.get(context)
-                                                  .myPostsId));
-                                    },
-                                    child: posts[index].image!.length > 4
-                                        ? index1 == 3
-                                            ? Stack(
-                                                alignment: Alignment.center,
-                                                children: [
-                                                  Image.network(
-                                                    posts[index].image![index1],
-                                                    width: double.infinity,
+                          (index1) => Column(
+                            children: [
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    navigateTo(
+                                        context: context,
+                                        screen: ViewImagesScreen(
+                                            view: posts,
+                                            index1: index,
+                                            index2: index1,
+                                            id: AppCubit.get(context)
+                                                .myPostsId));
+                                  },
+                                  child: posts[index].image!.length > 4
+                                      ? index1 == 3
+                                          ? Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                Image.network(
+                                                  posts[index].image![index1],
+                                                  fit: BoxFit.cover,
+                                                  width: double.infinity,
+                                                ),
+                                                Text(
+                                                  '${posts[index].image!.length - 4}+',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 25,
+                                                    fontWeight:
+                                                        FontWeight.bold,
                                                   ),
-                                                  Text(
-                                                    '${posts[index].image!.length - 4}+',
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 25,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            : Image.network(
-                                                posts[index].image![index1],
-                                                width: double.infinity,
-                                              )
-                                        : Image.network(
-                                            posts[index].image![index1],
-                                            width: double.infinity,
-                                          ),
-                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Image.network(
+                                              posts[index].image![index1],
+                                              width: double.infinity,
+                                    fit: BoxFit.cover,
+                                            )
+                                      : Image.network(
+                                          posts[index].image![index1],
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                        ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
