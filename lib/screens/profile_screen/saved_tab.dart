@@ -16,14 +16,14 @@ class SavedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {
-        // TODO: Implement listener if needed
+
       },
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Saved Posts'),
           ),
-          body: ListView.separated(
+          body: ListView.builder(
             shrinkWrap: true,
             itemBuilder: (context, index) => savedPostsItems(
                 AppCubit.get(context).savedPosts, index, context,
@@ -31,9 +31,7 @@ class SavedScreen extends StatelessWidget {
                 ,AppCubit.get(context).posts[index].values.single
 
             ),
-            separatorBuilder: (context, index) => const SizedBox(
-              height: 10,
-            ),
+
             itemCount: AppCubit.get(context).savedPosts.length,
           ),
         );

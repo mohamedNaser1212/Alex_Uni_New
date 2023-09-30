@@ -43,15 +43,34 @@ class HomeScreen extends StatelessWidget {
               Container(
                 height: MediaQuery.of(context).size.height * 0.25,
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) => buildFacultyItem(
-                      context, AppCubit.get(context).universities[index]),
-                  separatorBuilder: (context, index) => const SizedBox(
-                    width: 10,
-                  ),
-                  itemCount: AppCubit.get(context).universities.length,
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('Universities')
+                      .snapshots(),
+                  builder: (context,snapshot){
+                    if(snapshot.hasData) {
+                      return ListView.separated(
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot ds = snapshot.data!.docs[index];
+                          UniversityModel model = UniversityModel.fromJson(ds.data()! as Map<String, dynamic>?);
+                          model.id = ds.id;
+                          return buildFacultyItem(
+                            context,
+                            model,
+
+                          );
+                        },
+                        separatorBuilder: (context, index) => const SizedBox(
+                          width: 15,
+                        ),
+                        itemCount: snapshot.data!.docs.length,
+                      );
+                    } else {
+                      return const Center(child:Text('No Data Found'),);
+                    }
+                  },
                 ),
               ),
               Padding(
