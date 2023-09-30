@@ -75,8 +75,8 @@ class HomeScreen extends StatelessWidget {
                       .collection('News')
                       .snapshots(),
                   builder: (context,snapshot){
-                    if(snapshot.hasData)
-                    return ListView.separated(
+                    if(snapshot.hasData) {
+                      return ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
@@ -92,8 +92,9 @@ class HomeScreen extends StatelessWidget {
                       ),
                       itemCount: snapshot.data!.docs.length,
                     );
-                    else
+                    } else {
                       return const Center(child:Text('No Data Found'),);
+                    }
         },
                 ),
               ),
@@ -128,10 +129,6 @@ class HomeScreen extends StatelessWidget {
                       AppCubit.get(context).post[index],
                       index,
                       context),
-                  // separatorBuilder: (context, index) => Container(
-                  //   color: const Color(0xffE6EEFA),
-                  //   height: 20,
-                  // ),
                   itemCount: AppCubit.get(context).posts.length,
                 ),
               ),
@@ -216,12 +213,10 @@ class HomeScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
                 ),
-                child: Container(
-                  child: Image(
-                    image: NetworkImage(model.headlineImage!),
-                    height: 120,
-                    width: double.infinity,
-                  ),
+                child: Image(
+                  image: NetworkImage(model.headlineImage!),
+                  height: 120,
+                  width: double.infinity,
                 ),
               ),
 
@@ -248,7 +243,7 @@ class HomeScreen extends StatelessWidget {
                   '${model.mainDescription}',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
@@ -293,8 +288,6 @@ class HomeScreen extends StatelessWidget {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        print(
-                                            posts[index].values.single.userId);
                                         navigateTo(
                                           context: context,
                                           screen: ChatDetailsScreen(
