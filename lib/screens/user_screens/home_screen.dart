@@ -350,13 +350,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        navigateTo(
-                                          context: context,
-                                          screen: ChatDetailsScreen(
-                                            chatUserModel:
-                                                posts[index].values.single,
-                                          ),
-                                        );
                                       },
                                       child: Text(
                                         '${posts[index].values.single.userName}',

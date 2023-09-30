@@ -1,5 +1,5 @@
 import 'package:alex_uni_new/cubit/app_cubit.dart';
-import 'package:alex_uni_new/models/post_model.dart';
+import 'package:alex_uni_new/models/admin_model.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:chat_bubbles/bubbles/bubble_normal.dart';
 import 'package:chat_bubbles/bubbles/bubble_normal_image.dart';
@@ -14,32 +14,34 @@ import '../../models/message_model.dart';
 class ChatDetailsScreen extends StatelessWidget {
   const ChatDetailsScreen({Key? key, required this.chatUserModel})
       : super(key: key);
-  final PostModel? chatUserModel;
+  final AdminModel? chatUserModel;
   @override
   Widget build(BuildContext context) {
     return Builder(
       builder: (BuildContext context) {
         AppCubit.get(context)
-            .receiveMessage(receiverId: chatUserModel!.userId!);
+            .receiveMessage(receiverId: chatUserModel!.id!);
         return BlocConsumer<AppCubit, AppStates>(
           listener: (context, state) {},
           builder: (context, state) {
             return Scaffold(
               appBar: AppBar(
+                leading: IconButton(
+                  onPressed: () {
+                    AppCubit.get(context).postGraduate = [];
+                    AppCubit.get(context).underGraduate = [];
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.black,
+                  ),
+                ),
                 backgroundColor: defaultColor,
                 title: Row(
                   children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        '${chatUserModel?.userImage}',
-                      ),
-                      radius: 25,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
                     Text(
-                      '${chatUserModel?.userName}',
+                      '${chatUserModel?.name}',
                     ),
                   ],
                 ),
@@ -66,7 +68,7 @@ class ChatDetailsScreen extends StatelessWidget {
                           MessageBar(
                             onSend: (value) {
                               AppCubit.get(context).sendMessage(
-                                receiverId: chatUserModel!.userId!,
+                                receiverId: chatUserModel!.id!,
                                 text: value.toString(),
                               );
                             },
@@ -91,7 +93,7 @@ class ChatDetailsScreen extends StatelessWidget {
                                   onTap: () {
                                     AppCubit.get(context).pickPhoto(
                                         source: ImageSource.gallery,
-                                        receiverId: chatUserModel!.userId!);
+                                        receiverId: chatUserModel!.id!);
                                   },
                                 ),
                               ),

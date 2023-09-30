@@ -799,6 +799,28 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+  List<AdminModel>postGraduate=[];
+  getPostGraduateAdmins(){
+    postGraduate=[];
+    for (var element in admin) {
+      if(element.postGraduate==true){
+        postGraduate.add(element);
+      }
+    }
+    emit(GetAllAdminsSuccessState());
+  }
+  List<AdminModel>underGraduate=[];
+  getUnderGraduateAdmins(){
+    underGraduate=[];
+    for (var element in admin) {
+      if(element.postGraduate!=true){
+        underGraduate.add(element);
+      }
+    }
+    emit(GetAllAdminsSuccessState());
+  }
+
+
   UserModel? selectedUser;
   getSelectedUser(String id){
     emit(GetSelectedUserLoadingState());

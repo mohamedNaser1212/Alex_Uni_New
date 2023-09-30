@@ -1,4 +1,6 @@
 import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/reusable_widgets.dart';
+import 'package:alex_uni_new/screens/chat_details/chat_details_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,17 +22,23 @@ class ChooseScreen extends StatelessWidget {
               padding: EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                 const  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      'Post graduate',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                 InkWell(
+                   onTap: (){
+                     AppCubit.get(context).getPostGraduateAdmins();
+                      navigateTo(context: context, screen:  ChatDetailsScreen(chatUserModel: AppCubit.get(context).postGraduate[0]));
+                   },
+                   child: const  SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        'Post graduate',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
+                 ),
                    const SizedBox(
                     height: 20,
                   ),
@@ -38,16 +46,22 @@ class ChooseScreen extends StatelessWidget {
                     height: 1,
                     color: Colors.grey,
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        'Under graduate',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                   Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: InkWell(
+                      onTap: (){
+                        AppCubit.get(context).getPostGraduateAdmins();
+                        navigateTo(context: context, screen:  ChatDetailsScreen(chatUserModel: AppCubit.get(context).underGraduate[0]));
+                      },
+                      child:const SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          'Under graduate',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
