@@ -256,7 +256,7 @@ class HomeScreen extends StatelessWidget {
         ),
       );
 
-  Widget? buildPostItem(List posts, PostModel model, index, context) => Card(
+  Widget? buildPostItem(List posts, PostModel model, index, context,) => Card(
         color: const Color(0xffE6EEFA),
         clipBehavior: Clip.none,
         child: Padding(

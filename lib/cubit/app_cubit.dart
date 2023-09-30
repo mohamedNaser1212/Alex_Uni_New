@@ -51,6 +51,8 @@ class AppCubit extends Cubit<AppStates> {
     lang == 'en' ? 'Settings' : 'الاعدادات',
   ];
 
+
+
   void changeBottomNavBar(int index) {
     currentIndex = index;
     emit(AppChangeBottomNavBarState());

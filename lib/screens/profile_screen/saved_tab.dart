@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cubit/app_cubit.dart';
+import '../../models/post_model.dart';
+import '../../reusable_widgets.dart';
 import '../../states/app_states.dart';
+import '../comments/comments_screen.dart';
+import '../view_image_screen.dart';
 
 class SavedScreen extends StatelessWidget {
   const SavedScreen({Key? key}) : super(key: key);
@@ -11,248 +15,300 @@ class SavedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-        listener: (context, state) {
-          // TODO: Implement listener if needed
-        },
-        builder: (context, state) {
-          return Scaffold(
-              appBar: AppBar(
-                title: const Text('Saved Posts'),
-              ),
-              body: ListView.separated(
-                  itemBuilder: (context,index)=>savedPostsItems(AppCubit.get(context).savedPosts, index, context),
-                  separatorBuilder: (context,index)=>const SizedBox(height: 10,),
-                  itemCount: AppCubit.get(context).savedPosts.length
-              ),
-          );
-        }
+      listener: (context, state) {
+        // TODO: Implement listener if needed
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Saved Posts'),
+          ),
+          body: ListView.separated(
+            shrinkWrap: true,
+            itemBuilder: (context, index) => savedPostsItems(
+                AppCubit.get(context).savedPosts, index, context,
+                AppCubit.get(context).posts
+                ,AppCubit.get(context).posts[index].values.single
 
-
+            ),
+            separatorBuilder: (context, index) => const SizedBox(
+              height: 10,
+            ),
+            itemCount: AppCubit.get(context).savedPosts.length,
+          ),
+        );
+      },
     );
   }
 
-  Widget savedPostsItems(List<SavePostsModel> savedPosts, index, context) => Card(
-    margin: const EdgeInsets.symmetric(horizontal: 14),
-    color: const Color(0xffE6EEFA),
-    elevation: 8,
-    clipBehavior: Clip.none,
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+  Widget savedPostsItems(List<SavePostsModel> savedPosts, index, context,List posts,PostModel model) =>
+      Card(
+        color: const Color(0xffE6EEFA),
+        clipBehavior: Clip.none,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(
-                  '${savedPosts[index].userImage}',
-                ),
-                radius: 25,
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      '${posts[index].values.single.userImage}',
+                    ),
+                    radius: 25,
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
                           children: [
-                            Row(
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      '${savedPosts[index].userName}',
+                                      style: const TextStyle(
+                                        height: 1.4,
+                                        fontSize: 16,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w900,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.verified,
+                                      size: 16,
+                                      color: Colors.blue,
+                                    ),
+                                  ],
+                                ),
                                 Text(
-                                  '${savedPosts[index].userName}',
+                                  '${savedPosts[index].date}',
                                   style: const TextStyle(
                                     height: 1.4,
-                                    fontSize: 16,
-                                    color: Colors.black,
+                                    fontSize: 12,
+                                    color: Colors.grey,
                                     fontWeight: FontWeight.w900,
                                     fontFamily: 'Poppins',
                                   ),
                                 ),
-                                const Icon(
-                                  Icons.verified,
-                                  size: 16,
-                                  color: Colors.blue,
-                                ),
                               ],
-                            ),
-                            Text(
-                              '${savedPosts[index].date}',
-                              style: const TextStyle(
-                                height: 1.4,
-                                fontSize: 12,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Poppins',
-                              ),
                             ),
                           ],
                         ),
                       ],
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Divider(
+                  color: Colors.grey[350],
+                  height: 1,
+                ),
+              ),
+              Text(
+                '${savedPosts[index].text}',
+                style: const TextStyle(
+
+                  fontSize: 14,
+                  color: Colors.black,
+
+                  fontFamily: 'Poppins',
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: [
+                    GridView.count(
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      childAspectRatio: 1 / 1,
+                      children: List.generate(
+                        AppCubit.get(context)
+                                    .posts[index]
+                                    .values
+                                    .single
+                                    .image!
+                                    .length >
+                                4
+                            ? 4
+                            : AppCubit.get(context)
+                                .posts[index]
+                                .values
+                                .single
+                                .image!
+                                .length,
+                        (index1) => Container(
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    navigateTo(
+                                        context: context,
+                                        screen: ViewImagesScreen(
+                                            view: AppCubit.get(context).posts,
+                                            index1: index,
+                                            index2: index1,
+                                            id: AppCubit.get(context).postsId));
+                                  },
+                                  child: AppCubit.get(context)
+                                              .posts[index]
+                                              .values
+                                              .single
+                                              .image!
+                                              .length >
+                                          4
+                                      ? index1 == 3
+                                          ? Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                Image.network(
+                                                  AppCubit.get(context)
+                                                      .posts[index]
+                                                      .values
+                                                      .single
+                                                      .image![index1],
+                                                  width: double.infinity,
+                                                ),
+                                                Text(
+                                                  '${AppCubit.get(context).posts[index].values.single.image!.length - 4}+',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 25,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Image.network(
+                                              AppCubit.get(context)
+                                                  .posts[index]
+                                                  .values
+                                                  .single
+                                                  .image![index1],
+                                              width: double.infinity,
+                                            )
+                                      : Image.network(
+                                          AppCubit.get(context)
+                                              .posts[index]
+                                              .values
+                                              .single
+                                              .image![index1],
+                                          width: double.infinity,
+                                        ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      color: Colors.black.withOpacity(0.6),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                AppCubit.get(context).updatePostLikes(
+                                  AppCubit.get(context).posts[index],
+                                );
+                              },
+                              child: const Icon(
+                                Icons.favorite_outline_rounded,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              '${AppCubit.get(context).posts[index].values.single.likes!.length}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                AppCubit.get(context).getComments(
+                                    postId:
+                                        AppCubit.get(context).postsId[index]);
+                                navigateTo(
+                                  context: context,
+                                  screen: CommentsScreen(
+                                    postId:
+                                        AppCubit.get(context).postsId[index],
+                                  ),
+                                );
+                              },
+                              child: const Icon(
+                                Icons.comment_outlined,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const Spacer(),
+                            InkWell(
+                              onTap: () {
+                                AppCubit.get(context).addSharedPosts(
+                                    postId:
+                                        AppCubit.get(context).postsId[index],
+                                    index: index,
+                                    context: context);
+                              },
+                              child: const Icon(
+                                Icons.share_outlined,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                AppCubit.get(context).addSavePosts(
+                                    postId:
+                                        AppCubit.get(context).postsId[index],
+                                    index: index);
+                              },
+                              child: const Icon(
+                                Icons.bookmark_border_outlined,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Divider(
-              color: Colors.grey[350],
-              height: 1,
-            ),
-          ),
-          Text(
-            '${savedPosts[index].text}',
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          if (savedPosts[index].image != '')
-            Container(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Stack(
-                alignment: AlignmentDirectional.bottomCenter,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(46),
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                          '${savedPosts[index].image}',
-                        ),
-                      ),
-                    ),
-                    child: Image(
-                      image: NetworkImage(
-                          '${savedPosts[index].image}'),
-                      height: 120,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    color: Colors.black.withOpacity(0.6),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.favorite_outline_rounded,
-                            size: 18,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            '${savedPosts[index].likes?.length}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          InkWell(
-                            onTap: () {},
-                            child: const Icon(
-                              Icons.comment_outlined,
-                              size: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const Spacer(),
-                          InkWell(
-                            onTap: () {},
-                            child: const Icon(
-                              Icons.share_outlined,
-                              size: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          InkWell(
-                            onTap: () {},
-                            child: const Icon(
-                              Icons.bookmark_border_outlined,
-                              size: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          if (savedPosts[index].image == '')
-            Container(
-              width: double.infinity,
-              color: Colors.black.withOpacity(0.6),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                      },
-                      child: const Icon(
-                        Icons.favorite_outline_rounded,
-                        size: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      '${savedPosts[index].likes?.length}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    InkWell(
-                      onTap: () {},
-                      child: const Icon(
-                        Icons.comment_outlined,
-                        size: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const Spacer(),
-                    InkWell(
-                      onTap: () {},
-                      child: const Icon(
-                        Icons.share_outlined,
-                        size: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    InkWell(
-                      onTap: () {},
-                      child: const Icon(
-                        Icons.bookmark_border_outlined,
-                        size: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }
-
-
