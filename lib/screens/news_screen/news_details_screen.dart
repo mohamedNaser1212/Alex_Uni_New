@@ -23,7 +23,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
     super.initState();
 
     // Initialize unique keys for each IconButton
-    for (int i = 0; i < widget.newsModel.images!.length; i++) {
+    for (int i = 0; i < widget.newsModel.images.length; i++) {
       leftIconButtonKeys.add(GlobalKey());
       rightIconButtonKeys.add(GlobalKey());
     }
@@ -43,7 +43,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
   }
 
   void goToNextImage() {
-    if (index < widget.newsModel.images!.length - 1) {
+    if (index < widget.newsModel.images.length - 1) {
       setState(() {
         index++;
         scrollController.animateTo(
@@ -58,7 +58,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final hasPreviousImage = index > 0;
-    final hasNextImage = index < widget.newsModel.images!.length - 1;
+    final hasNextImage = index < widget.newsModel.images.length - 1;
 
     return Scaffold(
       appBar: AppBar(
@@ -233,7 +233,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                     width: MediaQuery.of(context).size.width * 0.08,
                   ),
                   Text(
-                    '${widget.newsModel.images!.length}',
+                    '${widget.newsModel.images.length}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

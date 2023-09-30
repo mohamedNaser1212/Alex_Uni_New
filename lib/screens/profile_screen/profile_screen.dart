@@ -37,79 +37,108 @@ class _ProfileScreenState extends State<ProfileScreen> {
           length: 3,
           child: Scaffold(
             body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        child: Stack(
-                          alignment: AlignmentDirectional.bottomStart,
-                          children: [
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Container(
-                                width: double.infinity,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.25,
-                                decoration: const BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(6),
-                                    topRight: Radius.circular(6),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      child: Stack(
+                        alignment: AlignmentDirectional.bottomStart,
+                        children: [
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                              width: double.infinity,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.25,
+                              decoration: const BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(6),
+                                  topRight: Radius.circular(6),
+                                ),
+                              ),
+                              child: userModel.cover != ''
+                                  ? Image(
+                                      image:
+                                          NetworkImage('${userModel.cover}'),
+                                      height: 120,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Container(),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      icon: const Icon(
+                                        Icons.arrow_back,
+                                      ),
+                                    ),
+                                  ),
+                                  CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        cubit.logout(context);
+                                      },
+                                      icon: const Icon(
+                                        Icons.logout,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              width: double.infinity,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.08,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30),
+                                ),
+                              ),
+                              child: Padding(
+                                padding:  EdgeInsetsDirectional.only(start: MediaQuery.of(context).size.width * 0.37,
+                                top: 5,
+                                ),
+                                child: Text(
+                                  '${userModel.name}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                    fontSize: 18,
                                   ),
                                 ),
-                                child: userModel.cover != ''
-                                    ? Image(
-                                        image:
-                                            NetworkImage('${userModel.cover}'),
-                                        height: 120,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Container(),
                               ),
                             ),
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        icon: const Icon(
-                                          Icons.arrow_back,
-                                        ),
-                                      ),
-                                    ),
-                                    CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          cubit.logout(context);
-                                        },
-                                        icon: const Icon(
-                                          Icons.logout,
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            CircleAvatar(
-                              radius: 65,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: CircleAvatar(
+                              radius: MediaQuery.of(context).size.width * 0.15,
                               backgroundColor:
                                   Theme.of(context).scaffoldBackgroundColor,
                               child: Container(
@@ -120,204 +149,130 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   backgroundImage: NetworkImage(
                                     '${userModel.image}',
                                   ),
-                                  radius: 60,
+                                  radius: MediaQuery.of(context).size.width * 0.14,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        height: 30,
-                        child: Align(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: Text(
-                            '${userModel.name}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                  fontSize: 18,
-                                ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      if (lang == 'en')
-                        Text(
-                          '${userModel.bio ?? 'Add Bio...'}',
-                          style: Theme.of(context).textTheme.bodyMedium!,
-                        ),
-                      if (lang == 'ar')
-                        Text(
-                          '${userModel.bio ?? 'اضف نبذة عنك...'}',
-                          style: Theme.of(context).textTheme.bodyMedium!,
-                        ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            InkWell(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      '${cubit.myPosts.length + cubit.sharePosts.length}',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      lang == 'en' ? 'Posts' : 'منشورات',
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              onTap: () {},
-                            ),
-                            InkWell(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    const Text(
-                                      '100',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      lang == 'en' ? 'Followers' : 'متابعين',
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              onTap: () {},
-                            ),
-                            InkWell(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    const Text(
-                                      '100',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      lang == 'en' ? 'Following' : 'متابعة',
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              onTap: () {},
-                            ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: reusableElevatedButton(
-                              label: lang == 'en'
-                                  ? 'Edit Profile'
-                                  : ' تعديل البيانات ',
-                              backColor: defaultColor,
-                              height: 40,
-                              function: () {
-                                navigateTo(
-                                    context: context,
-                                    screen: const EditProfile());
-                              },
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: reusableElevatedButton(
-                              label: lang == 'en' ? 'photos' : 'الصور',
-                              backColor: defaultColor,
-                              height: 40,
-                              function: () {
-                                navigateTo(
-                                    context: context, screen: PhotoScreen());
-                              },
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: reusableElevatedButton(
-                              label: lang == 'en' ? 'Saved' : 'المحفوظات',
-                              backColor: defaultColor,
-                              height: 40,
-                              function: () {
-                                AppCubit.get(context).getSavePosts();
-                                navigateTo(
-                                    context: context,
-                                    screen: const SavedScreen());
-                              },
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            90,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            height: 30,
+                            child: Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Text(
+                                'Faculty of ${userModel.universityname}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                        child: ListView.separated(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) => buildMyPostItem(
-                              AppCubit.get(context).myPosts, index, context),
-                          separatorBuilder: (context, index) => const SizedBox(
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Expanded(
+                                child: reusableElevatedButton(
+                                  label: lang == 'en'
+                                      ? 'Edit Profile'
+                                      : ' تعديل البيانات ',
+                                  backColor: defaultColor,
+                                  height: 40,
+                                  function: () {
+                                    navigateTo(
+                                        context: context,
+                                        screen: const EditProfile());
+                                  },
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: reusableElevatedButton(
+                                  label: lang == 'en' ? 'photos' : 'الصور',
+                                  backColor: defaultColor,
+                                  height: 40,
+                                  function: () {
+                                    navigateTo(
+                                        context: context, screen: PhotoScreen());
+                                  },
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: reusableElevatedButton(
+                                  label: lang == 'en' ? 'Saved' : 'المحفوظات',
+                                  backColor: defaultColor,
+                                  height: 40,
+                                  function: () {
+                                    AppCubit.get(context).getSavePosts();
+                                    navigateTo(
+                                        context: context,
+                                        screen: const SavedScreen());
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                90,
+                              ),
+                            ),
+                            child: ListView.separated(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) => buildMyPostItem(
+                                  AppCubit.get(context).myPosts, index, context),
+                              separatorBuilder: (context, index) => const SizedBox(
+                                height: 20,
+                              ),
+                              itemCount: AppCubit.get(context).myPosts.length,
+                            ),
+                          ),
+                          const SizedBox(
                             height: 20,
                           ),
-                          itemCount: AppCubit.get(context).myPosts.length,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            90,
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                90,
+                              ),
+                            ),
+                            child: ListView.separated(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) => buildShareItem(
+                                  AppCubit.get(context).sharePosts, index, context),
+                              separatorBuilder: (context, index) => const SizedBox(
+                                height: 20,
+                              ),
+                              itemCount: AppCubit.get(context).sharePosts.length,
+                            ),
                           ),
-                        ),
-                        child: ListView.separated(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) => buildShareItem(
-                              AppCubit.get(context).sharePosts, index, context),
-                          separatorBuilder: (context, index) => const SizedBox(
-                            height: 20,
-                          ),
-                          itemCount: AppCubit.get(context).sharePosts.length,
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    )
+                  ],
                 ),
               ),
             ),

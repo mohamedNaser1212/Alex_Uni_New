@@ -8,6 +8,7 @@ import 'package:alex_uni_new/screens/comments/comments_screen.dart';
 import 'package:alex_uni_new/screens/news_screen/news_details_screen.dart';
 import 'package:alex_uni_new/screens/universties/university_details_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../reusable_widgets.dart';
@@ -21,8 +22,6 @@ class HomeScreen extends StatelessWidget {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        AppCubit cubit = AppCubit.get(context);
-
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
@@ -71,17 +70,31 @@ class HomeScreen extends StatelessWidget {
               Container(
                 height: MediaQuery.of(context).size.height * 0.37,
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: ListView.separated(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => buildNewsItem(
-                    context: context,
-                    model: cubit.news[index],
-                  ),
-                  separatorBuilder: (context, index) => const SizedBox(
-                    width: 15,
-                  ),
-                  itemCount: cubit.news.length,
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('News')
+                      .snapshots(),
+                  builder: (context,snapshot){
+                    if(snapshot.hasData)
+                    return ListView.separated(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot ds = snapshot.data!.docs[index];
+                        NewsModel model = NewsModel.fromJson(ds.data()! as Map<String, dynamic>?);
+                        return buildNewsItem(
+                        context: context,
+                        model: model,
+                      );
+                      },
+                      separatorBuilder: (context, index) => const SizedBox(
+                        width: 15,
+                      ),
+                      itemCount: snapshot.data!.docs.length,
+                    );
+                    else
+                      return const Center(child:Text('No Data Found'),);
+        },
                 ),
               ),
               const SizedBox(
