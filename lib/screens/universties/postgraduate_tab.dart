@@ -81,7 +81,7 @@ class PostGraduateTab extends StatelessWidget {
   })=>InkWell(
     onTap: (){
       AppCubit.get(context).getDepartmentAdmins(departmentId: department.id!, universityId:department.universityId!);
-      navigateTo(context: context, screen: DepartmentDetailsScreen(department: department,));
+      navigateTo(context: context, screen: DepartmentDetailsScreen(departmentModel: department,));
     },
     child: Container(
       clipBehavior: Clip.hardEdge,
@@ -120,7 +120,7 @@ class PostGraduateTab extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
                   image: NetworkImage(
-                    '${department.mainImage}',
+                    '${department.sectionImages[0]}',
                   ),
                   fit: BoxFit.cover,
                 ),

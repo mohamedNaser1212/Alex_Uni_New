@@ -83,7 +83,7 @@ class UnderGraduateTab extends StatelessWidget {
   }) => InkWell(
         onTap: () async{
           AppCubit.get(context).getDepartmentAdmins(departmentId: department.id!, universityId:department.universityId!);
-          navigateTo(context: context, screen: DepartmentDetailsScreen(department: department,));
+          navigateTo(context: context, screen: DepartmentDetailsScreen(departmentModel: department,));
         },
         child: Container(
           clipBehavior: Clip.hardEdge,
@@ -134,7 +134,7 @@ class UnderGraduateTab extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
                       image: NetworkImage(
-                        '${department.mainImage}',
+                        '${department.sectionImages[0]}',
                       ),
                       fit: BoxFit.cover,
                     ),

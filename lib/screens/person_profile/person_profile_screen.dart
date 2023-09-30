@@ -12,14 +12,12 @@ class PersonProfileScreen extends StatefulWidget {
    PersonProfileScreen({super.key, this.userId});
 
   final String ? userId;
-   bool showPost = false;
+  bool showPost = false;
   @override
   State<PersonProfileScreen> createState() => _PersonProfileScreenState();
 }
 
 class _PersonProfileScreenState extends State<PersonProfileScreen> {
-
-
 
   @override
   void initState() {

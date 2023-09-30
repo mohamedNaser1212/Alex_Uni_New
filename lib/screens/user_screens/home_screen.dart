@@ -263,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: Image(
-                  image: NetworkImage(model.headlineImage!),
+                  image: NetworkImage(model.images[0]!),
                   height: 120,
                   width: double.infinity,
                 ),
@@ -289,7 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: Text(
-                  '${model.mainDescription}',
+                  '${model.descriptions[0]!}',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
