@@ -296,6 +296,7 @@ class AppCubit extends Cubit<AppStates> {
         .doc(post.keys.single)
         .update(post.values.single.toMap())
         .then((value) {
+          getUserData();
       emit(LikePostSuccessState());
     }).catchError((error) {});
   }
@@ -510,11 +511,11 @@ class AppCubit extends Cubit<AppStates> {
     FirebaseFirestore.instance
         .collection('posts')
         .where('showPost',isEqualTo: true)
+    .where('userId',isEqualTo: uId)
         .orderBy('date', descending: true)
         .get()
         .then((value) {
       for (var element in value.docs) {
-        if (element.data()['userId'] == uId) {
           myPosts.add({
             element.reference.id: PostModel.fromJson(element.data()),
           });
@@ -522,7 +523,6 @@ class AppCubit extends Cubit<AppStates> {
           element.data()['image'].forEach((element) {
             myphotos.add(element);
           });
-        }
       }
     }).then((value) {
       emit(GetPostsSuccessState());
@@ -550,6 +550,7 @@ class AppCubit extends Cubit<AppStates> {
     FirebaseFirestore.instance.collection('users').doc(uId).update({
       'savedPosts': FieldValue.arrayUnion([savePostsModel.toMap()]),
     }).then((value) {
+      getUserData();
       emit(AddSavePostSuccessState());
     }).catchError((error) {
       emit(AddSavePostErrorState());
@@ -797,5 +798,63 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetAllAdminsErrorState());
     });
   }
+
+  UserModel? selectedUser;
+  getSelectedUser(String id){
+    emit(GetSelectedUserLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(id)
+        .get()
+        .then((value) {
+      selectedUser=UserModel.fromJson(value.data()!);
+      emit(GetSelectedUserSuccessState());
+    }).catchError((error) {
+      emit(GetSelectedUserErrorState());
+    });
+  }
+
+  List <PostModel> selectedUserPosts=[];
+  getSelectedUserPosts(String id){
+    emit(GetSelectedUserPostsLoadingState());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .where('userId',isEqualTo: id)
+    .where('showPost',isEqualTo: true)
+    .orderBy('date',descending: true)
+        .get()
+        .then((value) {
+      selectedUserPosts=[];
+      for(var element in value.docs){
+        PostModel postModel=PostModel.fromJson(element.data());
+        postModel.postId=element.id;
+        selectedUserPosts.add(PostModel.fromJson(element.data()));
+      }
+      emit(GetSelectedUserPostsSuccessState());
+    }).catchError((error) {
+      emit(GetSelectedUserPostsErrorState());
+    });
+  }
+
+  List <SharePostModel> selectedUserSharedPosts=[];
+  getSelectedUserSharedPosts(String id){
+    emit(GetSelectedUserLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(id)
+        .get()
+        .then((value) {
+      selectedUserSharedPosts=[];
+      for(var element in value.data()!['sharePosts']){
+        SharePostModel sharePostModel=SharePostModel.fromJson(element);
+        selectedUserSharedPosts.add(sharePostModel);
+      }
+      emit(GetSelectedUserSuccessState());
+    }).catchError((error) {
+      emit(GetSelectedUserErrorState());
+    });
+  }
+
+
 
 }

@@ -495,10 +495,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
-                              const Icon(
-                                Icons.favorite_outline_rounded,
-                                size: 18,
-                                color: Colors.white,
+                              InkWell(
+                                onTap: () {
+                                  AppCubit.get(context).updatePostLikes(
+                                    AppCubit.get(context).posts[index],
+                                  );
+                                },
+                                child: Icon(
+                                  AppCubit.get(context)
+                                      .posts[index]
+                                      .values
+                                      .single
+                                      .likes!
+                                      .contains(uId)
+                                      ? Icons.favorite
+                                      : Icons.favorite_outline_rounded,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
                               ),
                               const SizedBox(width: 5),
                               Text(
@@ -560,9 +574,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Row(
                       children: [
                         InkWell(
-                          onTap: () {},
-                          child: const Icon(
-                            Icons.favorite_outline_rounded,
+                          onTap: () {
+                            AppCubit.get(context).updatePostLikes(
+                              AppCubit.get(context).posts[index],
+                            );
+                          },
+                          child: Icon(
+                            AppCubit.get(context)
+                                .posts[index]
+                                .values
+                                .single
+                                .likes!
+                                .contains(uId)
+                                ? Icons.favorite
+                                : Icons.favorite_outline_rounded,
                             size: 18,
                             color: Colors.white,
                           ),

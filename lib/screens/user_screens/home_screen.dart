@@ -6,6 +6,8 @@ import 'package:alex_uni_new/models/university_model.dart';
 import 'package:alex_uni_new/screens/chat_details/chat_details_screen.dart';
 import 'package:alex_uni_new/screens/comments/comments_screen.dart';
 import 'package:alex_uni_new/screens/news_screen/news_details_screen.dart';
+import 'package:alex_uni_new/screens/person_profile/person_profile_screen.dart';
+import 'package:alex_uni_new/screens/profile_screen/profile_screen.dart';
 import 'package:alex_uni_new/screens/universties/university_details_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -313,11 +315,24 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Row(
                 children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      '${posts[index].values.single.userImage}',
+                  InkWell(
+                    onTap: () {
+                      navigateTo(
+                        context: context,
+                        screen: AppCubit.get(context).user!.uId ==
+                                posts[index].values.single.userId
+                            ?  const ProfileScreen()
+                            : PersonProfileScreen(
+                          userId: posts[index].values.single.userId,
+                        ),
+                      );
+                    },
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        '${posts[index].values.single.userImage}',
+                      ),
+                      radius: 25,
                     ),
-                    radius: 25,
                   ),
                   const SizedBox(
                     width: 20,
@@ -520,8 +535,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                       AppCubit.get(context).posts[index],
                                     );
                                   },
-                                  child: const Icon(
-                                    Icons.favorite_outline_rounded,
+                                  child: Icon(
+                                    AppCubit.get(context)
+                                        .posts[index]
+                                        .values
+                                        .single
+                                        .likes!
+                                        .contains(uId)
+                                        ? Icons.favorite
+                                        : Icons.favorite_outline_rounded,
                                     size: 18,
                                     color: Colors.white,
                                   ),
@@ -579,8 +601,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .postsId[index],
                                         index: index);
                                   },
-                                  child: const Icon(
-                                    Icons.bookmark_border_outlined,
+                                  child:  Icon(
+                                    AppCubit.get(context).user!.savedPosts!
+                                            .contains(AppCubit.get(context)
+                                                .postsId[index])
+                                        ? Icons.bookmark
+                                        : Icons.bookmark_border_outlined,
                                     size: 18,
                                     color: Colors.white,
                                   ),
@@ -607,8 +633,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 AppCubit.get(context).posts[index],
                               );
                             },
-                            child: const Icon(
-                              Icons.favorite_outline_rounded,
+                            child: Icon(
+                              AppCubit.get(context)
+                                      .posts[index]
+                                      .values
+                                      .single
+                                      .likes!
+                                      .contains(uId)
+                                  ? Icons.favorite
+                                  : Icons.favorite_outline_rounded,
                               size: 18,
                               color: Colors.white,
                             ),

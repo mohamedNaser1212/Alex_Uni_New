@@ -1,4 +1,5 @@
 class PostModel{
+  String ? postId;
   String ? text;
   String? date;
   String? userName;

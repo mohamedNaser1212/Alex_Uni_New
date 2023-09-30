@@ -180,3 +180,14 @@ class GetAllAdminsLoadingState extends AppStates {}
 class GetAllAdminsSuccessState extends AppStates {}
 
 class GetAllAdminsErrorState extends AppStates {}
+
+class GetSelectedUserLoadingState extends AppStates {}
+
+class GetSelectedUserSuccessState extends AppStates {}
+
+class GetSelectedUserErrorState extends AppStates {}
+
+class GetSelectedUserPostsLoadingState extends AppStates {}
+class GetSelectedUserPostsSuccessState extends AppStates {}
+class GetSelectedUserPostsErrorState extends AppStates {}
+
