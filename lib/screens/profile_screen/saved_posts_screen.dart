@@ -1,3 +1,4 @@
+import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +22,7 @@ class SavedScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Saved Posts'),
+            title:  Text(lang=='en'?'Saved Posts':'المنشورات المحفوظة'),
           ),
           body: ListView.builder(
             shrinkWrap: true,
@@ -52,7 +53,7 @@ class SavedScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     backgroundImage: NetworkImage(
-                      '${posts[index].values.single.userImage}',
+                      '${savedPosts[index].userImage}',
                     ),
                     radius: 25,
                   ),
@@ -142,18 +143,16 @@ class SavedScreen extends StatelessWidget {
                       crossAxisSpacing: 10,
                       childAspectRatio: 1 / 1,
                       children: List.generate(
-                        AppCubit.get(context)
-                                    .posts[index]
-                                    .values
-                                    .single
+                        AppCubit.get(context).
+                                   savedPosts[index]
                                     .image!
                                     .length >
                                 4
                             ? 4
                             : AppCubit.get(context)
-                                .posts[index]
-                                .values
-                                .single
+                                .savedPosts[index]
+
+
                                 .image!
                                 .length,
                         (index1) => Container(
@@ -172,9 +171,7 @@ class SavedScreen extends StatelessWidget {
                                             id: AppCubit.get(context).postsId));
                                   },
                                   child: AppCubit.get(context)
-                                              .posts[index]
-                                              .values
-                                              .single
+                                              .savedPosts[index]
                                               .image!
                                               .length >
                                           4
@@ -201,18 +198,14 @@ class SavedScreen extends StatelessWidget {
                                               ],
                                             )
                                           : Image.network(
-                                              AppCubit.get(context)
-                                                  .posts[index]
-                                                  .values
-                                                  .single
+                                              AppCubit.get(context).savedPosts[index]
+
                                                   .image![index1],
                                               width: double.infinity,
                                             )
                                       : Image.network(
                                           AppCubit.get(context)
-                                              .posts[index]
-                                              .values
-                                              .single
+                                           .savedPosts[index]
                                               .image![index1],
                                           width: double.infinity,
                                         ),
@@ -287,13 +280,15 @@ class SavedScreen extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
-                                AppCubit.get(context).addSavePosts(
-                                    postId:
-                                        AppCubit.get(context).postsId[index],
-                                    index: index);
+
+                                AppCubit.get(context).removeSavedPost(
+
+                                    index: index,
+
+                                    );
                               },
                               child: const Icon(
-                                Icons.bookmark_border_outlined,
+                                Icons.bookmark,
                                 size: 18,
                                 color: Colors.white,
                               ),

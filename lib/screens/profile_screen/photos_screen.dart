@@ -31,12 +31,11 @@ class _PhotoScreenState extends State<PhotoScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Photos'),
+            title:  Text(lang=='en'?'Photos':'الصور'),
           ),
           body: cubit.myphotos.length > 0
               ? GridView.count(
                   shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: 3,
                   mainAxisSpacing: 1,
                   crossAxisSpacing: 1,

@@ -14,6 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:ui' as ui;
 import '../../reusable_widgets.dart';
 import '../view_image_screen.dart';
 
@@ -25,7 +26,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: ConditionalBuilder(
             condition: state is! GetPostsLoadingState,
-            builder: (context)=>SingleChildScrollView(
+            builder: (context) => SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Inter',
                       ),
+
                     ),
                   ),
                   Container(
@@ -70,28 +71,31 @@ class _HomeScreenState extends State<HomeScreen> {
                       stream: FirebaseFirestore.instance
                           .collection('Universities')
                           .snapshots(),
-                      builder: (context,snapshot){
-                        if(snapshot.hasData) {
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
                           return ListView.separated(
                             physics: const BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               DocumentSnapshot ds = snapshot.data!.docs[index];
-                              UniversityModel model = UniversityModel.fromJson(ds.data()! as Map<String, dynamic>?);
+                              UniversityModel model = UniversityModel.fromJson(
+                                  ds.data()! as Map<String, dynamic>?);
                               model.id = ds.id;
                               return buildFacultyItem(
                                 context,
                                 model,
-
                               );
                             },
-                            separatorBuilder: (context, index) => const SizedBox(
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
                               width: 15,
                             ),
                             itemCount: snapshot.data!.docs.length,
                           );
                         } else {
-                          return const Center(child:Text('No Data Found'),);
+                          return  Center(
+                            child: Text(lang=='en'?'No Data Found':'لا يوجد بيانات'),
+                          );
                         }
                       },
                     ),
@@ -116,26 +120,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       stream: FirebaseFirestore.instance
                           .collection('News')
                           .snapshots(),
-                      builder: (context,snapshot){
-                        if(snapshot.hasData) {
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
                           return ListView.separated(
                             physics: const BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               DocumentSnapshot ds = snapshot.data!.docs[index];
-                              NewsModel model = NewsModel.fromJson(ds.data()! as Map<String, dynamic>?);
+                              ArabicNewsModel model = ArabicNewsModel.fromJson(
+                                  ds.data()! as Map<String, dynamic>?);
                               return buildNewsItem(
                                 context: context,
                                 model: model,
                               );
                             },
-                            separatorBuilder: (context, index) => const SizedBox(
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
                               width: 15,
                             ),
                             itemCount: snapshot.data!.docs.length,
                           );
                         } else {
-                          return const Center(child:Text('No Data Found'),);
+                          return  Center(
+                            child: Text(lang=='en'?'No Data Found':'لا يوجد بيانات'),
+                          );
                         }
                       },
                     ),
@@ -180,10 +188,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            fallback: (context)=>Center(
+            fallback: (context) => Center(
               child: CircularProgressIndicator(
-              color: defaultColor,
-            ),
+                color: defaultColor,
+              ),
             ),
           ),
         );
@@ -235,8 +243,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget buildNewsItem({
     required BuildContext context,
-    required NewsModel model,
-  }) => InkWell(
+    required ArabicNewsModel model,
+  }) =>
+      InkWell(
         onTap: () {
           navigateTo(
             context: context,
@@ -268,9 +277,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: double.infinity,
                 ),
               ),
-
               const SizedBox(
                 height: 3,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    '${model.date}',
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
               ),
               Text(
                 '${model.title}',
@@ -281,7 +302,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
-                textDirection: TextDirection.rtl,
               ),
               const SizedBox(
                 height: 5,
@@ -289,23 +309,32 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: Text(
-                  '${model.descriptions[0]!}',
-                  maxLines: 2,
+                  model.descriptions[0]!,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),
-                  textDirection: TextDirection.rtl,
+
                 ),
+              ),
+              const SizedBox(
+                height: 5,
               ),
             ],
           ),
         ),
       );
 
-  Widget? buildPostItem(List posts, PostModel model, index, context,) => Card(
+  Widget? buildPostItem(
+    List posts,
+    PostModel model,
+    index,
+    context,
+  ) =>
+      Card(
         color: const Color(0xffE6EEFA),
         clipBehavior: Clip.none,
         child: Padding(
@@ -321,10 +350,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         context: context,
                         screen: AppCubit.get(context).user!.uId ==
                                 posts[index].values.single.userId
-                            ?  const ProfileScreen()
+                            ? const ProfileScreen()
                             : PersonProfileScreen(
-                          userId: posts[index].values.single.userId,
-                        ),
+                                userId: posts[index].values.single.userId,
+                              ),
                       );
                     },
                     child: CircleAvatar(
@@ -349,8 +378,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Row(
                                   children: [
                                     InkWell(
-                                      onTap: () {
-                                      },
+                                      onTap: () {},
                                       child: Text(
                                         '${posts[index].values.single.userName}',
                                         style: const TextStyle(
@@ -530,11 +558,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   child: Icon(
                                     AppCubit.get(context)
-                                        .posts[index]
-                                        .values
-                                        .single
-                                        .likes!
-                                        .contains(uId)
+                                            .posts[index]
+                                            .values
+                                            .single
+                                            .likes!
+                                            .contains(uId)
                                         ? Icons.favorite
                                         : Icons.favorite_outline_rounded,
                                     size: 18,
@@ -594,8 +622,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .postsId[index],
                                         index: index);
                                   },
-                                  child:  Icon(
-                                    AppCubit.get(context).user!.savedPosts!
+                                  child: Icon(
+                                    AppCubit.get(context)
+                                            .user!
+                                            .savedPosts!
                                             .contains(AppCubit.get(context)
                                                 .postsId[index])
                                         ? Icons.bookmark

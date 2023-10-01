@@ -25,10 +25,8 @@ class _SettingsLayoutScreenState extends State<SettingsLayoutScreen> {
         var cubit = AppCubit.get(context);
 
         return Scaffold(
-          backgroundColor: Color(0xff3E657B),
-          appBar: AppBar(
-            title: Text(lang == 'en' ? 'settings' : 'الاعدادات'),
-          ),
+          backgroundColor: const Color(0xff3E657B),
+
           body: Stack(children: [
             Center(
               child: SafeArea(

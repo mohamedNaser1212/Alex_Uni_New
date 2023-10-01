@@ -2,6 +2,7 @@ import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/add_posts/add_posts_screen.dart';
 import 'package:alex_uni_new/screens/chat_screens/chat_screen.dart';
+import 'package:alex_uni_new/screens/news_screen/drawer_news_screen.dart';
 import 'package:alex_uni_new/screens/profile_screen/profile_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/settings_details_screen_layout.dart';
 import 'package:alex_uni_new/states/app_states.dart';
@@ -181,7 +182,13 @@ class _UserLayoutState extends State<UserLayout> {
                       thickness: 1,
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        navigateTo(
+                          context: context,
+                          screen: const DrawerNewsScreen(),
+                        );
+
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Row(
@@ -289,11 +296,11 @@ class _UserLayoutState extends State<UserLayout> {
             activeIndex: AppCubit.get(context).currentIndex,
             gapLocation: GapLocation.center,
             onTap: (index) {
-                if (index == 1) {
-                  navigateTo(context: context, screen: ChatScreen());
-                } else {
+                // if (index == 1) {
+                //   navigateTo(context: context, screen: ChatScreen());
+                // } else {
                   AppCubit.get(context).changeBottomNavBar(index);
-                }
+                // }
             },
           ):null,
           floatingActionButton: !isGuest? FloatingActionButton(

@@ -191,3 +191,10 @@ class GetSelectedUserPostsLoadingState extends AppStates {}
 class GetSelectedUserPostsSuccessState extends AppStates {}
 class GetSelectedUserPostsErrorState extends AppStates {}
 
+
+
+
+class RemoveSavedPostLoadingState extends AppStates {}
+class RemoveSavedPostSuccessState extends AppStates {}
+class RemoveSavedPostErrorState extends AppStates {}
+

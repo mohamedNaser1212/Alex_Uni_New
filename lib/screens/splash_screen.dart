@@ -117,20 +117,22 @@ class _SplashScreenState extends State<SplashScreen> {
                     const SizedBox(height: 30),
                     const Spacer(),
                     Image.asset('assets/images/University-Logo.png'),
-                    const SizedBox(
-                      height: 200,
-                    ),
-                    const Text(
-                      'Empowering Minds,\nEnriching Futures',
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Belleza',
-                        color: Color(0xffD1DFF3),
+                    Spacer(),
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        'Empowering Minds,\nEnriching Futures',
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Belleza',
+                          color: Color(0xffD1DFF3),
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 30),
+
+
                   ],
                 ),
               ),

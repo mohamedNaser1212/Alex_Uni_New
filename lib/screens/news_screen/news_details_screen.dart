@@ -5,7 +5,7 @@ import 'package:alex_uni_new/models/news_model.dart';
 class NewsDetailsScreen extends StatefulWidget {
   const NewsDetailsScreen({super.key, required this.newsModel});
 
-  final NewsModel newsModel;
+  final ArabicNewsModel newsModel;
 
   @override
   State<NewsDetailsScreen> createState() => _NewsDetailsScreenState();

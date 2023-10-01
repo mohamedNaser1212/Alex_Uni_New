@@ -98,6 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       },
                                       icon: const Icon(
                                         Icons.logout,
+
                                         color: Colors.red,
                                       ),
                                     ),
@@ -200,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Column(
                               children: [
                                 Text(
-                                    'posts',
+                                   lang=='en'? 'posts':'المنشورات',
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleSmall!
@@ -225,7 +226,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Column(
                                 children: [
                                   Text(
-                                      'photos',
+                                     lang=='en'? 'photos':'الصور',
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleSmall!
@@ -251,7 +252,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Column(
                                 children: [
                                   Text(
-                                      'saved',
+                                      lang=='en'?'saved':'المحفوظات',
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleSmall!
