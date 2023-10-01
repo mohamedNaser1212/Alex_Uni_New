@@ -266,7 +266,7 @@ class SavedScreen extends StatelessWidget {
                             const Spacer(),
                             InkWell(
                               onTap: () {
-                                AppCubit.get(context).addSharedPosts(
+                                AppCubit.get(context).addSharedSavedPosts(
                                     postId:
                                         AppCubit.get(context).postsId[index],
                                     index: index,
