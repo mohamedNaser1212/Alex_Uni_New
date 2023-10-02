@@ -249,14 +249,17 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             CircleAvatar(
-              backgroundColor: Colors.grey[300],
-              radius: MediaQuery.of(context).size.width / 7.7,
+              backgroundColor: Colors.grey.withOpacity(0.6),
+              radius: MediaQuery.of(context).size.width /8,
               child: CircleAvatar(
                 backgroundColor: Colors.white,
                 radius: MediaQuery.of(context).size.width / 8.5,
                 child: Image(
+                  width: MediaQuery.of(context).size.width / 5.5,
+                  height: MediaQuery.of(context).size.width / 5.9,
                   image: NetworkImage(
                     '${model.image}',
+
                   ),
                 ),
               ),
