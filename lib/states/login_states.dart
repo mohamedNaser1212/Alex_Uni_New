@@ -22,3 +22,21 @@ class ResetPasswordErrorState extends LoginStates{
   String error;
   ResetPasswordErrorState({required this.error});
 }
+
+class GoogleSignInLoadingState extends LoginStates{}
+
+class GoogleSignInSuccessState extends LoginStates{}
+
+class GoogleSignInErrorState extends LoginStates{
+  String error;
+  GoogleSignInErrorState({required this.error});
+}
+
+class CreateUserLoadingState extends LoginStates{}
+
+class CreateUserSuccessState extends LoginStates{}
+
+class CreateUserErrorState extends LoginStates{
+  String error;
+  CreateUserErrorState({required this.error});
+}

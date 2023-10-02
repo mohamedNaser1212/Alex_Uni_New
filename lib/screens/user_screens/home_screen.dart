@@ -719,14 +719,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   child: Icon(
                                     AppCubit.get(context)
-                                            .posts[index]
-                                            .values
-                                            .single
-                                            .likes!
-                                            .contains(uId)
+                                        .posts[index]
+                                        .values
+                                        .single
+                                        .likes
+                                    !.any((element) =>
+                                    element ==
+                                        AppCubit.get(context)
+                                            .user!
+                                            .uId)
                                         ? Icons.favorite
-                                        : Icons.favorite_outline_rounded,
-                                    size: 18,
+                                        : Icons.favorite_border_outlined,
+                                    size: 18.0,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -760,7 +764,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               const Spacer(),
                               if (isGuest == false)
-                                InkWell(
+                                if(AppCubit.get(context).posts[index].values.single.userId != uId)
+                                  InkWell(
                                   onTap: () {
                                     AppCubit.get(context).addSharedPosts(
                                         postId: AppCubit.get(context)
@@ -785,13 +790,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   child: Icon(
                                     AppCubit.get(context)
-                                            .user!
-                                            .savedPosts!
-                                            .contains(AppCubit.get(context)
-                                                .postsId[index])
+                                        .savedPosts.any((element) =>
+                                    element.postId ==
+                                        AppCubit.get(context)
+                                            .postsId[index]
+                                    )
                                         ? Icons.bookmark
-                                        : Icons.bookmark_border_outlined,
-                                    size: 18,
+                                        : Icons.bookmark_outline,
+                                    size: 18.0,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -819,14 +825,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                             child: Icon(
                               AppCubit.get(context)
-                                      .posts[index]
-                                      .values
-                                      .single
-                                      .likes!
-                                      .contains(uId)
+                                  .posts[index]
+                                  .values
+                                  .single
+                                  .likes
+                              !.any((element) =>
+                              element ==
+                                  AppCubit.get(context)
+                                      .user!
+                                      .uId)
                                   ? Icons.favorite
-                                  : Icons.favorite_outline_rounded,
-                              size: 18,
+                                  : Icons.favorite_border_outlined,
+                              size: 18.0,
                               color: Colors.white,
                             ),
                           ),
@@ -880,9 +890,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   postId: AppCubit.get(context).postsId[index],
                                   index: index);
                             },
-                            child: const Icon(
-                              Icons.bookmark_border_outlined,
-                              size: 18,
+                            child: Icon(
+                              AppCubit.get(context)
+                                  .savedPosts.any((element) =>
+                              element.postId ==
+                                  AppCubit.get(context)
+                                      .postsId[index]
+                              )
+                                  ? Icons.bookmark
+                                  : Icons.bookmark_outline,
+                              size: 18.0,
                               color: Colors.white,
                             ),
                           ),
