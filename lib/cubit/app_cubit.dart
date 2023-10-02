@@ -537,6 +537,7 @@ class AppCubit extends Cubit<AppStates> {
       'savedPosts': FieldValue.arrayUnion([savePostsModel.toMap()]),
     }).then((value) {
       getUserData();
+      getSavePosts();
       emit(AddSavePostSuccessState());
     }).catchError((error) {
       emit(AddSavePostErrorState());

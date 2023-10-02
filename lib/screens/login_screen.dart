@@ -8,6 +8,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:alex_uni_new/screens/registeration_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:icons_plus/icons_plus.dart';
 import '../constants.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -314,6 +315,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                             color: Color(0xff3E657B),
                                           ),
                                         ),
+                                      ),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      InkWell(
+                                        onTap: (){
+                                          cubit.googleSignIn(context: context);
+                                        },
+                                        child: Center(child: Logo(Logos.google)),
                                       ),
                                       const SizedBox(height: 10),
                                       Row(

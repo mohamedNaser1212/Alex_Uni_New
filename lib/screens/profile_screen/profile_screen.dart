@@ -7,6 +7,7 @@ import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/user_model.dart';
+import '../comments/comments_screen.dart';
 import '../edit_screen/edit_screen.dart';
 import '../view_image_screen.dart';
 
@@ -496,69 +497,82 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
+                              if (isGuest == false)
+                                InkWell(
+                                  onTap: () {
+                                    AppCubit.get(context).updatePostLikes(
+                                      AppCubit.get(context).myPosts[index],
+                                    );
+                                    AppCubit.get(context).getPosts();
+                                  },
+                                  child: Icon(
+                                    AppCubit.get(context)
+                                        .myPosts[index]
+                                        .values
+                                        .single
+                                        .likes
+                                    !.any((element) =>
+                                    element ==
+                                        AppCubit.get(context)
+                                            .user!
+                                            .uId)
+                                        ? Icons.favorite
+                                        : Icons.favorite_border_outlined,
+                                    size: 18.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              if (isGuest == false) const SizedBox(width: 5),
+                              if (isGuest == false)
+                                Text(
+                                  '${posts[index].values.single.likes.length}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              if (isGuest == false) const SizedBox(width: 20),
                               InkWell(
                                 onTap: () {
-                                  AppCubit.get(context).updatePostLikes(
-                                    AppCubit.get(context).posts[index],
+                                  AppCubit.get(context).getComments(
+                                      postId:
+                                      AppCubit.get(context).myPostsId[index]);
+                                  navigateTo(
+                                    context: context,
+                                    screen: CommentsScreen(
+                                      postId:
+                                      AppCubit.get(context).myPostsId[index],
+                                    ),
                                   );
                                 },
-                                child: Icon(
-                                  AppCubit.get(context)
-                                      .posts[index]
-                                      .values
-                                      .single
-                                      .likes!
-                                      .contains(uId)
-                                      ? Icons.favorite
-                                      : Icons.favorite_outline_rounded,
-                                  size: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                '${posts[index].values.single.likes.length}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              InkWell(
-                                onTap: () {},
                                 child: const Icon(
                                   Icons.comment_outlined,
                                   size: 18,
                                   color: Colors.white,
                                 ),
                               ),
-                              const SizedBox(width: 5),
-                              InkWell(
-                                onTap: () {},
-                                child: Text(
-                                  '${posts[index].values.single.comments.length}',
-                                  style: const TextStyle(
+                              const Spacer(),
+                              if (isGuest == false) const SizedBox(width: 20),
+                              if (isGuest == false)
+                                InkWell(
+                                  onTap: () {
+                                    AppCubit.get(context).addSavePosts(
+                                        postId: AppCubit.get(context)
+                                            .myPostsId[index],
+                                        index: index);
+                                  },
+                                  child: Icon(
+                                    AppCubit.get(context)
+                                        .savedPosts.any((element) =>
+                                    element.postId ==
+                                        AppCubit.get(context)
+                                            .myPostsId[index]
+                                    )
+                                        ? Icons.bookmark
+                                        : Icons.bookmark_outline,
+                                    size: 18.0,
                                     color: Colors.white,
                                   ),
                                 ),
-                              ),
-                              const Spacer(),
-                              InkWell(
-                                onTap: () {},
-                                child: const Icon(
-                                  Icons.share_outlined,
-                                  size: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              InkWell(
-                                onTap: () {},
-                                child: const Icon(
-                                  Icons.bookmark_border_outlined,
-                                  size: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -574,69 +588,82 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
+                        if (isGuest == false)
+                          InkWell(
+                            onTap: () {
+                              AppCubit.get(context).updatePostLikes(
+                                AppCubit.get(context).myPosts[index],
+                              );
+                              AppCubit.get(context).getPosts();
+                            },
+                            child: Icon(
+                              AppCubit.get(context)
+                                  .myPosts[index]
+                                  .values
+                                  .single
+                                  .likes
+                              !.any((element) =>
+                              element ==
+                                  AppCubit.get(context)
+                                      .user!
+                                      .uId)
+                                  ? Icons.favorite
+                                  : Icons.favorite_border_outlined,
+                              size: 18.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        if (isGuest == false) const SizedBox(width: 5),
+                        if (isGuest == false)
+                          Text(
+                            '${posts[index].values.single.likes.length}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        if (isGuest == false) const SizedBox(width: 20),
                         InkWell(
                           onTap: () {
-                            AppCubit.get(context).updatePostLikes(
-                              AppCubit.get(context).posts[index],
+                            AppCubit.get(context).getComments(
+                                postId:
+                                AppCubit.get(context).myPostsId[index]);
+                            navigateTo(
+                              context: context,
+                              screen: CommentsScreen(
+                                postId:
+                                AppCubit.get(context).myPostsId[index],
+                              ),
                             );
                           },
-                          child: Icon(
-                            AppCubit.get(context)
-                                .posts[index]
-                                .values
-                                .single
-                                .likes!
-                                .contains(uId)
-                                ? Icons.favorite
-                                : Icons.favorite_outline_rounded,
-                            size: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          '${posts[index].values.single.likes.length}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        InkWell(
-                          onTap: () {},
                           child: const Icon(
                             Icons.comment_outlined,
                             size: 18,
                             color: Colors.white,
                           ),
                         ),
-                        const SizedBox(width: 5),
-                        InkWell(
-                          onTap: () {},
-                          child: Text(
-                            '${posts[index].values.single.comments.length}',
-                            style: const TextStyle(
+                        const Spacer(),
+                        if (isGuest == false) const SizedBox(width: 20),
+                        if (isGuest == false)
+                          InkWell(
+                            onTap: () {
+                              AppCubit.get(context).addSavePosts(
+                                  postId: AppCubit.get(context)
+                                      .myPostsId[index],
+                                  index: index);
+                            },
+                            child: Icon(
+                              AppCubit.get(context)
+                                  .savedPosts.any((element) =>
+                              element.postId ==
+                                  AppCubit.get(context)
+                                      .myPostsId[index]
+                              )
+                                  ? Icons.bookmark
+                                  : Icons.bookmark_outline,
+                              size: 18.0,
                               color: Colors.white,
                             ),
                           ),
-                        ),
-                        const Spacer(),
-                        InkWell(
-                          onTap: () {},
-                          child: const Icon(
-                            Icons.share_outlined,
-                            size: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        InkWell(
-                          onTap: () {},
-                          child: const Icon(
-                            Icons.bookmark_border_outlined,
-                            size: 18,
-                            color: Colors.white,
-                          ),
-                        ),
                       ],
                     ),
                   ),

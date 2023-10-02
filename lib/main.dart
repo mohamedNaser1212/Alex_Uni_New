@@ -76,7 +76,8 @@ class _MyAppState extends State<MyApp> {
           create: (BuildContext context) => AppCubit()
             ..getUserData()
             ..getMyPosts()
-            ..getSettings(),
+            ..getSettings()
+          ..getSavePosts(),
         ),
       ],
       child: MaterialApp(
