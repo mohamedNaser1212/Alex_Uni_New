@@ -76,10 +76,11 @@ class _ArabicNewsDetailsScreenState extends State<ArabicNewsDetailsScreen> {
                   alignment: Alignment.topCenter,
                   child: SizedBox(
                     width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.26,
+                    height: MediaQuery.of(context).size.height * 0.3,
                     child: Stack(
                       children: [
                         Image.network(
+
                           widget.newsModel.images[index]!,
                           width: double.infinity,
                           fit: BoxFit.cover,
@@ -92,7 +93,7 @@ class _ArabicNewsDetailsScreenState extends State<ArabicNewsDetailsScreen> {
                               onTap: goToPreviousImage,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Color(0xff2238455E).withOpacity(0.9),
+                                  color: const Color(0xff2238455E).withOpacity(0.9),
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 child: IconButton(
@@ -119,6 +120,7 @@ class _ArabicNewsDetailsScreenState extends State<ArabicNewsDetailsScreen> {
                                 child: IconButton(
                                   onPressed: goToNextImage,
                                   icon: Icon(
+                                    lang=='ar'?Icons.arrow_back_ios:
                                     Icons.arrow_forward_ios,
                                     color: Color(0xffFFFFFF),
                                   ),

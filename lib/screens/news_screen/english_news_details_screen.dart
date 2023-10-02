@@ -170,13 +170,17 @@ class _BothNewsDetailsScreenState extends State<BothNewsDetailsScreen> {
                                 ),
                               ),
                             if(index==0)
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            if(index==0)
                               Divider(
                                 height: 0.5,
-                                color: Colors.grey,
+                                color: Colors.grey[400],
                               ),
                             if(index==0)
-                              SizedBox(
-                                height: 10.0,
+                              const SizedBox(
+                                height: 20.0,
                               ),
                             Text(
                               lang=='ar'? widget.newsModel.arabicDescriptions![index]!:widget.newsModel.descriptions![index]!,

@@ -7,6 +7,7 @@ import 'package:alex_uni_new/models/university_model.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
 import 'package:alex_uni_new/screens/chat_screens/chat_screen.dart';
+import 'package:alex_uni_new/screens/profile_screen/profile_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/home_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/notification_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/settings_screen.dart';
@@ -38,19 +39,19 @@ class AppCubit extends Cubit<AppStates> {
     const HomeScreen(),
     // const ChatScreen(),
     // const NotificationScreen(),
-    const SettingsLayoutScreen(),
+    const ProfileScreen(),
   ];
   List<IconData> bottomNavIcons = [
     Icons.home,
     // Icons.chat,
     // Icons.notifications,
-    Icons.settings,
+    Icons.person,
   ];
   List<String> titles = [
     lang == 'en' ? 'Home' : 'الرئيسية',
     // lang == 'en' ? 'Chat' : 'المحادثات',
     // lang == 'en' ? 'Notifications' : 'الاشعارات',
-    lang == 'en' ? 'Settings' : 'الاعدادات',
+    lang == 'en' ? 'Profile' : 'الملف الشخصي',
   ];
 
   void changeBottomNavBar(int index) {
@@ -76,7 +77,7 @@ class AppCubit extends Cubit<AppStates> {
           lang == 'en' ? 'Home' : 'الرئيسية',
           // lang == 'en' ? 'Chat' : 'المحادثات',
           // lang == 'en' ? 'Notifications' : 'الاشعارات',
-          lang == 'en' ? 'Settings' : 'الاعدادات',
+          lang == 'en' ? 'Profile' : 'الملف الشخصي',
         ];
         emit(AppChangeLanguageState());
       }).catchError((e) {

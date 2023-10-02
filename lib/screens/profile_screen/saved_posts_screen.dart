@@ -250,8 +250,31 @@ class SavedScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            if (isGuest == false) const SizedBox(width: 20),
-                            if (isGuest == false)
+
+
+                              InkWell(
+                                onTap: () {
+                                  AppCubit.get(context).getComments(
+                                      postId:
+                                      AppCubit.get(context).savedPosts[index].postId!);
+                                  navigateTo(
+                                    context: context,
+                                    screen: CommentsScreen(
+                                      postId:
+                                      AppCubit.get(context).savedPosts[index].postId!,
+                                    ),
+                                  );
+                                },
+                                child: const Icon(
+                                  Icons.comment_outlined,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+
+                            Spacer(),
+
+
                               InkWell(
                                 onTap: () {
                                   AppCubit.get(context).removeSavedPost(
@@ -263,6 +286,7 @@ class SavedScreen extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                               ),
+
                           ],
                         ),
                       ),
