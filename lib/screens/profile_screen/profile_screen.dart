@@ -34,175 +34,186 @@ class _ProfileScreenState extends State<ProfileScreen> {
         AppCubit cubit = AppCubit.get(context);
         UserModel userModel = cubit.user!;
 
-        return DefaultTabController(
-          length: 3,
-          child: Scaffold(
-            body: SafeArea(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      child: Stack(
-                        alignment: AlignmentDirectional.bottomStart,
-                        children: [
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                              width: double.infinity,
-                              height:
-                                  MediaQuery.of(context).size.height * 0.25,
-                              decoration: const BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(6),
-                                  topRight: Radius.circular(6),
-                                ),
+        return Scaffold(
+          body: SafeArea(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      children: [
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            width: double.infinity,
+                            height:
+                                MediaQuery.of(context).size.height * 0.25,
+                            decoration: const BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(6),
+                                topRight: Radius.circular(6),
                               ),
-                              child: userModel.cover != ''
-                                  ? Image(
-                                      image:
-                                          NetworkImage('${userModel.cover}'),
-                                      height: 120,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Container(),
                             ),
+                            child: userModel.cover != ''
+                                ? Image(
+                                    image:
+                                        NetworkImage('${userModel.cover}'),
+                                    height: 120,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Container(),
                           ),
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      icon: const Icon(
-                                        Icons.arrow_back,
-                                      ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    icon: const Icon(
+                                      Icons.arrow_back,
                                     ),
                                   ),
-                                  CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        cubit.logout(context);
-                                      },
-                                      icon: const Icon(
-                                        Icons.logout,
+                                ),
+                                CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      cubit.logout(context);
+                                    },
+                                    icon: const Icon(
+                                      Icons.logout,
 
-                                        color: Colors.red,
-                                      ),
+                                      color: Colors.red,
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              width: double.infinity,
-                              height:
-                                  MediaQuery.of(context).size.height * 0.08,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                  topRight: Radius.circular(30),
                                 ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: double.infinity,
+                            height:
+                                MediaQuery.of(context).size.height * 0.08,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.only(
-                              start: MediaQuery.of(context).size.width * 0.035,
-                            ),
+                        ),
+                        CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.15,
+                          backgroundColor:
+                              Theme.of(context).scaffoldBackgroundColor,
+                          child: Container(
+                            decoration: const BoxDecoration(),
                             child: CircleAvatar(
-                              radius: MediaQuery.of(context).size.width * 0.15,
                               backgroundColor:
                                   Theme.of(context).scaffoldBackgroundColor,
-                              child: Container(
-                                decoration: const BoxDecoration(),
-                                child: CircleAvatar(
-                                  backgroundColor:
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                  backgroundImage: NetworkImage(
-                                    '${userModel.image}',
-                                  ),
-                                  radius: MediaQuery.of(context).size.width * 0.14,
-                                ),
+                              backgroundImage: NetworkImage(
+                                '${userModel.image}',
                               ),
+                              radius: MediaQuery.of(context).size.width * 0.14,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsetsDirectional.only(
-                            top: 10,
-                        start: MediaQuery.of(context).size.width * 0.06,),
-                          alignment: Alignment.center,
-                          height: 30,
-                          child: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              '${userModel.name}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                fontSize: 18,
-                              ),
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        height: 30,
+                        child: Align(
+                          alignment: AlignmentDirectional.center,
+                          child: Text(
+                            '${userModel.name}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: reusableElevatedButton(
+                                label: lang == 'en'
+                                    ? 'Edit Profile'
+                                    : ' تعديل البيانات ',
+                                backColor: defaultColor,
+                                height: 40,
+                                function: () {
+                                  navigateTo(
+                                      context: context,
+                                      screen: const EditProfile());
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
                             children: [
-                              Expanded(
-                                child: reusableElevatedButton(
-                                  label: lang == 'en'
-                                      ? 'Edit Profile'
-                                      : ' تعديل البيانات ',
-                                  backColor: defaultColor,
-                                  height: 40,
-                                  function: () {
-                                    navigateTo(
-                                        context: context,
-                                        screen: const EditProfile());
-                                  },
+                              Text(
+                                 lang=='en'? 'posts':'المنشورات',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                  fontSize: 18,
                                 ),
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                              Container(
+                                width: 45,
+                                height: 3,
+                                color: defaultColor,
                               ),
                             ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
+                          InkWell(
+                            onTap: (){
+                              navigateTo(context: context, screen: const PhotoScreen(),);
+                            },
+                            child: Column(
                               children: [
                                 Text(
-                                   lang=='en'? 'posts':'المنشورات',
+                                   lang=='en'? 'photos':'الصور',
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleSmall!
@@ -213,98 +224,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 const SizedBox(
                                   height: 3,
                                 ),
-                                Container(
+                                const SizedBox(
                                   width: 45,
                                   height: 3,
-                                  color: defaultColor,
                                 ),
                               ],
                             ),
-                            InkWell(
-                              onTap: (){
-                                navigateTo(context: context, screen: PhotoScreen(),);
-                              },
-                              child: Column(
-                                children: [
-                                  Text(
-                                     lang=='en'? 'photos':'الصور',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall!
-                                        .copyWith(
-                                      fontSize: 18,
-                                    ),
+                          ),
+                          InkWell(
+                            onTap: (){
+                              AppCubit.get(context).getSavePosts();
+                              navigateTo(context: context, screen: const SavedScreen(),);
+                            },
+                            child: Column(
+                              children: [
+                                Text(
+                                    lang=='en'?'saved':'المحفوظات',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                    fontSize: 18,
                                   ),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  Container(
-                                    width: 45,
-                                    height: 3,
-                                  ),
-                                ],
-                              ),
+                                ),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                const SizedBox(
+                                  width: 45,
+                                  height: 3,
+                                ),
+                              ],
                             ),
-                            InkWell(
-                              onTap: (){
-                                AppCubit.get(context).getSavePosts();
-                                navigateTo(context: context, screen: const SavedScreen(),);
-                              },
-                              child: Column(
-                                children: [
-                                  Text(
-                                      lang=='en'?'saved':'المحفوظات',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall!
-                                        .copyWith(
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  Container(
-                                    width: 45,
-                                    height: 3,
-                                  ),
-                                ],
-                              ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            90,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) => buildMyPostItem(
+                                  AppCubit.get(context).myPosts, index, context),
+                              itemCount: AppCubit.get(context).myPosts.length,
+                            ),
+                            ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) => buildShareItem(
+                                  AppCubit.get(context).sharePosts, index, context),
+                              itemCount: AppCubit.get(context).sharePosts.length,
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              90,
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) => buildMyPostItem(
-                                    AppCubit.get(context).myPosts, index, context),
-                                itemCount: AppCubit.get(context).myPosts.length,
-                              ),
-                              ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) => buildShareItem(
-                                    AppCubit.get(context).sharePosts, index, context),
-                                itemCount: AppCubit.get(context).sharePosts.length,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
+                      ),
+                    ],
+                  )
+                ],
               ),
             ),
           ),
