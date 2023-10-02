@@ -321,7 +321,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                       InkWell(
                                         onTap: (){
-                                          cubit.googleSignIn(context: context);
+                                          cubit.googleSignIn(
+                                              context: context,
+                                              phone: 'phone',
+                                              address: 'address',
+                                              country: 'country',
+                                              universityName: 'universityName',
+                                              underGraduate: true,
+                                              postGraduate: false,
+                                              passportId: 'passportId'
+                                          );
                                         },
                                         child: Center(child: Logo(Logos.google)),
                                       ),

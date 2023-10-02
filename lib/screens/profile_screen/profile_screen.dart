@@ -541,9 +541,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 InkWell(
                                   onTap: () {
                                     AppCubit.get(context).addSavePosts(
-                                        postId: AppCubit.get(context)
-                                            .myPostsId[index],
-                                        index: index);
+                                      postId: AppCubit.get(context).myPostsId[index],
+                                      index: index,
+                                      text: posts[index].values.single.text,
+                                      date: posts[index].values.single.date,
+                                      userName: posts[index].values.single.userName,
+                                      userImage: posts[index].values.single.userImage,
+                                      userId: posts[index].values.single.userId,
+                                      likes: posts[index].values.single.likes,
+                                      image: posts[index].values.single.image,
+                                    );
                                   },
                                   child: Icon(
                                     AppCubit.get(context)
@@ -632,9 +639,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           InkWell(
                             onTap: () {
                               AppCubit.get(context).addSavePosts(
-                                  postId: AppCubit.get(context)
-                                      .myPostsId[index],
-                                  index: index);
+                                postId: AppCubit.get(context).myPostsId[index],
+                                index: index,
+                                text: posts[index].values.single.text,
+                                date: posts[index].values.single.date,
+                                userName: posts[index].values.single.userName,
+                                userImage: posts[index].values.single.userImage,
+                                userId: posts[index].values.single.userId,
+                                likes: posts[index].values.single.likes,
+                                image: posts[index].values.single.image,
+                              );
                             },
                             child: Icon(
                               AppCubit.get(context)
