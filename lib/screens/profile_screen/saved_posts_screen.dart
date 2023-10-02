@@ -1,5 +1,6 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/models/user_model.dart';
+import 'package:alex_uni_new/screens/profile_screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,6 +9,7 @@ import '../../models/post_model.dart';
 import '../../reusable_widgets.dart';
 import '../../states/app_states.dart';
 import '../comments/comments_screen.dart';
+import '../person_profile/person_profile_screen.dart';
 import '../view_image_screen.dart';
 
 class SavedScreen extends StatelessWidget {
@@ -51,11 +53,25 @@ class SavedScreen extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      '${savedPosts[index].userImage}',
+                  InkWell(
+                    onTap: (){
+                      if(AppCubit.get(context).user!.uId !=
+                          savedPosts[index].userId) {
+                        navigateTo(
+                          context: context,
+                          screen:
+                          PersonProfileScreen(
+                            userId: savedPosts[index].userId,
+                          ),
+                        );
+                      }
+                    },
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        '${savedPosts[index].userImage}',
+                      ),
+                      radius: 25,
                     ),
-                    radius: 25,
                   ),
                   const SizedBox(
                     width: 20,
@@ -71,14 +87,28 @@ class SavedScreen extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Text(
-                                      '${savedPosts[index].userName}',
-                                      style: const TextStyle(
-                                        height: 1.4,
-                                        fontSize: 16,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w900,
-                                        fontFamily: 'Poppins',
+                                    InkWell(
+                                      onTap:(){
+                                        if(AppCubit.get(context).user!.uId !=
+                                            savedPosts[index].userId) {
+                                          navigateTo(
+                                          context: context,
+                                          screen:
+                                          PersonProfileScreen(
+                                            userId: savedPosts[index].userId,
+                                          ),
+                                        );
+                                        }
+                                        },
+                                      child: Text(
+                                        '${savedPosts[index].userName}',
+                                        style: const TextStyle(
+                                          height: 1.4,
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w900,
+                                          fontFamily: 'Poppins',
+                                        ),
                                       ),
                                     ),
                                     const Icon(
@@ -151,8 +181,6 @@ class SavedScreen extends StatelessWidget {
                             ? 4
                             : AppCubit.get(context)
                                 .savedPosts[index]
-
-
                                 .image!
                                 .length,
                         (index1) => Container(
@@ -248,7 +276,7 @@ class SavedScreen extends StatelessWidget {
                               onTap: () {
                                 AppCubit.get(context).getComments(
                                     postId:
-                                        AppCubit.get(context).postsId[index]);
+                                        AppCubit.get(context).savedPosts[index].postId!);
                                 navigateTo(
                                   context: context,
                                   screen: CommentsScreen(

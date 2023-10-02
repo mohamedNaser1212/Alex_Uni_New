@@ -130,9 +130,19 @@ class AppCubit extends Cubit<AppStates> {
           });
         }
       }).then((value) {
-        getUserData();
-        getMyPosts();
-        emit(UserModelUpdateSuccessState());
+        FirebaseFirestore.instance.collectionGroup('comments').where('ownerId',isEqualTo: uId).get().then((snapshot) {
+          for (DocumentSnapshot ds in snapshot.docs) {
+            ds.reference.update({
+              'ownerName': name,
+              'ownerImage': image ?? user!.image,
+            });
+          }
+        }).then((value) {
+          getUserData();
+          emit(UserModelUpdateSuccessState());
+        }).catchError((error) {
+          emit(UserModelUpdateErrorState(error.toString()));
+        });
       });
     }).catchError((error) {
       emit(UserModelUpdateErrorState(error.toString()));
@@ -242,7 +252,6 @@ class AppCubit extends Cubit<AppStates> {
         userId: AppCubit.get(context).user!.uId!,
         text: text,
         date: formattedDate,
-        comments: [],
         showPost: !AppCubit.get(context).settings!.reviewPosts!,
         isReviewed: !AppCubit.get(context).settings!.reviewPosts!,
       );
@@ -319,26 +328,34 @@ class AppCubit extends Cubit<AppStates> {
       ownerImage: user!.image!,
       ownerId: user!.uId!,
     );
-    FirebaseFirestore.instance.collection('posts').doc(postId).update({
-      'comments': FieldValue.arrayUnion([commentModel.toJson()])
-    }).then((value) {
+    FirebaseFirestore.instance.collection('posts').doc(postId).collection('comments').add(
+      commentModel.toJson(),
+    ).then((value) {
       getComments(postId: postId);
       emit(WriteCommentSuccessState());
     }).catchError((error) {
       emit(WriteCommentErrorState());
     });
   }
-
-  deleteComment(index, postId) {
+  // emit(DeleteCommentSuccessState());
+  // emit(DeleteCommentErrorState());
+  deleteComment({
+    required String commentId,
+    required String postId,
+  }) {
     emit(DeleteCommentLoadingState());
-    FirebaseFirestore.instance.collection('posts').doc(postId).update({
-      'comments': FieldValue.arrayRemove([comments[index].toJson()])
-    }).then((value) {
+    FirebaseFirestore.instance
+    .collection('posts')
+    .doc(postId)
+    .collection('comments')
+    .doc(commentId)
+    .delete().then((value){
       getComments(postId: postId);
       emit(DeleteCommentSuccessState());
-    }).catchError((error) {
+    }).catchError((error){
       emit(DeleteCommentErrorState());
     });
+
   }
 
   List<CommentDataModel> comments = [];
@@ -349,11 +366,14 @@ class AppCubit extends Cubit<AppStates> {
     FirebaseFirestore.instance
         .collection('posts')
         .doc(postId)
+        .collection('comments')
         .get()
         .then((value) {
       comments = [];
-      for (var element in value.data()!['comments']) {
-        comments.add(CommentDataModel.fromJson(element));
+      for (var element in value.docs) {
+        CommentDataModel currentComment = CommentDataModel.fromJson(element.data());
+        currentComment.id = element.id;
+        comments.add(currentComment);
       }
       emit(GetCommentsSuccessState());
     }).catchError((error) {
@@ -540,7 +560,6 @@ class AppCubit extends Cubit<AppStates> {
       userImage: posts[index].values.single.userImage,
       userId: posts[index].values.single.userId,
       likes: posts[index].values.single.likes,
-      comments: posts[index].values.single.comments,
       image: posts[index].values.single.image,
     );
     FirebaseFirestore.instance.collection('users').doc(uId).update({
@@ -583,7 +602,6 @@ class AppCubit extends Cubit<AppStates> {
       userImage: posts[index].values.single.userImage,
       userId: posts[index].values.single.userId,
       likes: posts[index].values.single.likes,
-      comments: posts[index].values.single.comments,
       image: posts[index].values.single.image,
     );
     FirebaseFirestore.instance.collection('users').doc(uId).update({
@@ -911,7 +929,6 @@ class AppCubit extends Cubit<AppStates> {
       userImage: posts[index].values.single.userImage,
       userId: posts[index].values.single.userId,
       likes: posts[index].values.single.likes,
-      comments: posts[index].values.single.comments,
       image: posts[index].values.single.image,
     );
     FirebaseFirestore.instance.collection('users').doc(uId).update({

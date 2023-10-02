@@ -921,16 +921,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.white,
                                 ),
                               ),
-                              const SizedBox(width: 5),
-                              InkWell(
-                                onTap: () {},
-                                child: Text(
-                                  '${posts[index].comments?.length}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
                               const Spacer(),
                               InkWell(
                                 onTap: () {},
@@ -986,16 +976,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Icons.comment_outlined,
                             size: 18,
                             color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        InkWell(
-                          onTap: () {},
-                          child: Text(
-                            '${posts[index].comments?.length}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
                           ),
                         ),
                         const Spacer(),

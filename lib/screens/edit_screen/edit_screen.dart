@@ -209,7 +209,6 @@ class EditProfile extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     if (isProfileImageChanged)
-
                                       Container(
                                         width: MediaQuery.of(context).size.width * 0.5,
                                         decoration: BoxDecoration(

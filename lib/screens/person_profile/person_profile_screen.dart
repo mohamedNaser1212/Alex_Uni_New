@@ -165,7 +165,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                             child: Column(
                               children: [
                                 Text(
-                                  'posts',
+                                  lang=='en'?'Posts':'المنشورات',
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleSmall!
@@ -438,16 +438,6 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                               color: Colors.white,
                             ),
                           ),
-                          const SizedBox(width: 5),
-                          InkWell(
-                            onTap: () {},
-                            child: Text(
-                              '${posts[index].comments.length}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
                           const Spacer(),
                           InkWell(
                             onTap: () {},
@@ -512,16 +502,6 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                         Icons.comment_outlined,
                         size: 18,
                         color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    InkWell(
-                      onTap: () {},
-                      child: Text(
-                        '${posts[index].comments.length}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
                       ),
                     ),
                     const Spacer(),
@@ -799,16 +779,6 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                               color: Colors.white,
                             ),
                           ),
-                          const SizedBox(width: 5),
-                          InkWell(
-                            onTap: () {},
-                            child: Text(
-                              '${posts[index].comments?.length}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
                           const Spacer(),
                           InkWell(
                             onTap: () {},
@@ -864,16 +834,6 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                         Icons.comment_outlined,
                         size: 18,
                         color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    InkWell(
-                      onTap: () {},
-                      child: Text(
-                        '${posts[index].comments?.length}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
                       ),
                     ),
                     const Spacer(),

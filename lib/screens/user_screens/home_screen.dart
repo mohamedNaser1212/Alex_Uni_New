@@ -389,15 +389,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      navigateTo(
-                        context: context,
-                        screen: AppCubit.get(context).user!.uId ==
-                                posts[index].values.single.userId
-                            ? const ProfileScreen()
-                            : PersonProfileScreen(
-                                userId: posts[index].values.single.userId,
-                              ),
-                      );
+                      if(!isGuest) {
+                        navigateTo(
+                          context: context,
+                          screen: AppCubit.get(context).user!.uId ==
+                              posts[index].values.single.userId
+                              ? const ProfileScreen()
+                              : PersonProfileScreen(
+                            userId: posts[index].values.single.userId,
+                          ),
+                        );
+                      }
+                      else{
+                        navigateTo(context: context, screen: PersonProfileScreen(
+                          userId: posts[index].values.single.userId,
+                        ));
+                      }
                     },
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(
@@ -421,7 +428,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Row(
                                   children: [
                                     InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        if(!isGuest) {
+                                          navigateTo(
+                                          context: context,
+                                          screen: AppCubit.get(context).user!.uId ==
+                                              posts[index].values.single.userId
+                                              ? const ProfileScreen()
+                                              : PersonProfileScreen(
+                                            userId: posts[index].values.single.userId,
+                                          ),
+                                        );
+                                        }
+                                        else{
+                                          navigateTo(context: context, screen: PersonProfileScreen(
+                                            userId: posts[index].values.single.userId,
+                                          ));
+                                        }
+                                      },
                                       child: Text(
                                         '${posts[index].values.single.userName}',
                                         style: const TextStyle(
@@ -523,11 +547,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .posts[index]
                                         .values
                                         .single
-                                        .likes!
-                                        .contains(uId)
+                                        .likes
+                                    !.any((element) =>
+                                    element ==
+                                        AppCubit.get(context)
+                                            .user!
+                                            .uId)
                                         ? Icons.favorite
-                                        : Icons.favorite_outline_rounded,
-                                    size: 18,
+                                        : Icons.favorite_border_outlined,
+                                    size: 18.0,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -561,20 +589,21 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               const Spacer(),
                               if (isGuest == false)
-                                InkWell(
-                                  onTap: () {
-                                    AppCubit.get(context).addSharedPosts(
-                                        postId: AppCubit.get(context)
-                                            .postsId[index],
-                                        index: index,
-                                        context: context);
-                                  },
-                                  child: const Icon(
-                                    Icons.share_outlined,
-                                    size: 18,
-                                    color: Colors.white,
+                                if(AppCubit.get(context).posts[index].values.single.userId != uId)
+                                  InkWell(
+                                    onTap: () {
+                                      AppCubit.get(context).addSharedPosts(
+                                          postId: AppCubit.get(context)
+                                              .postsId[index],
+                                          index: index,
+                                          context: context);
+                                    },
+                                    child: const Icon(
+                                      Icons.share_outlined,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
                               if (isGuest == false) const SizedBox(width: 20),
                               if (isGuest == false)
                                 InkWell(
@@ -586,13 +615,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   child: Icon(
                                     AppCubit.get(context)
-                                        .user!
-                                        .savedPosts!
-                                        .contains(AppCubit.get(context)
-                                        .postsId[index])
+                                        .savedPosts.any((element) =>
+                                    element.postId ==
+                                        AppCubit.get(context)
+                                            .postsId[index]
+                                    )
                                         ? Icons.bookmark
-                                        : Icons.bookmark_border_outlined,
-                                    size: 18,
+                                        : Icons.bookmark_outline,
+                                    size: 18.0,
                                     color: Colors.white,
                                   ),
                                 ),

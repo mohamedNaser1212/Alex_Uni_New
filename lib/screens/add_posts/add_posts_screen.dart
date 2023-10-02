@@ -29,7 +29,6 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
     DateFormat('yyyy-MM-dd hh:mm a').format(now);
 
     PostModel model = PostModel(
-      comments: [],
       image: [],
       likes: [],
       userImage: AppCubit.get(context).user!.image!,

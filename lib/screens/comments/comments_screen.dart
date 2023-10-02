@@ -17,95 +17,101 @@ class CommentsScreen extends StatelessWidget {
     return BlocConsumer<AppCubit,AppStates>(
       listener: (context,state){},
       builder: (context,state){
-        return Scaffold(
-            appBar: AppBar(
-              centerTitle: true,
-              title: const Text(
-                'Comments',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+        return WillPopScope(
+          onWillPop: ()async{
+            AppCubit.get(context).comments=[];
+            return true;
+          },
+          child: Scaffold(
+              appBar: AppBar(
+                centerTitle: true,
+                title: Text(
+                  lang=='ar'?'التعليقات':'Comments',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            body: ListView.separated(
-                itemBuilder: (context,index)=>comments(
-                  AppCubit.get(context).comments,
-                    index,
-                  context
-                ),
-                separatorBuilder: (context,index)=>const SizedBox(height: 10,),
-                itemCount: AppCubit.get(context).comments.length
-            ),
-            bottomNavigationBar: !isGuest? Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(15,15,15,MediaQuery.of(context).viewInsets.bottom),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(15)
-                          ),
-                          child: Row(
-                            children: [
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: TextFormField(
-                                  controller: commentsController,
-                                  decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Write a comment',
+              body: ListView.separated(
+                  itemBuilder: (context,index)=>comments(
+                    AppCubit.get(context).comments,
+                      index,
+                    context
+                  ),
+                  separatorBuilder: (context,index)=>const SizedBox(height: 10,),
+                  itemCount: AppCubit.get(context).comments.length
+              ),
+              bottomNavigationBar: !isGuest? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(15,15,15,MediaQuery.of(context).viewInsets.bottom),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Row(
+                              children: [
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: commentsController,
+                                    decoration: const InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: 'Write a comment',
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      InkWell(
-                        onTap: (){
-                          if(commentsController.text.isNotEmpty){
-                            AppCubit.get(context).writeComment(
-                              postId: postId,
-                              text: commentsController.text,
-                            );
-                            commentsController.clear();
-                          }
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(15)
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Icon(
-                              Icons.send,
-                              color: Colors.white,
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        InkWell(
+                          onTap: (){
+                            if(commentsController.text.isNotEmpty){
+                              AppCubit.get(context).writeComment(
+                                postId: postId,
+                                text: commentsController.text,
+                              );
+                              commentsController.clear();
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Icon(
+                                Icons.send,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-              ],
-            ):null,
+                  const SizedBox(
+                    height: 15,
+                  ),
+                ],
+              ):null,
+          ),
         );
       },
     );
@@ -161,8 +167,8 @@ class CommentsScreen extends StatelessWidget {
             IconButton(
                 onPressed: (){
                   AppCubit.get(context).deleteComment(
-                    index,
-                    postId,
+                    commentId: data[index].id!,
+                    postId: postId,
                   );
                 },
                 icon:const Icon(
