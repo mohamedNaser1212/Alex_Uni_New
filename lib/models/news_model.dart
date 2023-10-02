@@ -16,16 +16,28 @@ class ArabicNewsModel{
   });
 
   ArabicNewsModel.fromJson(Map<String, dynamic>? json){
-    title = json!['title'];
-    json['images'].forEach((element){
-      images.add(element);
-    });
-    json['descriptions'].forEach((element){
-      descriptions.add(element);
-    });
-    date = json['date'];
-    type = json['type'];
-
+    if(json!['type']=='arabic'){
+      title = json['title'];
+      json['images'].forEach((element){
+        images.add(element);
+      });
+      json['descriptions'].forEach((element){
+        descriptions.add(element);
+      });
+      date = json['date'];
+      type = json['type'];
+    }
+    else{
+      title = json['arabicTitle'];
+      json['images'].forEach((element){
+        images.add(element);
+      });
+      json['arabicDescriptions'].forEach((element){
+        descriptions.add(element);
+      });
+      date = json['date'];
+      type = json['type'];
+    }
   }
 
   Map<String, dynamic> toMap(){

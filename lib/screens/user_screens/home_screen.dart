@@ -339,7 +339,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               Text(
-                '${model.title}',
+               model.title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
