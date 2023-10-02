@@ -1,9 +1,7 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/models/user_model.dart';
-import 'package:alex_uni_new/screens/profile_screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../cubit/app_cubit.dart';
 import '../../models/post_model.dart';
 import '../../reusable_widgets.dart';
@@ -250,77 +248,21 @@ class SavedScreen extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            InkWell(
-                              onTap: () {
-                                AppCubit.get(context).updatePostLikes(
-                                  AppCubit.get(context).posts[index],
-                                );
-                              },
-                              child: const Icon(
-                                Icons.favorite_outline_rounded,
-                                size: 18,
-                                color: Colors.white,
+                            if (isGuest == false) const SizedBox(width: 20),
+                            if (isGuest == false)
+                              InkWell(
+                                onTap: () {
+                                  AppCubit.get(context).removeSavedPost(
+                                      index: index);
+                                },
+                                child:const  Icon(
+                                  Icons.bookmark,
+                                  size: 18.0,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '${AppCubit.get(context).posts[index].values.single.likes!.length}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                AppCubit.get(context).getComments(
-                                    postId:
-                                        AppCubit.get(context).savedPosts[index].postId!);
-                                navigateTo(
-                                  context: context,
-                                  screen: CommentsScreen(
-                                    postId:
-                                        AppCubit.get(context).postsId[index],
-                                  ),
-                                );
-                              },
-                              child: const Icon(
-                                Icons.comment_outlined,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const Spacer(),
-                            InkWell(
-                              onTap: () {
-                                AppCubit.get(context).addSharedSavedPosts(
-                                    postId:
-                                        AppCubit.get(context).postsId[index],
-                                    index: index,
-                                    context: context);
-                              },
-                              child: const Icon(
-                                Icons.share_outlined,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-
-                                AppCubit.get(context).removeSavedPost(
-
-                                    index: index,
-
-                                    );
-                              },
-                              child: const Icon(
-                                Icons.bookmark,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                            ),
                           ],
                         ),
                       ),

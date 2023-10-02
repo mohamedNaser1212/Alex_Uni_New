@@ -550,17 +550,37 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  addSavePosts({required String postId, required int index}) {
+  addSavePosts({
+    required String postId,
+    required int index,
+    required String text,
+    required String date,
+    required String userName,
+    required String userImage,
+    required String userId,
+    required List<String> likes,
+    required List<String> image,
+  }) {
     emit(AddSavePostLoadingState());
+    // SavePostsModel savePostsModel = SavePostsModel(
+    //   postId: postId,
+    //   text: posts[index].values.single.text,
+    //   date: posts[index].values.single.date,
+    //   userName: posts[index].values.single.userName,
+    //   userImage: posts[index].values.single.userImage,
+    //   userId: posts[index].values.single.userId,
+    //   likes: posts[index].values.single.likes,
+    //   image: posts[index].values.single.image,
+    // );
     SavePostsModel savePostsModel = SavePostsModel(
       postId: postId,
-      text: posts[index].values.single.text,
-      date: posts[index].values.single.date,
-      userName: posts[index].values.single.userName,
-      userImage: posts[index].values.single.userImage,
-      userId: posts[index].values.single.userId,
-      likes: posts[index].values.single.likes,
-      image: posts[index].values.single.image,
+      text: text,
+      date: date,
+      userName: userName,
+      userImage: userImage,
+      userId: userId,
+      likes: likes,
+      image: image,
     );
     FirebaseFirestore.instance.collection('users').doc(uId).update({
       'savedPosts': FieldValue.arrayUnion([savePostsModel.toMap()]),

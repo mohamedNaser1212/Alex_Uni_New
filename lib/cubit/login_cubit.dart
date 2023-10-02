@@ -1,5 +1,6 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
+import 'package:alex_uni_new/screens/complete_information.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,9 +48,15 @@ class LoginCubit extends Cubit<LoginStates> {
     }
   }
 
-  bool signInBefore=false;
   googleSignIn({
     required context,
+    required String phone,
+    required String address,
+required String country,
+required String universityName,
+required bool underGraduate,
+required bool postGraduate,
+    required String passportId
   }){
     emit(GoogleSignInLoadingState());
     GoogleSignIn(clientId: DefaultFirebaseOptions.currentPlatform.iosClientId).signIn().then((value){
@@ -60,36 +67,29 @@ class LoginCubit extends Cubit<LoginStates> {
         );
         FirebaseAuth.instance.signInWithCredential(credential).then((value){
           uId=value.user!.uid;
-          FirebaseFirestore.instance.collection('users').get().then((n){
-            for (var element in n.docs) {
-              if (element.data()['uId'] == value.user!.uid) {
-                signInBefore=true;
-              }
-            }
-            if(signInBefore==true){
-              CacheHelper.saveData(
-                key: 'uId',
-                value: uId,
-              ).then((value) {
-                navigateAndFinish(context: context, screen: const HomeScreen());
+          FirebaseFirestore.instance.collection('users').doc(uId).get().then((n){
+            if(n.exists){
+              CacheHelper.saveData(key: 'uId', value: uId).then((value){
+                  emit(GoogleSignInSuccessState());
+                  navigateAndFinish(context: context, screen: const HomeScreen());
               });
             }else{
-              // userCreate(
-              //     name: name,
-              //     image: image,
-              //     email: email,
-              //     uId: uId,
-              //     phone: phone,
-              //     address: address,
-              //     country: country,
-              //     universityName: universityName,
-              //     underGraduate: underGraduate,
-              //     postGraduate: postGraduate,
-              //     passportId: passportId,
-              //     context: context
-              // );
+              userCreate(
+                  name: value.user!.displayName!,
+                  image: value.user!.photoURL!,
+                  email: value.user!.email!,
+                  uId: value.user!.uid,
+                  phone: phone,
+                  address: address,
+                  country: country,
+                  universityName: universityName,
+                  underGraduate: underGraduate,
+                  postGraduate: postGraduate,
+                  passportId: passportId,
+                  context: context
+              );
+              navigateTo(context: context, screen: const CompleteInformationScreen());
             }
-
           });
 
 

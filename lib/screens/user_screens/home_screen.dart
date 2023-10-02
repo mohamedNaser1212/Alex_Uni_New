@@ -609,9 +609,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 InkWell(
                                   onTap: () {
                                     AppCubit.get(context).addSavePosts(
-                                        postId: AppCubit.get(context)
-                                            .postsId[index],
-                                        index: index);
+                                      postId: AppCubit.get(context).postsId[index],
+                                      index: index,
+                                      text: posts[index].values.single.text,
+                                      date: posts[index].values.single.date,
+                                      userName: posts[index].values.single.userName,
+                                      userImage: posts[index].values.single.userImage,
+                                      userId: posts[index].values.single.userId,
+                                      likes: posts[index].values.single.likes,
+                                      image: posts[index].values.single.image,
+                                    );
                                   },
                                   child: Icon(
                                     AppCubit.get(context)
@@ -814,9 +821,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 InkWell(
                                   onTap: () {
                                     AppCubit.get(context).addSavePosts(
-                                        postId: AppCubit.get(context)
-                                            .postsId[index],
-                                        index: index);
+                                      postId: AppCubit.get(context).postsId[index],
+                                      index: index,
+                                      text: posts[index].values.single.text,
+                                      date: posts[index].values.single.date,
+                                      userName: posts[index].values.single.userName,
+                                      userImage: posts[index].values.single.userImage,
+                                      userId: posts[index].values.single.userId,
+                                      likes: posts[index].values.single.likes,
+                                      image: posts[index].values.single.image,
+                                    );
                                   },
                                   child: Icon(
                                     AppCubit.get(context)
@@ -918,7 +932,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: () {
                               AppCubit.get(context).addSavePosts(
                                   postId: AppCubit.get(context).postsId[index],
-                                  index: index);
+                                  index: index,
+                                  text: posts[index].values.single.text,
+                                  date: posts[index].values.single.date,
+                                  userName: posts[index].values.single.userName,
+                                  userImage: posts[index].values.single.userImage,
+                                  userId: posts[index].values.single.userId,
+                                  likes: posts[index].values.single.likes,
+                                  image: posts[index].values.single.image,
+                              );
                             },
                             child: Icon(
                               AppCubit.get(context)
