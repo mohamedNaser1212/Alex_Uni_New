@@ -1,9 +1,7 @@
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/add_posts/add_posts_screen.dart';
-import 'package:alex_uni_new/screens/chat_screens/chat_screen.dart';
 import 'package:alex_uni_new/screens/news_screen/drawer_news_screen.dart';
-import 'package:alex_uni_new/screens/profile_screen/profile_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/settings_details_screen_layout.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
@@ -34,6 +32,7 @@ class _UserLayoutState extends State<UserLayout> {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
+          extendBody: true,
           appBar: AppBar(
             title: Text(
               AppCubit.get(context).titles[AppCubit.get(context).currentIndex],
@@ -52,6 +51,17 @@ class _UserLayoutState extends State<UserLayout> {
                     Icons.login,
                   ),
                 ),
+                if(AppCubit.get(context).currentIndex==1)
+                  IconButton(
+                    onPressed: () {
+                      AppCubit.get(context).logout(context);
+                    },
+                    icon: const Icon(
+                      Icons.logout,
+
+                      color: Colors.red,
+                    ),
+                  ),
               ],
           ),
           drawer: isGuest==false? Drawer(
@@ -93,38 +103,6 @@ class _UserLayoutState extends State<UserLayout> {
                     ),
                     const SizedBox(
                       height: 20,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        navigateTo(
-                          context: context,
-                          screen: const ProfileScreen(),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.person,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              lang == 'en' ? 'My Profile' : 'الملف الشخصي',
-                            ),
-                            const Spacer(),
-                            const Icon(
-                              Icons.arrow_forward_ios,
-                              size: 14,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const Divider(
-                      thickness: 1,
                     ),
                     InkWell(
                       onTap: () {},
@@ -285,6 +263,7 @@ class _UserLayoutState extends State<UserLayout> {
                 ),
               ],
             ),
+
           ): null,
           body: AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
           bottomNavigationBar: !isGuest? AnimatedBottomNavigationBar(

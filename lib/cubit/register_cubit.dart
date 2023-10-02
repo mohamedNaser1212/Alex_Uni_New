@@ -3,21 +3,28 @@ import 'package:alex_uni_new/states/register_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../models/department_model.dart';
 import '../models/university_model.dart';
 import '../models/user_model.dart';
-import '../states/app_states.dart';
 
 class RegisterCubit extends Cubit<RegisterStates>{
-  RegisterCubit() : super(RegisterInitialState()){
-    getUniversities();
-  }
+  RegisterCubit() : super(RegisterInitialState());
 
   static RegisterCubit get(context) => BlocProvider.of(context);
-  UniversityModel? currentSelectedUniversity = null;
-  DepartmentModel? currentSelectedDepartment = null;
+  UniversityModel? currentSelectedUniversity;
+  DepartmentModel? currentSelectedDepartment;
   bool selecteddegree=false;
+
+  void changRadioValue(bool value){
+    selecteddegree=value;
+    emit(ChangeRadioValueState());
+  }
+
+  void changeSelectedUniversity(UniversityModel universityModel) {
+    currentSelectedUniversity = universityModel;
+    currentSelectedDepartment = null;
+    emit(RegisterChangeSelectedUniversityState());
+  }
 
 
   void userRegister({
@@ -115,6 +122,7 @@ class RegisterCubit extends Cubit<RegisterStates>{
   }
   List<UniversityModel> universities = [];
   getUniversities() {
+    universities = [];
     emit(GetUniversitiesLoadingState());
     FirebaseFirestore.instance
         .collection('Universities')

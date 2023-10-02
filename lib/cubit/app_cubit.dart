@@ -6,11 +6,8 @@ import 'package:alex_uni_new/models/post_model.dart';
 import 'package:alex_uni_new/models/university_model.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
-import 'package:alex_uni_new/screens/chat_screens/chat_screen.dart';
 import 'package:alex_uni_new/screens/profile_screen/profile_screen.dart';
 import 'package:alex_uni_new/screens/user_screens/home_screen.dart';
-import 'package:alex_uni_new/screens/user_screens/notification_screen.dart';
-import 'package:alex_uni_new/screens/user_screens/settings_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -262,7 +259,6 @@ class AppCubit extends Cubit<AppStates> {
       imageFileList = [];
       emit(CreatePostSuccessState());
 
-      // Return a success message or value if needed
     } catch (error) {
       // Handle any errors here
       print('Error uploading images: $error');
@@ -338,8 +334,7 @@ class AppCubit extends Cubit<AppStates> {
       emit(WriteCommentErrorState());
     });
   }
-  // emit(DeleteCommentSuccessState());
-  // emit(DeleteCommentErrorState());
+
   deleteComment({
     required String commentId,
     required String postId,

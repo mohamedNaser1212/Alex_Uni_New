@@ -1,7 +1,6 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/models/both_news_model.dart';
-import 'package:alex_uni_new/models/both_news_model.dart';
 import 'package:alex_uni_new/models/news_model.dart';
 import 'package:alex_uni_new/models/post_model.dart';
 import 'package:alex_uni_new/models/university_model.dart';
@@ -9,7 +8,6 @@ import 'package:alex_uni_new/screens/comments/comments_screen.dart';
 import 'package:alex_uni_new/screens/news_screen/arabic_news_details_screen.dart';
 import 'package:alex_uni_new/screens/news_screen/english_news_details_screen.dart';
 import 'package:alex_uni_new/screens/person_profile/person_profile_screen.dart';
-import 'package:alex_uni_new/screens/profile_screen/profile_screen.dart';
 import 'package:alex_uni_new/screens/universties/university_details_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -393,15 +391,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   InkWell(
                     onTap: () {
                       if(!isGuest) {
-                        navigateTo(
+                        if(AppCubit.get(context).user!.uId !=
+                            posts[index].values.single.userId) {
+                          navigateTo(
                           context: context,
-                          screen: AppCubit.get(context).user!.uId ==
-                              posts[index].values.single.userId
-                              ? const ProfileScreen()
-                              : PersonProfileScreen(
+                          screen: PersonProfileScreen(
                             userId: posts[index].values.single.userId,
                           ),
                         );
+                        }
+                        else{
+                          AppCubit.get(context).changeBottomNavBar(1);
+                        }
                       }
                       else{
                         navigateTo(context: context, screen: PersonProfileScreen(
@@ -433,15 +434,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                     InkWell(
                                       onTap: () {
                                         if(!isGuest) {
-                                          navigateTo(
-                                          context: context,
-                                          screen: AppCubit.get(context).user!.uId ==
-                                              posts[index].values.single.userId
-                                              ? const ProfileScreen()
-                                              : PersonProfileScreen(
-                                            userId: posts[index].values.single.userId,
-                                          ),
-                                        );
+                                          if(AppCubit.get(context).user!.uId !=
+                                              posts[index].values.single.userId) {
+                                            navigateTo(
+                                              context: context,
+                                              screen: PersonProfileScreen(
+                                                userId: posts[index].values.single.userId,
+                                              ),
+                                            );
+                                          }
+                                          else{
+                                            AppCubit.get(context).changeBottomNavBar(1);
+                                          }
                                         }
                                         else{
                                           navigateTo(context: context, screen: PersonProfileScreen(

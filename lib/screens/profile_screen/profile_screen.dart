@@ -71,42 +71,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         Align(
-                          alignment: Alignment.topCenter,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    icon: const Icon(
-                                      Icons.arrow_back,
-                                    ),
-                                  ),
-                                ),
-                                CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      cubit.logout(context);
-                                    },
-                                    icon: const Icon(
-                                      Icons.logout,
-
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
                             width: double.infinity,

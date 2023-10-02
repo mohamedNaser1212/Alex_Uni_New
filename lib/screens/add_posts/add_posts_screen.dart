@@ -60,150 +60,168 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: defaultColor,
-            centerTitle: true,
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: defaultColor,
+              centerTitle: true,
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                ),
+              ),
+              title: const Text(
+                'Add new post',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
             ),
-            title: const Text(
-              'Add new post',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: postTextController,
-                      validator: (value) {
-                        if (value!.isEmpty) {
+            body: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Form(
+                key: formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        controller: postTextController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
 
-                          return 'post body must not be empty';
-                        }
+                            return 'post body must not be empty';
+                          }
 
-                        return null;
-                      },
-                      keyboardType: TextInputType.text,
-                      maxLines: null,
-                      autofocus: true,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'What\'s in your mind?',
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    GridView.builder(
-                        shrinkWrap: true,
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: AppCubit.get(context).imageFileList.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-                        itemBuilder: (context,index){
-                          return Padding(
-                            padding: const EdgeInsets.all(7.0),
-                            child: FullScreenWidget(child: Image.file(File(AppCubit.get(context).imageFileList[index].path),)),
-                          );
-                        }
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              AppCubit.get(context).selectImages();
-                            },
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.add,
-                                ),
-                                Text(
-                                  'Add photo',
-                                ),
-                              ],
-                            ),
-                          ),
+                          return null;
+                        },
+                        keyboardType: TextInputType.text,
+                        maxLines: null,
+                        autofocus: true,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'What\'s in your mind?',
                         ),
-                        if (AppCubit.get(context).imageFileList.isNotEmpty)
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      GridView.builder(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: AppCubit.get(context).imageFileList.length,
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                          itemBuilder: (context,index){
+                            return Padding(
+                              padding: const EdgeInsets.all(7.0),
+                              child: FullScreenWidget(child: Image.file(File(AppCubit.get(context).imageFileList[index].path),)),
+                            );
+                          }
+                      ),
+                      Row(
+                        children: [
                           Expanded(
                             child: TextButton(
                               onPressed: () {
-                                setState(() {
-                                  AppCubit.get(context).imageFileList=[];
-                                });
+                                AppCubit.get(context).selectImages();
                               },
                               child: const Row(
-                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
+                                    Icons.add,
                                   ),
                                   Text(
-                                    'delete photo',
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                    ),
+                                    'Add photo',
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                      ],
+                          if (AppCubit.get(context).imageFileList.isNotEmpty)
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    AppCubit.get(context).imageFileList=[];
+                                  });
+                                },
+                                child: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    Text(
+                                      'delete photo',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            bottomNavigationBar: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    0,
+                    20,
+                   MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.07,
+                    width: double.infinity,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    decoration: BoxDecoration(
+                      color: defaultColor,
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                  ],
+                    child: MaterialButton(
+                      onPressed: () {
+                        if(AppCubit.get(context).imageFileList.isEmpty){
+                          if(formKey.currentState!.validate()){
+                            uploadWithoutImage(context: context);
+                          }
+                        }
+                        else {
+                          AppCubit.get(context).uploadImages(AppCubit.get(context).imageFileList,context,postTextController.text);
+                        }
+                      },
+                      child:state is! CreatePostLoadingState? const Text(
+                        'Post',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                        ),
+                      ):const Center(child: CupertinoActivityIndicator(
+                        color: Colors.white,
+                      )),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-          bottomNavigationBar: Container(
-            height: MediaQuery.of(context).size.height * 0.07,
-            width: double.infinity,
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            decoration: BoxDecoration(
-              color: defaultColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                topRight: Radius.circular(20.0),
-              ),
-            ),
-            child: MaterialButton(
-              onPressed: () {
-                if(AppCubit.get(context).imageFileList.isEmpty){
-                  if(formKey.currentState!.validate()){
-                    uploadWithoutImage(context: context);
-                  }
-                }
-                else {
-                  AppCubit.get(context).uploadImages(AppCubit.get(context).imageFileList,context,postTextController.text);
-                }
-              },
-              child:state is! CreatePostLoadingState? const Text(
-                'Post',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
+                SizedBox(
+                  height: 20,
                 ),
-              ):const Center(child: CupertinoActivityIndicator(
-                color: Colors.white,
-              )),
+              ],
             ),
           ),
         );

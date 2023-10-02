@@ -1,5 +1,9 @@
 abstract class RegisterStates {}
 
+class ChangeRadioValueState extends RegisterStates {}
+
+class RegisterChangeSelectedUniversityState extends RegisterStates {}
+
 class RegisterInitialState extends RegisterStates {}
 class RegisterLoadingState extends RegisterStates {}
 class RegisterSuccessState extends RegisterStates {
