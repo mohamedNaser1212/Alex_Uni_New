@@ -354,7 +354,123 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 10,
               ),
-              if (posts[index].values.single.image.isNotEmpty)
+              if(posts[index].values.single.image.isNotEmpty && posts[index].values.single.image.length==1)
+                Container(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      Image.network(
+                        AppCubit.get(context)
+                            .myPosts[index]
+                            .values
+                            .single
+                            .image![0],
+                        width: double.infinity,
+
+                        fit: BoxFit.cover,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        color: Colors.black.withOpacity(0.6),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              if (isGuest == false)
+                                InkWell(
+                                  onTap: () {
+                                    AppCubit.get(context).updatePostLikes(
+                                      AppCubit.get(context).myPosts[index],
+                                    );
+                                    AppCubit.get(context).getPosts();
+                                  },
+                                  child: Icon(
+                                    AppCubit.get(context)
+                                        .myPosts[index]
+                                        .values
+                                        .single
+                                        .likes
+                                    !.any((element) =>
+                                    element ==
+                                        AppCubit.get(context)
+                                            .user!
+                                            .uId)
+                                        ? Icons.favorite
+                                        : Icons.favorite_border_outlined,
+                                    size: 18.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              if (isGuest == false) const SizedBox(width: 5),
+                              if (isGuest == false)
+                                Text(
+                                  '${posts[index].values.single.likes.length}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              if (isGuest == false) const SizedBox(width: 20),
+                              InkWell(
+                                onTap: () {
+                                  AppCubit.get(context).getComments(
+                                      postId:
+                                      AppCubit.get(context).myPostsId[index]);
+                                  navigateTo(
+                                    context: context,
+                                    screen: CommentsScreen(
+                                      postId:
+                                      AppCubit.get(context).myPostsId[index],
+                                    ),
+                                  );
+                                },
+                                child: const Icon(
+                                  Icons.comment_outlined,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const Spacer(),
+                              if (isGuest == false) const SizedBox(width: 20),
+                              if (isGuest == false)
+                                InkWell(
+                                  onTap: () {
+                                    AppCubit.get(context).addSavePosts(
+                                      postId: AppCubit.get(context).myPostsId[index],
+                                      index: index,
+                                      text: posts[index].values.single.text,
+                                      date: posts[index].values.single.date,
+                                      userName: posts[index].values.single.userName,
+                                      userImage: posts[index].values.single.userImage,
+                                      userId: posts[index].values.single.userId,
+                                      likes: posts[index].values.single.likes,
+                                      image: posts[index].values.single.image,
+                                    );
+                                  },
+                                  child: Icon(
+                                    AppCubit.get(context)
+                                        .savedPosts.any((element) =>
+                                    element.postId ==
+                                        AppCubit.get(context)
+                                            .myPostsId[index]
+                                    )
+                                        ? Icons.bookmark
+                                        : Icons.bookmark_outline,
+                                    size: 18.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              if (posts[index].values.single.image.isNotEmpty && posts[index].values.single.image.length>1)
                 Container(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   decoration: BoxDecoration(

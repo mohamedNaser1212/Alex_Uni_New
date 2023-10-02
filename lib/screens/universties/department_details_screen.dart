@@ -281,12 +281,13 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                   alignment: Alignment.topCenter,
                   child: SizedBox(
                     width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.26,
+                    height: MediaQuery.of(context).size.height * 0.3,
                     child: Stack(
                       children: [
                         Image.network(
                           widget.departmentModel.sectionImages[index]!,
                           width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.4,
                           fit: BoxFit.cover,
                         ),
                         if (hasPreviousImage)
@@ -375,7 +376,7 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                                   fontWeight: FontWeight.bold,
                                   color: defaultColor,
                                 ),
-                                textDirection: TextDirection.rtl,
+                                textDirection: TextDirection.ltr,
                               ),
                             if(index==0)
                               Divider(
@@ -386,13 +387,13 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                               SizedBox(
                                 height: 10.0,
                               ),
-
                             Text(
                               widget.departmentModel.sectionDescriptions[index]!,
                               style: const TextStyle(
                                 fontSize: 20.0,
                               ),
-                              textDirection: TextDirection.rtl,
+                              textDirection: TextDirection.ltr,
+
                             ),
                             const SizedBox(
                               height: 10.0,

@@ -74,7 +74,7 @@ class _BothNewsDetailsScreenState extends State<BothNewsDetailsScreen> {
                   alignment: Alignment.topCenter,
                   child: SizedBox(
                     width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.26,
+                    height: MediaQuery.of(context).size.height * 0.3,
                     child: Stack(
                       children: [
                         Image.network(
@@ -168,6 +168,7 @@ class _BothNewsDetailsScreenState extends State<BothNewsDetailsScreen> {
                                   fontWeight: FontWeight.bold,
                                   color: defaultColor,
                                 ),
+                                textDirection: TextDirection.ltr,
                               ),
                             if(index==0)
                             const SizedBox(
@@ -186,7 +187,11 @@ class _BothNewsDetailsScreenState extends State<BothNewsDetailsScreen> {
                               lang=='ar'? widget.newsModel.arabicDescriptions![index]!:widget.newsModel.descriptions![index]!,
                               style: const TextStyle(
                                 fontSize: 20.0,
+                              height: 1.5,
                               ),
+
+                              textDirection: TextDirection.ltr,
+
                             ),
                             const SizedBox(
                               height: 10.0,

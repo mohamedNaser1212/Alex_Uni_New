@@ -187,6 +187,7 @@ class _ArabicNewsDetailsScreenState extends State<ArabicNewsDetailsScreen> {
                               widget.newsModel.descriptions[index]!,
                               style: const TextStyle(
                                 fontSize: 20.0,
+                                height: 1.5,
                               ),
                             ),
                             const SizedBox(

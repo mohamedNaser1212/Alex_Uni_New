@@ -532,7 +532,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             .single
                             .image![0],
                         width: double.infinity,
-                        height:200,
+
                         fit: BoxFit.cover,
                       ),
                       Container(
