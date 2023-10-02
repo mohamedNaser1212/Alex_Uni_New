@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/news_model.dart';
 import '../../reusable_widgets.dart';
-import 'news_details_screen.dart';
+import 'arabic_news_details_screen.dart';
 
 class DrawerNewsScreen extends StatefulWidget {
   const DrawerNewsScreen({super.key});
@@ -65,7 +65,7 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
         onTap: () {
           navigateTo(
             context: context,
-            screen: NewsDetailsScreen(
+            screen: ArabicNewsDetailsScreen(
               newsModel: model,
             ),
           );

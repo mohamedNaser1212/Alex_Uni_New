@@ -1,11 +1,13 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/models/both_news_model.dart';
+import 'package:alex_uni_new/models/both_news_model.dart';
 import 'package:alex_uni_new/models/news_model.dart';
 import 'package:alex_uni_new/models/post_model.dart';
 import 'package:alex_uni_new/models/university_model.dart';
-import 'package:alex_uni_new/screens/chat_details/chat_details_screen.dart';
 import 'package:alex_uni_new/screens/comments/comments_screen.dart';
-import 'package:alex_uni_new/screens/news_screen/news_details_screen.dart';
+import 'package:alex_uni_new/screens/news_screen/arabic_news_details_screen.dart';
+import 'package:alex_uni_new/screens/news_screen/english_news_details_screen.dart';
 import 'package:alex_uni_new/screens/person_profile/person_profile_screen.dart';
 import 'package:alex_uni_new/screens/profile_screen/profile_screen.dart';
 import 'package:alex_uni_new/screens/universties/university_details_screen.dart';
@@ -14,7 +16,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:ui' as ui;
 import '../../reusable_widgets.dart';
 import '../view_image_screen.dart';
 
@@ -61,7 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Inter',
                       ),
-
                     ),
                   ),
                   Container(
@@ -116,9 +116,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                     height: MediaQuery.of(context).size.height * 0.37,
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: StreamBuilder(
+                    child: lang=='ar'? StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('News')
+                          .orderBy('date', descending: true)
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
@@ -143,6 +144,40 @@ class _HomeScreenState extends State<HomeScreen> {
                         } else {
                           return  Center(
                             child: Text(lang=='en'?'No Data Found':'لا يوجد بيانات'),
+                          );
+                        }
+                      },
+                    ):StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('News')
+                          .where('type',isEqualTo: 'both')
+                          .orderBy('date', descending: true)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot ds = snapshot.data!.docs[index];
+                              BothNewsModel model = BothNewsModel.fromJson(
+                                  ds.data()! as Map<String, dynamic>?);
+                              return buildNewsItem(
+                                context: context,
+                                model: model,
+                              );
+                            },
+                            separatorBuilder: (context, index) =>
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            itemCount: snapshot.data!.docs.length,
+                          );
+                        } else {
+                          return Center(
+                            child: Text(lang == 'en'
+                                ? 'No Data Found'
+                                : 'لا يوجد بيانات'),
                           );
                         }
                       },
@@ -243,16 +278,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget buildNewsItem({
     required BuildContext context,
-    required ArabicNewsModel model,
-  }) =>
-      InkWell(
+    model,
+  }) => InkWell(
         onTap: () {
-          navigateTo(
+          if(model is ArabicNewsModel) {
+            navigateTo(
             context: context,
-            screen: NewsDetailsScreen(
+            screen: ArabicNewsDetailsScreen(
               newsModel: model,
             ),
           );
+          }
+          else{
+            navigateTo(
+              context: context,
+              screen: BothNewsDetailsScreen(
+                newsModel: model,
+              ),
+            );
+          }
         },
         child: Container(
           width: MediaQuery.of(context).size.width * 0.7,
@@ -333,8 +377,7 @@ class _HomeScreenState extends State<HomeScreen> {
     PostModel model,
     index,
     context,
-  ) =>
-      Card(
+  ) => Card(
         color: const Color(0xffE6EEFA),
         clipBehavior: Clip.none,
         child: Padding(
@@ -442,7 +485,125 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 10,
               ),
-              if (posts[index].values.single.image.isNotEmpty)
+              if(posts[index].values.single.image.isNotEmpty && posts[index].values.single.image.length==1)
+                Container(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      Image.network(
+                        AppCubit.get(context)
+                            .posts[index]
+                            .values
+                            .single
+                            .image![0],
+                        width: double.infinity,
+                        height:200,
+                        fit: BoxFit.cover,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        color: Colors.black.withOpacity(0.6),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              if (isGuest == false)
+                                InkWell(
+                                  onTap: () {
+                                    AppCubit.get(context).updatePostLikes(
+                                      AppCubit.get(context).posts[index],
+                                    );
+                                  },
+                                  child: Icon(
+                                    AppCubit.get(context)
+                                        .posts[index]
+                                        .values
+                                        .single
+                                        .likes!
+                                        .contains(uId)
+                                        ? Icons.favorite
+                                        : Icons.favorite_outline_rounded,
+                                    size: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              if (isGuest == false) const SizedBox(width: 5),
+                              if (isGuest == false)
+                                Text(
+                                  '${posts[index].values.single.likes.length}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              if (isGuest == false) const SizedBox(width: 20),
+                              InkWell(
+                                onTap: () {
+                                  AppCubit.get(context).getComments(
+                                      postId:
+                                      AppCubit.get(context).postsId[index]);
+                                  navigateTo(
+                                    context: context,
+                                    screen: CommentsScreen(
+                                      postId:
+                                      AppCubit.get(context).postsId[index],
+                                    ),
+                                  );
+                                },
+                                child: const Icon(
+                                  Icons.comment_outlined,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const Spacer(),
+                              if (isGuest == false)
+                                InkWell(
+                                  onTap: () {
+                                    AppCubit.get(context).addSharedPosts(
+                                        postId: AppCubit.get(context)
+                                            .postsId[index],
+                                        index: index,
+                                        context: context);
+                                  },
+                                  child: const Icon(
+                                    Icons.share_outlined,
+                                    size: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              if (isGuest == false) const SizedBox(width: 20),
+                              if (isGuest == false)
+                                InkWell(
+                                  onTap: () {
+                                    AppCubit.get(context).addSavePosts(
+                                        postId: AppCubit.get(context)
+                                            .postsId[index],
+                                        index: index);
+                                  },
+                                  child: Icon(
+                                    AppCubit.get(context)
+                                        .user!
+                                        .savedPosts!
+                                        .contains(AppCubit.get(context)
+                                        .postsId[index])
+                                        ? Icons.bookmark
+                                        : Icons.bookmark_border_outlined,
+                                    size: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              if (posts[index].values.single.image.isNotEmpty && posts[index].values.single.image.length>1)
                 Container(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   decoration: BoxDecoration(

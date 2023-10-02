@@ -1,17 +1,17 @@
 import 'package:alex_uni_new/constants.dart';
+import 'package:alex_uni_new/models/both_news_model.dart';
 import 'package:flutter/material.dart';
-import 'package:alex_uni_new/models/news_model.dart';
 
-class NewsDetailsScreen extends StatefulWidget {
-  const NewsDetailsScreen({super.key, required this.newsModel});
+class BothNewsDetailsScreen extends StatefulWidget {
+  BothNewsDetailsScreen({super.key, required this.newsModel});
 
-  final ArabicNewsModel newsModel;
+  final BothNewsModel newsModel;
 
   @override
-  State<NewsDetailsScreen> createState() => _NewsDetailsScreenState();
+  State<BothNewsDetailsScreen> createState() => _BothNewsDetailsScreenState();
 }
 
-class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
+class _BothNewsDetailsScreenState extends State<BothNewsDetailsScreen> {
   int index = 0;
   List<GlobalKey> leftIconButtonKeys = [];
   List<GlobalKey> rightIconButtonKeys = [];
@@ -21,9 +21,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Initialize unique keys for each IconButton
-    for (int i = 0; i < widget.newsModel.images.length; i++) {
+    for (int i = 0; i < widget.newsModel.images!.length; i++) {
       leftIconButtonKeys.add(GlobalKey());
       rightIconButtonKeys.add(GlobalKey());
     }
@@ -43,7 +41,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
   }
 
   void goToNextImage() {
-    if (index < widget.newsModel.images.length - 1) {
+    if (index < widget.newsModel.images!.length - 1) {
       setState(() {
         index++;
         scrollController.animateTo(
@@ -58,15 +56,12 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final hasPreviousImage = index > 0;
-    final hasNextImage = index < widget.newsModel.images.length - 1;
+    final hasNextImage = index < widget.newsModel.images!.length - 1;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            widget.newsModel.title!,
-          textDirection: TextDirection.rtl,
-
-
+         lang=='ar'? widget.newsModel.arabicTitle!:widget.newsModel.title!,
         ),
         centerTitle: true,
       ),
@@ -83,7 +78,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                     child: Stack(
                       children: [
                         Image.network(
-                          widget.newsModel.images[index]!,
+                          widget.newsModel.images![index]!,
                           width: double.infinity,
                           fit: BoxFit.cover,
                         ),
@@ -166,31 +161,28 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                               height: 10.0,
                             ),
                             if(index==0)
-                            Text(
-                              widget.newsModel.title!,
-                              style:  TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                                color: defaultColor,
+                              Text(
+                                lang=='ar'? widget.newsModel.arabicTitle!:widget.newsModel.title!,
+                                style:  TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: defaultColor,
+                                ),
                               ),
-                              textDirection: TextDirection.rtl,
-                            ),
                             if(index==0)
-                            Divider(
-                              height: 0.5,
-                              color: Colors.grey,
-                            ),
+                              Divider(
+                                height: 0.5,
+                                color: Colors.grey,
+                              ),
                             if(index==0)
-                            SizedBox(
-                              height: 10.0,
-                            ),
-
+                              SizedBox(
+                                height: 10.0,
+                              ),
                             Text(
-                              widget.newsModel.descriptions[index]!,
+                              lang=='ar'? widget.newsModel.arabicDescriptions![index]!:widget.newsModel.descriptions![index]!,
                               style: const TextStyle(
                                 fontSize: 20.0,
                               ),
-                             textDirection: TextDirection.rtl,
                             ),
                             const SizedBox(
                               height: 10.0,
@@ -233,11 +225,11 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                     width: MediaQuery.of(context).size.width * 0.08,
                   ),
                   Text(
-                    '${widget.newsModel.images.length}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    '${widget.newsModel.images!.length}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),

@@ -58,7 +58,6 @@ class _MyAppState extends State<MyApp> {
   late Locale _selectedLocale;
 
   _MyAppState() {
-    // Initialize _selectedLocale with the default language (English or your preferred default)
     _selectedLocale = Locale(lang ?? 'en');
   }
 

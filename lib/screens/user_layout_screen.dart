@@ -23,7 +23,6 @@ class UserLayout extends StatefulWidget {
 class _UserLayoutState extends State<UserLayout> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if(isGuest==false) {
       AppCubit.get(context).getUserData();

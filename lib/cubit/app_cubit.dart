@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:alex_uni_new/cache_helper.dart';
+import 'package:alex_uni_new/models/both_news_model.dart';
 import 'package:alex_uni_new/models/department_model.dart';
 import 'package:alex_uni_new/models/post_model.dart';
 import 'package:alex_uni_new/models/university_model.dart';
@@ -730,15 +731,35 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   List<ArabicNewsModel> news = [];
-  getNews() {
+  getArabicNews() {
     emit(GetNewsLoadingState());
     FirebaseFirestore.instance
         .collection('News')
-        // .orderBy('date', descending: true)
+        .where('type',isEqualTo: 'arabic')
+        .orderBy('date', descending: true)
         .get()
         .then((value) {
       for (var element in value.docs) {
         news.add(ArabicNewsModel.fromJson(element.data()));
+      }
+    }).then((value) {
+      emit(GetNewsSuccessState());
+    }).catchError((error) {
+      emit(GetNewsErrorState(error.toString()));
+    });
+  }
+
+List<BothNewsModel> bothNews = [];
+  getEnglishNews() {
+    emit(GetNewsLoadingState());
+    FirebaseFirestore.instance
+        .collection('News')
+        .where('type',isEqualTo: 'both')
+        .orderBy('date', descending: true)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        bothNews.add(BothNewsModel.fromJson(element.data()));
       }
     }).then((value) {
       emit(GetNewsSuccessState());
@@ -851,42 +872,11 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  // make a function to remove the saved posts
-//   removeSavedPost({
-//     required String postId,
-//     required int index
-//
-// }){
-//     emit(RemoveSavedPostLoadingState());
-//     SavePostsModel savePostsModel=SavePostsModel(
-//       postId: postId,
-//       text: posts[index].values.single.text,
-//       date: posts[index].values.single.date,
-//       userName: posts[index].values.single.userName,
-//       userImage: posts[index].values.single.userImage,
-//       userId: posts[index].values.single.userId,
-//       likes: posts[index].values.single.likes,
-//       comments: posts[index].values.single.comments,
-//       image: posts[index].values.single.image,
-//     );
-//     FirebaseFirestore.instance.collection('users').doc(uId).update({
-//       'savedPosts': FieldValue.arrayRemove([savePostsModel.toMap()]),
-//     }).then((value) {
-//       getSavePosts();
-//       getUserData();
-//       emit(RemoveSavedPostSuccessState());
-//     }).catchError((error) {
-//       emit(RemoveSavedPostErrorState());
-//     });
-//   }
-
-
   removeSavedPost({required int index}) {
     emit(RemoveSavedPostLoadingState());
 
     FirebaseFirestore.instance.collection('users').doc(uId).update({
       'savedPosts':  FieldValue.arrayRemove([savedPosts[index].toMap()]),
-
     }).then((value) {
       getSavePosts();
       getUserData();
