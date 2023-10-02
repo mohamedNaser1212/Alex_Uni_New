@@ -122,9 +122,18 @@ class AppCubit extends Cubit<AppStates> {
         .doc(uId)
         .update(user2.toMap())
         .then((value) {
-      getUserData();
-
-      emit(UserModelUpdateSuccessState());
+      FirebaseFirestore.instance.collection('posts').where('userId',isEqualTo: uId).get().then((snapshot) {
+        for (DocumentSnapshot ds in snapshot.docs) {
+          ds.reference.update({
+            'userName': name,
+            'userImage': image ?? user!.image,
+          });
+        }
+      }).then((value) {
+        getUserData();
+        getMyPosts();
+        emit(UserModelUpdateSuccessState());
+      });
     }).catchError((error) {
       emit(UserModelUpdateErrorState(error.toString()));
     });
@@ -735,7 +744,7 @@ class AppCubit extends Cubit<AppStates> {
     emit(GetNewsLoadingState());
     FirebaseFirestore.instance
         .collection('News')
-        .where('type',isEqualTo: 'arabic')
+        .where('type', isEqualTo: 'arabic')
         .orderBy('date', descending: true)
         .get()
         .then((value) {
@@ -749,12 +758,12 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-List<BothNewsModel> bothNews = [];
+  List<BothNewsModel> bothNews = [];
   getEnglishNews() {
     emit(GetNewsLoadingState());
     FirebaseFirestore.instance
         .collection('News')
-        .where('type',isEqualTo: 'both')
+        .where('type', isEqualTo: 'both')
         .orderBy('date', descending: true)
         .get()
         .then((value) {
@@ -876,16 +885,17 @@ List<BothNewsModel> bothNews = [];
     emit(RemoveSavedPostLoadingState());
 
     FirebaseFirestore.instance.collection('users').doc(uId).update({
-      'savedPosts':  FieldValue.arrayRemove([savedPosts[index].toMap()]),
+      'savedPosts': FieldValue.arrayRemove([savedPosts[index].toMap()]),
     }).then((value) {
       getSavePosts();
       getUserData();
       emit(RemoveSavedPostSuccessState());
     }).catchError((error) {
-      print(error.toString()  );
+      print(error.toString());
       emit(RemoveSavedPostErrorState());
     });
   }
+
   addSharedSavedPosts({
     required String postId,
     required int index,
