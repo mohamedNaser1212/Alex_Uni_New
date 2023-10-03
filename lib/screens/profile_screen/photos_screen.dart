@@ -1,39 +1,31 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/states/app_states.dart';
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PhotoScreen extends StatefulWidget {
-  const PhotoScreen({super.key});
+  const PhotoScreen({super.key,required this.photos});
+
+  final List<String> photos;
 
   @override
   State<PhotoScreen> createState() => _PhotoScreenState();
 }
 
 class _PhotoScreenState extends State<PhotoScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {
-        if (state is GetPostsSuccessState) {
-          print('${AppCubit.get(context).myphotos}');
-        }
-      },
+      listener: (context, state) {},
       builder: (context, state) {
-        AppCubit cubit = AppCubit.get(context);
-
         return Scaffold(
           appBar: AppBar(
             title:  Text(lang=='en'?'Photos':'الصور'),
           ),
-          body: cubit.myphotos.length > 0
+          body: widget.photos.isNotEmpty
               ? GridView.count(
                   shrinkWrap: true,
                   crossAxisCount: 3,
@@ -41,7 +33,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
                   crossAxisSpacing: 1,
                   childAspectRatio: 1 / 1.69,
                   children:
-                      cubit.myphotos.map((e) => buildPhotoItem(e)).toList(),
+                      widget.photos.map((e) => buildPhotoItem(e)).toList(),
                 )
               : const Center(
                   child: Text(

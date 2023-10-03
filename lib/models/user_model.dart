@@ -1,5 +1,3 @@
-import 'package:alex_uni_new/models/post_model.dart';
-
 class UserModel {
   String? uId;
   String? name;
@@ -15,7 +13,7 @@ class UserModel {
   bool? underGraduate;
   bool? postGraduate;
 
-  List<SavePostsModel>?savedPosts;
+
   List<SharePostModel>? sharePosts;
 
   UserModel({
@@ -32,7 +30,6 @@ class UserModel {
     required this.postGraduate,
     required this.address,
     required this.passportId,
-    required this.savedPosts,
     required this.sharePosts,
   });
 
@@ -48,10 +45,8 @@ class UserModel {
     universityname=json['universityname'];
     underGraduate=json['underGraduate'];
     postGraduate=json['postGraduate'];
-
     address=json['address'];
     passportId=json['passportId'];
-    savedPosts = List.from(json['savedPosts']).map((e) => SavePostsModel.fromJson(e)).toList();
     sharePosts = List.from(json['sharePosts']).map((e) => SharePostModel.fromJson(e)).toList();
   }
 
@@ -68,59 +63,14 @@ class UserModel {
       'universityname':universityname,
       'underGraduate':underGraduate,
       'postGraduate':postGraduate,
-
       'address':address,
       'passportId':passportId,
-      'savedPosts': savedPosts!.map((e) => e.toMap()).toList(),
       'sharePosts': sharePosts!.map((e) => e.toMap()).toList(),
     };
   }
 }
 
-class SavePostsModel{
-  String? postId;
-  String ? text;
-  String? date;
-  String? userName;
-  String? userImage;
-  String? userId;
-  List<String>?likes;
-  List<String> ?image;
 
-  SavePostsModel({
-    required this.postId,
-    required this.text,
-    required this.date,
-    required this.userName,
-    required this.userImage,
-    required this.userId,
-    required this.likes,
-    required this.image,
-  });
-
-  SavePostsModel.fromJson(Map<String,dynamic>? json){
-    postId=json!['postId'];
-    text=json['text']??'';
-    date=json['date']??'';
-    userName=json['userName']??'';
-    userImage=json['userImage']??'';
-    userId=json['userId']??'';
-    likes=List.from(json['likes']).map((e) => e.toString()).toList();
-    image=List.from(json['image']).map((e) => e.toString()).toList();
-  }
-  Map<String,dynamic> toMap(){
-    return {
-      'postId':postId,
-      'text':text,
-      'date':date,
-      'userName':userName,
-      'userImage':userImage,
-      'userId':userId,
-      'likes':likes!.map((element) => element).toList(),
-      'image':image!.map((element) => element).toList(),
-    };
-  }
-}
 
 class SharePostModel{
   String? postId;

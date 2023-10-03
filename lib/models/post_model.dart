@@ -11,6 +11,7 @@ class PostModel{
   bool? isReviewed=false;
 
   PostModel({
+    this.postId,
     required this.text,
     required this.date,
     required this.userName,

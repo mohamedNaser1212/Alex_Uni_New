@@ -33,8 +33,22 @@ class _SettingsLayoutScreenState extends State<SettingsLayoutScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      const SizedBox(
-                        height: 20,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,

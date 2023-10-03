@@ -174,15 +174,18 @@ class _ArabicNewsDetailsScreenState extends State<ArabicNewsDetailsScreen> {
                               ),
                             ),
                             if(index==0)
-                            Divider(
-                              height: 0.5,
-                              color: Colors.grey,
-                            ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
                             if(index==0)
-                            SizedBox(
-                              height: 10.0,
-                            ),
-
+                              Divider(
+                                height: 0.5,
+                                color: Colors.grey[400],
+                              ),
+                            if(index==0)
+                              const SizedBox(
+                                height: 20.0,
+                              ),
                             Text(
                               widget.newsModel.descriptions[index]!,
                               style: const TextStyle(

@@ -104,9 +104,7 @@ class RegisterCubit extends Cubit<RegisterStates>{
       postGraduate: postGraduate,
       address: address,
       universityname: universityname,
-
       country: country,
-      savedPosts: [],
      sharePosts: [],
     );
 

@@ -24,7 +24,6 @@ import '../models/message_model.dart';
 import '../models/news_model.dart';
 import '../models/settings_model.dart';
 import '../models/user_model.dart';
-import '../screens/user_screens/settings_details_screen_layout.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitialState());
@@ -110,7 +109,6 @@ class AppCubit extends Cubit<AppStates> {
         country: user!.country,
         passportId: user!.passportId,
         address: user!.address,
-        savedPosts: user!.savedPosts,
         sharePosts: user!.sharePosts,
         underGraduate: user!.underGraduate,
         postGraduate: user!.postGraduate);
@@ -120,7 +118,11 @@ class AppCubit extends Cubit<AppStates> {
         .doc(uId)
         .update(user2.toMap())
         .then((value) {
-      FirebaseFirestore.instance.collection('posts').where('userId',isEqualTo: uId).get().then((snapshot) {
+      FirebaseFirestore.instance
+          .collection('posts')
+          .where('userId', isEqualTo: uId)
+          .get()
+          .then((snapshot) {
         for (DocumentSnapshot ds in snapshot.docs) {
           ds.reference.update({
             'userName': name,
@@ -128,7 +130,11 @@ class AppCubit extends Cubit<AppStates> {
           });
         }
       }).then((value) {
-        FirebaseFirestore.instance.collectionGroup('comments').where('ownerId',isEqualTo: uId).get().then((snapshot) {
+        FirebaseFirestore.instance
+            .collectionGroup('comments')
+            .where('ownerId', isEqualTo: uId)
+            .get()
+            .then((snapshot) {
           for (DocumentSnapshot ds in snapshot.docs) {
             ds.reference.update({
               'ownerName': name,
@@ -258,7 +264,6 @@ class AppCubit extends Cubit<AppStates> {
       await FirebaseFirestore.instance.collection('posts').add(model.toMap());
       imageFileList = [];
       emit(CreatePostSuccessState());
-
     } catch (error) {
       // Handle any errors here
       print('Error uploading images: $error');
@@ -266,11 +271,10 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  List<Map<String, PostModel>> posts = [];
+  // List<Map<String, PostModel>> posts = [];
   List<PostModel> post = [];
   List postsId = [];
   getPosts() {
-    posts = [];
     postsId = [];
     post = [];
     emit(GetPostsLoadingState());
@@ -281,10 +285,9 @@ class AppCubit extends Cubit<AppStates> {
         .get()
         .then((value) {
       for (var element in value.docs) {
-        post.add(PostModel.fromJson(element.data()));
-        posts.add({
-          element.reference.id: PostModel.fromJson(element.data()),
-        });
+        PostModel currentPost = PostModel.fromJson(element.data());
+        currentPost.postId = element.id;
+        post.add(currentPost);
         postsId.add(element.id);
       }
     }).then((value) {
@@ -294,21 +297,17 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  updatePostLikes(Map<String, PostModel> post) {
-    if (post.values.single.likes!.any((element) => element == user!.uId)) {
-      debugPrint('exist and remove');
-
-      post.values.single.likes!.removeWhere((element) => element == user!.uId);
+  updatePostLikes(PostModel post) {
+    if (post.likes!.any((element) => element == user!.uId)) {
+      post.likes!.removeWhere((element) => element == user!.uId);
     } else {
-      post.values.single.likes!.add(user!.uId!);
+      post.likes!.add(user!.uId!);
     }
-
     FirebaseFirestore.instance
         .collection('posts')
-        .doc(post.keys.single)
-        .update(post.values.single.toMap())
+        .doc(post.postId)
+        .update(post.toMap())
         .then((value) {
-      getUserData();
       emit(LikePostSuccessState());
     }).catchError((error) {});
   }
@@ -325,9 +324,14 @@ class AppCubit extends Cubit<AppStates> {
       ownerImage: user!.image!,
       ownerId: user!.uId!,
     );
-    FirebaseFirestore.instance.collection('posts').doc(postId).collection('comments').add(
-      commentModel.toJson(),
-    ).then((value) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .add(
+          commentModel.toJson(),
+        )
+        .then((value) {
       getComments(postId: postId);
       emit(WriteCommentSuccessState());
     }).catchError((error) {
@@ -341,17 +345,17 @@ class AppCubit extends Cubit<AppStates> {
   }) {
     emit(DeleteCommentLoadingState());
     FirebaseFirestore.instance
-    .collection('posts')
-    .doc(postId)
-    .collection('comments')
-    .doc(commentId)
-    .delete().then((value){
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(commentId)
+        .delete()
+        .then((value) {
       getComments(postId: postId);
       emit(DeleteCommentSuccessState());
-    }).catchError((error){
+    }).catchError((error) {
       emit(DeleteCommentErrorState());
     });
-
   }
 
   List<CommentDataModel> comments = [];
@@ -367,7 +371,8 @@ class AppCubit extends Cubit<AppStates> {
         .then((value) {
       comments = [];
       for (var element in value.docs) {
-        CommentDataModel currentComment = CommentDataModel.fromJson(element.data());
+        CommentDataModel currentComment =
+            CommentDataModel.fromJson(element.data());
         currentComment.id = element.id;
         comments.add(currentComment);
       }
@@ -515,7 +520,7 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  List<Map<String, PostModel>> myPosts = [];
+  List< PostModel> myPosts = [];
   List<String> myphotos = [];
   List myPostsId = [];
   getMyPosts() {
@@ -531,9 +536,9 @@ class AppCubit extends Cubit<AppStates> {
         .get()
         .then((value) {
       for (var element in value.docs) {
-        myPosts.add({
-          element.reference.id: PostModel.fromJson(element.data()),
-        });
+        PostModel currentPost = PostModel.fromJson(element.data());
+        currentPost.postId = element.id;
+        myPosts.add(currentPost);
         myPostsId.add(element.id);
         element.data()['image'].forEach((element) {
           myphotos.add(element);
@@ -547,41 +552,16 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   addSavePosts({
-    required String postId,
-    required int index,
-    required String text,
-    required String date,
-    required String userName,
-    required String userImage,
-    required String userId,
-    required List<String> likes,
-    required List<String> image,
+    required PostModel model,
   }) {
     emit(AddSavePostLoadingState());
-    // SavePostsModel savePostsModel = SavePostsModel(
-    //   postId: postId,
-    //   text: posts[index].values.single.text,
-    //   date: posts[index].values.single.date,
-    //   userName: posts[index].values.single.userName,
-    //   userImage: posts[index].values.single.userImage,
-    //   userId: posts[index].values.single.userId,
-    //   likes: posts[index].values.single.likes,
-    //   image: posts[index].values.single.image,
-    // );
-    SavePostsModel savePostsModel = SavePostsModel(
-      postId: postId,
-      text: text,
-      date: date,
-      userName: userName,
-      userImage: userImage,
-      userId: userId,
-      likes: likes,
-      image: image,
-    );
-    FirebaseFirestore.instance.collection('users').doc(uId).update({
-      'savedPosts': FieldValue.arrayUnion([savePostsModel.toMap()]),
-    }).then((value) {
-      getUserData();
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('savedPosts')
+        .doc('${model.postId}')
+        .set(model.toMap())
+        .then((value) {
       getSavePosts();
       emit(AddSavePostSuccessState());
     }).catchError((error) {
@@ -589,14 +569,19 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  List<SavePostsModel> savedPosts = [];
+  List<PostModel> savedPosts = [];
+  List<String> savedPostsId = [];
 
   getSavePosts() {
     emit(GetSavedPostsLoadingState());
-    FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
+    FirebaseFirestore.instance.collection('users').doc(uId).collection('savedPosts').get().then((value) {
       savedPosts = [];
-      for (var element in value.data()!['savedPosts']) {
-        savedPosts.add(SavePostsModel.fromJson(element));
+      savedPostsId = [];
+      for (var element in value.docs) {
+        PostModel currentPost = PostModel.fromJson(element.data());
+        currentPost.postId = element.id;
+        savedPosts.add(currentPost);
+        savedPostsId.add(element.id);
       }
       emit(GetSavedPostsSuccessState());
     }).catchError((error) {
@@ -604,36 +589,35 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  addSharedPosts({
-    required String postId,
-    required int index,
-    required context,
-  }) {
-    emit(AddSharePostLoadingState());
-    SharePostModel sharePostModel = SharePostModel(
-      postId: postId,
-      text: posts[index].values.single.text,
-      date: posts[index].values.single.date,
-      userName: posts[index].values.single.userName,
-      userImage: posts[index].values.single.userImage,
-      userId: posts[index].values.single.userId,
-      likes: posts[index].values.single.likes,
-      image: posts[index].values.single.image,
-    );
-    FirebaseFirestore.instance.collection('users').doc(uId).update({
-      'sharePosts': FieldValue.arrayUnion([sharePostModel.toMap()]),
-    }).then((value) {
-      showFlushBar(
-        context: context,
-        message: 'Shared Successfully',
-      );
-      emit(AddSharePostSuccessState());
-    }).catchError((error) {
-      emit(AddSharePostErrorState());
-    });
-  }
 
   List<SharePostModel> sharePosts = [];
+  // addSharedPosts({
+  //   required PostModel model,
+  //   required context,
+  // }) {
+  //   emit(AddSharePostLoadingState());
+  //   SharePostModel sharePostModel = SharePostModel(
+  //     postId: model.postId,
+  //     text: model.text,
+  //     date: model.date,
+  //     userName: model.userName,
+  //     userImage: model.userImage,
+  //     userId: model.userId,
+  //     likes: model.likes,
+  //     image: model.image,
+  //   );
+  //   FirebaseFirestore.instance.collection('users').doc(uId).update({
+  //     'sharePosts': FieldValue.arrayUnion([sharePostModel.toMap()]),
+  //   }).then((value) {
+  //     showFlushBar(
+  //       context: context,
+  //       message: 'Shared Successfully',
+  //     );
+  //     emit(AddSharePostSuccessState());
+  //   }).catchError((error) {
+  //     emit(AddSharePostErrorState());
+  //   });
+  // }
 
   getSharePosts() {
     emit(GetSharedPostsLoadingState());
@@ -645,6 +629,22 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetSharedPostsSuccessState());
     }).catchError((error) {
       emit(GetSharedPostsErrorState());
+    });
+  }
+
+  removeSavedPost({required String postId}) {
+    emit(RemoveSavedPostLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('savedPosts')
+        .doc(postId)
+        .delete()
+        .then((value) {
+      getSavePosts();
+      emit(RemoveSavedPostSuccessState());
+    }).catchError((error) {
+      emit(RemoveSavedPostErrorState());
     });
   }
 
@@ -813,7 +813,6 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   SettingsModel? settings;
-
   getSettings() {
     emit(GetSettingsLoadingState());
     FirebaseFirestore.instance
@@ -880,6 +879,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   List<PostModel> selectedUserPosts = [];
+  List<String> selectedUserPhotos = [];
   getSelectedUserPosts(String id) {
     emit(GetSelectedUserPostsLoadingState());
     FirebaseFirestore.instance
@@ -890,10 +890,14 @@ class AppCubit extends Cubit<AppStates> {
         .get()
         .then((value) {
       selectedUserPosts = [];
+      selectedUserPhotos = [];
       for (var element in value.docs) {
         PostModel postModel = PostModel.fromJson(element.data());
         postModel.postId = element.id;
-        selectedUserPosts.add(PostModel.fromJson(element.data()));
+        selectedUserPosts.add(postModel);
+        element.data()['image'].forEach((element) {
+          selectedUserPhotos.add(element);
+        });
       }
       emit(GetSelectedUserPostsSuccessState());
     }).catchError((error) {
@@ -916,47 +920,34 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  removeSavedPost({required int index}) {
-    emit(RemoveSavedPostLoadingState());
 
-    FirebaseFirestore.instance.collection('users').doc(uId).update({
-      'savedPosts': FieldValue.arrayRemove([savedPosts[index].toMap()]),
-    }).then((value) {
-      getSavePosts();
-      getUserData();
-      emit(RemoveSavedPostSuccessState());
-    }).catchError((error) {
-      print(error.toString());
-      emit(RemoveSavedPostErrorState());
-    });
-  }
 
-  addSharedSavedPosts({
-    required String postId,
-    required int index,
-    required context,
-  }) {
-    emit(AddSharePostLoadingState());
-    SavePostsModel sharePostModel = SavePostsModel(
-      postId: postId,
-      text: posts[index].values.single.text,
-      date: posts[index].values.single.date,
-      userName: posts[index].values.single.userName,
-      userImage: posts[index].values.single.userImage,
-      userId: posts[index].values.single.userId,
-      likes: posts[index].values.single.likes,
-      image: posts[index].values.single.image,
-    );
-    FirebaseFirestore.instance.collection('users').doc(uId).update({
-      'sharePosts': FieldValue.arrayUnion([sharePostModel.toMap()]),
-    }).then((value) {
-      showFlushBar(
-        context: context,
-        message: 'Shared Successfully',
-      );
-      emit(AddSharePostSuccessState());
-    }).catchError((error) {
-      emit(AddSharePostErrorState());
-    });
-  }
+  // addSharedSavedPosts({
+  //   required String postId,
+  //   required int index,
+  //   required context,
+  // }) {
+  //   emit(AddSharePostLoadingState());
+  //   SavePostsModel sharePostModel = SavePostsModel(
+  //     postId: postId,
+  //     text: posts[index].values.single.text,
+  //     date: posts[index].values.single.date,
+  //     userName: posts[index].values.single.userName,
+  //     userImage: posts[index].values.single.userImage,
+  //     userId: posts[index].values.single.userId,
+  //     likes: posts[index].values.single.likes,
+  //     image: posts[index].values.single.image,
+  //   );
+  //   FirebaseFirestore.instance.collection('users').doc(uId).update({
+  //     'sharePosts': FieldValue.arrayUnion([sharePostModel.toMap()]),
+  //   }).then((value) {
+  //     showFlushBar(
+  //       context: context,
+  //       message: 'Shared Successfully',
+  //     );
+  //     emit(AddSharePostSuccessState());
+  //   }).catchError((error) {
+  //     emit(AddSharePostErrorState());
+  //   });
+  // }
 }

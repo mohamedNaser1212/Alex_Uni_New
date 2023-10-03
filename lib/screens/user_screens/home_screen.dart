@@ -15,7 +15,6 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../reusable_widgets.dart';
-import '../view_image_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -145,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }
                       },
-                    ):StreamBuilder(
+                    ) :StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('News')
                           .where('type',isEqualTo: 'both')
@@ -208,11 +207,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (context, index) => buildPostItem(
-                          AppCubit.get(context).posts,
                           AppCubit.get(context).post[index],
-                          index,
                           context),
-                      itemCount: AppCubit.get(context).posts.length,
+                      itemCount: AppCubit.get(context).post.length,
                     ),
                   ),
                   const SizedBox(
@@ -374,9 +371,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
 
   Widget? buildPostItem(
-    List posts,
     PostModel model,
-    index,
     context,
   ) => Card(
         color: const Color(0xffE6EEFA),
@@ -391,12 +386,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   InkWell(
                     onTap: () {
                       if(!isGuest) {
-                        if(AppCubit.get(context).user!.uId !=
-                            posts[index].values.single.userId) {
+                        if(uId != model.userId) {
                           navigateTo(
                           context: context,
                           screen: PersonProfileScreen(
-                            userId: posts[index].values.single.userId,
+                            userId: model.userId,
                           ),
                         );
                         }
@@ -406,13 +400,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                       else{
                         navigateTo(context: context, screen: PersonProfileScreen(
-                          userId: posts[index].values.single.userId,
+                          userId: model.userId,
                         ));
                       }
                     },
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(
-                        '${posts[index].values.single.userImage}',
+                        '${model.userImage}',
                       ),
                       radius: 25,
                     ),
@@ -435,11 +429,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       onTap: () {
                                         if(!isGuest) {
                                           if(AppCubit.get(context).user!.uId !=
-                                              posts[index].values.single.userId) {
+                                             model.userId) {
                                             navigateTo(
                                               context: context,
                                               screen: PersonProfileScreen(
-                                                userId: posts[index].values.single.userId,
+                                                userId: model.userId,
                                               ),
                                             );
                                           }
@@ -449,12 +443,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         }
                                         else{
                                           navigateTo(context: context, screen: PersonProfileScreen(
-                                            userId: posts[index].values.single.userId,
+                                            userId: model.userId,
                                           ));
                                         }
                                       },
                                       child: Text(
-                                        '${posts[index].values.single.userName}',
+                                        '${model.userName}',
                                         style: const TextStyle(
                                           height: 1.4,
                                           fontSize: 16,
@@ -472,7 +466,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ],
                                 ),
                                 Text(
-                                  '${posts[index].values.single.date}',
+                                  '${model.date}',
                                   style: const TextStyle(
                                     height: 1.4,
                                     fontSize: 12,
@@ -484,11 +478,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                             const Spacer(),
-                            if (posts[index].values.single.userId == uId)
+                            if (model.userId == uId)
                               IconButton(
                                 onPressed: () {
                                   AppCubit.get(context).deletePost(
-                                      AppCubit.get(context).postsId[index]);
+                                    model.postId!,
+                                  );
                                 },
                                 icon: const Icon(
                                   Icons.delete,
@@ -511,12 +506,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Text(
-                '${posts[index].values.single.text}',
+                '${model.text}',
               ),
               const SizedBox(
                 height: 10,
               ),
-              if(posts[index].values.single.image.isNotEmpty && posts[index].values.single.image.length==1)
+              if(model.image!.isNotEmpty && model.image!.length==1)
                 Container(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   decoration: BoxDecoration(
@@ -526,13 +521,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     alignment: AlignmentDirectional.bottomCenter,
                     children: [
                       Image.network(
-                        AppCubit.get(context)
-                            .posts[index]
-                            .values
-                            .single
-                            .image![0],
+                       model.image![0],
                         width: double.infinity,
-
                         fit: BoxFit.cover,
                       ),
                       Container(
@@ -546,20 +536,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 InkWell(
                                   onTap: () {
                                     AppCubit.get(context).updatePostLikes(
-                                      AppCubit.get(context).posts[index],
+                                      model,
                                     );
                                   },
                                   child: Icon(
-                                    AppCubit.get(context)
-                                        .posts[index]
-                                        .values
-                                        .single
-                                        .likes
-                                    !.any((element) =>
-                                    element ==
-                                        AppCubit.get(context)
-                                            .user!
-                                            .uId)
+                                   model.likes!.any((element) => element == uId)
                                         ? Icons.favorite
                                         : Icons.favorite_border_outlined,
                                     size: 18.0,
@@ -569,7 +550,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               if (isGuest == false) const SizedBox(width: 5),
                               if (isGuest == false)
                                 Text(
-                                  '${posts[index].values.single.likes.length}',
+                                  '${model.likes!.length}',
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
@@ -577,14 +558,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               if (isGuest == false) const SizedBox(width: 20),
                               InkWell(
                                 onTap: () {
-                                  AppCubit.get(context).getComments(
-                                      postId:
-                                      AppCubit.get(context).postsId[index]);
+                                  AppCubit.get(context).getComments(postId: model.postId!);
                                   navigateTo(
                                     context: context,
                                     screen: CommentsScreen(
-                                      postId:
-                                      AppCubit.get(context).postsId[index],
+                                      postId: model.postId!,
                                     ),
                                   );
                                 },
@@ -596,44 +574,35 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               const Spacer(),
                               if (isGuest == false)
-                                if(AppCubit.get(context).posts[index].values.single.userId != uId)
+                                if(model.userId != uId)
                                   InkWell(
-                                    onTap: () {
-                                      AppCubit.get(context).addSharedPosts(
-                                          postId: AppCubit.get(context)
-                                              .postsId[index],
-                                          index: index,
-                                          context: context);
-                                    },
+                                    // onTap: () {
+                                    //   AppCubit.get(context).addSharedPosts(
+                                    //       postId: model.postId!,
+                                    //       context: context);
+                                    // },
                                     child: const Icon(
                                       Icons.share_outlined,
                                       size: 18,
                                       color: Colors.white,
                                     ),
                                   ),
-                              if (isGuest == false) const SizedBox(width: 20),
+                              if (isGuest == false)
+                                const SizedBox(
+                                    width: 20,
+                                ),
                               if (isGuest == false)
                                 InkWell(
                                   onTap: () {
-                                    AppCubit.get(context).addSavePosts(
-                                      postId: AppCubit.get(context).postsId[index],
-                                      index: index,
-                                      text: posts[index].values.single.text,
-                                      date: posts[index].values.single.date,
-                                      userName: posts[index].values.single.userName,
-                                      userImage: posts[index].values.single.userImage,
-                                      userId: posts[index].values.single.userId,
-                                      likes: posts[index].values.single.likes,
-                                      image: posts[index].values.single.image,
+                                    AppCubit.get(context).savedPostsId.any((element) => element == model.postId)?
+                                      AppCubit.get(context).removeSavedPost(
+                                      postId: model.postId!,
+                                    ):AppCubit.get(context).addSavePosts(
+                                      model: model,
                                     );
                                   },
                                   child: Icon(
-                                    AppCubit.get(context)
-                                        .savedPosts.any((element) =>
-                                    element.postId ==
-                                        AppCubit.get(context)
-                                            .postsId[index]
-                                    )
+                                    AppCubit.get(context).savedPostsId.any((element) => element == model.postId)
                                         ? Icons.bookmark
                                         : Icons.bookmark_outline,
                                     size: 18.0,
@@ -647,7 +616,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-              if (posts[index].values.single.image.isNotEmpty && posts[index].values.single.image.length>1)
+              if (model.image!.isNotEmpty && model.image!.length>1)
                 Container(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   decoration: BoxDecoration(
@@ -664,18 +633,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisSpacing: 10,
                         childAspectRatio: 1 / 1,
                         children: List.generate(
-                          AppCubit.get(context)
-                                      .posts[index]
-                                      .values
-                                      .single
+                         model
                                       .image!
                                       .length >
                                   4
                               ? 4
-                              : AppCubit.get(context)
-                                  .posts[index]
-                                  .values
-                                  .single
+                              : model
                                   .image!
                                   .length,
                           (index1) => Container(
@@ -684,20 +647,18 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Expanded(
                                   child: InkWell(
-                                    onTap: () {
-                                      navigateTo(
-                                          context: context,
-                                          screen: ViewImagesScreen(
-                                              view: AppCubit.get(context).posts,
-                                              index1: index,
-                                              index2: index1,
-                                              id: AppCubit.get(context)
-                                                  .postsId));
-                                    },
-                                    child: AppCubit.get(context)
-                                                .posts[index]
-                                                .values
-                                                .single
+                                    // onTap: () {
+                                    //   navigateTo(
+                                    //       context: context,
+                                    //       screen: ViewImagesScreen(
+                                    //           view: AppCubit.get(context).posts,
+                                    //           index1: index,
+                                    //           index2: index1,
+                                    //           id: AppCubit.get(context)
+                                    //               .postsId));
+                                    // },
+                                    child: model
+
                                                 .image!
                                                 .length >
                                             4
@@ -706,15 +667,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 alignment: Alignment.center,
                                                 children: [
                                                   Image.network(
-                                                    AppCubit.get(context)
-                                                        .posts[index]
-                                                        .values
-                                                        .single
-                                                        .image![index1],
+                                                  model.image![index1],
                                                     width: double.infinity,
                                                   ),
                                                   Text(
-                                                    '${AppCubit.get(context).posts[index].values.single.image!.length - 4}+',
+                                                    '${model.image!.length - 4}+',
                                                     style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 25,
@@ -725,19 +682,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ],
                                               )
                                             : Image.network(
-                                                AppCubit.get(context)
-                                                    .posts[index]
-                                                    .values
-                                                    .single
-                                                    .image![index1],
+                                                model.image![index1],
                                                 width: double.infinity,
                                               )
                                         : Image.network(
-                                            AppCubit.get(context)
-                                                .posts[index]
-                                                .values
-                                                .single
-                                                .image![index1],
+                                           model.image![index1],
                                             width: double.infinity,
                                           ),
                                   ),
@@ -758,15 +707,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 InkWell(
                                   onTap: () {
                                     AppCubit.get(context).updatePostLikes(
-                                      AppCubit.get(context).posts[index],
+                                     model,
                                     );
                                   },
                                   child: Icon(
-                                    AppCubit.get(context)
-                                        .posts[index]
-                                        .values
-                                        .single
-                                        .likes
+                                  model.likes
                                     !.any((element) =>
                                     element ==
                                         AppCubit.get(context)
@@ -781,7 +726,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               if (isGuest == false) const SizedBox(width: 5),
                               if (isGuest == false)
                                 Text(
-                                  '${posts[index].values.single.likes.length}',
+                                  '${model.likes!.length}',
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
@@ -790,13 +735,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               InkWell(
                                 onTap: () {
                                   AppCubit.get(context).getComments(
-                                      postId:
-                                          AppCubit.get(context).postsId[index]);
+                                      postId: model.postId!);
                                   navigateTo(
                                     context: context,
                                     screen: CommentsScreen(
-                                      postId:
-                                          AppCubit.get(context).postsId[index],
+                                      postId: model.postId!,
                                     ),
                                   );
                                 },
@@ -808,15 +751,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               const Spacer(),
                               if (isGuest == false)
-                                if(AppCubit.get(context).posts[index].values.single.userId != uId)
+                                if(model.userId != uId)
                                   InkWell(
-                                  onTap: () {
-                                    AppCubit.get(context).addSharedPosts(
-                                        postId: AppCubit.get(context)
-                                            .postsId[index],
-                                        index: index,
-                                        context: context);
-                                  },
+                                  // onTap: () {
+                                  //   AppCubit.get(context).addSharedPosts(
+                                  //       postId: AppCubit.get(context)
+                                  //           .postsId[index],
+                                  //       index: index,
+                                  //       context: context);
+                                  // },
                                   child: const Icon(
                                     Icons.share_outlined,
                                     size: 18,
@@ -827,25 +770,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               if (isGuest == false)
                                 InkWell(
                                   onTap: () {
-                                    AppCubit.get(context).addSavePosts(
-                                      postId: AppCubit.get(context).postsId[index],
-                                      index: index,
-                                      text: posts[index].values.single.text,
-                                      date: posts[index].values.single.date,
-                                      userName: posts[index].values.single.userName,
-                                      userImage: posts[index].values.single.userImage,
-                                      userId: posts[index].values.single.userId,
-                                      likes: posts[index].values.single.likes,
-                                      image: posts[index].values.single.image,
+                                    AppCubit.get(context).savedPostsId.any((element) => element == model.postId)?
+                                    AppCubit.get(context).removeSavedPost(
+                                      postId: model.postId!,
+                                    ):AppCubit.get(context).addSavePosts(
+                                      model: model,
                                     );
                                   },
                                   child: Icon(
-                                    AppCubit.get(context)
-                                        .savedPosts.any((element) =>
-                                    element.postId ==
-                                        AppCubit.get(context)
-                                            .postsId[index]
-                                    )
+                                    AppCubit.get(context).savedPostsId.any((element) => element == model.postId)
                                         ? Icons.bookmark
                                         : Icons.bookmark_outline,
                                     size: 18.0,
@@ -859,7 +792,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-              if (posts[index].values.single.image.isEmpty)
+              if (model.image!.isEmpty)
                 Container(
                   width: double.infinity,
                   color: Colors.black.withOpacity(0.6),
@@ -871,15 +804,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           InkWell(
                             onTap: () {
                               AppCubit.get(context).updatePostLikes(
-                                AppCubit.get(context).posts[index],
+                                model,
                               );
                             },
                             child: Icon(
-                              AppCubit.get(context)
-                                  .posts[index]
-                                  .values
-                                  .single
-                                  .likes
+                             model.likes
                               !.any((element) =>
                               element ==
                                   AppCubit.get(context)
@@ -897,7 +826,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         if (isGuest == false)
                           Text(
-                            '${posts[index].values.single.likes.length}',
+                            '${model.likes!.length}',
                             style: const TextStyle(
                               color: Colors.white,
                             ),
@@ -909,11 +838,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         InkWell(
                           onTap: () {
                             AppCubit.get(context).getComments(
-                                postId: AppCubit.get(context).postsId[index]);
+                                postId: model.postId!);
                             navigateTo(
                               context: context,
                               screen: CommentsScreen(
-                                postId: AppCubit.get(context).postsId[index],
+                                postId: model.postId!,
                               ),
                             );
                           },
@@ -937,25 +866,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (isGuest == false)
                           InkWell(
                             onTap: () {
-                              AppCubit.get(context).addSavePosts(
-                                  postId: AppCubit.get(context).postsId[index],
-                                  index: index,
-                                  text: posts[index].values.single.text,
-                                  date: posts[index].values.single.date,
-                                  userName: posts[index].values.single.userName,
-                                  userImage: posts[index].values.single.userImage,
-                                  userId: posts[index].values.single.userId,
-                                  likes: posts[index].values.single.likes,
-                                  image: posts[index].values.single.image,
+                              AppCubit.get(context).savedPostsId.any((element) => element == model.postId)?
+                              AppCubit.get(context).removeSavedPost(
+                                postId: model.postId!,
+                              ):AppCubit.get(context).addSavePosts(
+                                model: model,
                               );
                             },
                             child: Icon(
-                              AppCubit.get(context)
-                                  .savedPosts.any((element) =>
-                              element.postId ==
-                                  AppCubit.get(context)
-                                      .postsId[index]
-                              )
+                              AppCubit.get(context).savedPostsId.any((element) => element == model.postId)
                                   ? Icons.bookmark
                                   : Icons.bookmark_outline,
                               size: 18.0,

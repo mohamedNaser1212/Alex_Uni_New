@@ -2,6 +2,7 @@ import 'package:alex_uni_new/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/both_news_model.dart';
 import '../../models/news_model.dart';
 import '../../reusable_widgets.dart';
 import 'arabic_news_details_screen.dart';
@@ -22,34 +23,68 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
         title: Text(lang == 'en' ? 'News' : 'الاخبار'),
         backgroundColor: const Color(0xffE6EEFA),
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('News').snapshots(),
+      body: lang=='ar'? StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('News')
+            .orderBy('date', descending: true)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.separated(
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  DocumentSnapshot ds = snapshot.data!.docs[index];
-                  ArabicNewsModel model = ArabicNewsModel.fromJson(
-                      ds.data()! as Map<String, dynamic>?);
-
-                  return buildNewsItem(
-                    context: context,
-                    model: model,
-                  );
-                },
-                separatorBuilder: (context, index) => Divider(
-                  thickness: 1,
-                  color: Colors.grey[300],
-                ),
-                itemCount: snapshot.data!.docs.length,
+            return ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                DocumentSnapshot ds = snapshot.data!.docs[index];
+                ArabicNewsModel model = ArabicNewsModel.fromJson(
+                    ds.data()! as Map<String, dynamic>?);
+                return buildNewsItem(
+                  context: context,
+                  model: model,
+                );
+              },
+              separatorBuilder: (context, index) =>
+              Divider(
+                color: Colors.grey,
+                thickness: 1,
               ),
+              itemCount: snapshot.data!.docs.length,
+            );
+          } else {
+            return  Center(
+              child: Text(lang=='en'?'No Data Found':'لا يوجد بيانات'),
+            );
+          }
+        },
+      ) :StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('News')
+            .where('type',isEqualTo: 'both')
+            .orderBy('date', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                DocumentSnapshot ds = snapshot.data!.docs[index];
+                BothNewsModel model = BothNewsModel.fromJson(
+                    ds.data()! as Map<String, dynamic>?);
+                return buildNewsItem(
+                  context: context,
+                  model: model,
+                );
+              },
+              separatorBuilder: (context, index) =>
+              Divider(
+                color: Colors.grey,
+                thickness: 1,
+              ),
+              itemCount: snapshot.data!.docs.length,
             );
           } else {
             return Center(
-              child: Text(lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات '),
+              child: Text(lang == 'en'
+                  ? 'No Data Found'
+                  : 'لا يوجد بيانات'),
             );
           }
         },
@@ -59,7 +94,7 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
 
   Widget buildNewsItem({
     required BuildContext context,
-    required ArabicNewsModel model,
+    required model,
   }) =>
       InkWell(
         onTap: () {
