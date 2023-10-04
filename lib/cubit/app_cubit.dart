@@ -24,6 +24,8 @@ import '../models/message_model.dart';
 import '../models/news_model.dart';
 import '../models/settings_model.dart';
 import '../models/user_model.dart';
+import '../screens/chat_screens/chat_screen.dart';
+import '../screens/user_screens/notification_screen.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitialState());
@@ -33,20 +35,20 @@ class AppCubit extends Cubit<AppStates> {
   int currentIndex = 0;
   List<Widget> screens = [
     const HomeScreen(),
-    // const ChatScreen(),
-    // const NotificationScreen(),
+    const ChatScreen(),
+    const NotificationScreen(),
     const ProfileScreen(),
   ];
   List<IconData> bottomNavIcons = [
     Icons.home,
-    // Icons.chat,
-    // Icons.notifications,
+    Icons.chat,
+    Icons.notifications,
     Icons.person,
   ];
   List<String> titles = [
     lang == 'en' ? 'Home' : 'الرئيسية',
-    // lang == 'en' ? 'Chat' : 'المحادثات',
-    // lang == 'en' ? 'Notifications' : 'الاشعارات',
+    lang == 'en' ? 'Chat' : 'المحادثات',
+    lang == 'en' ? 'Notifications' : 'الاشعارات',
     lang == 'en' ? 'Profile' : 'الملف الشخصي',
   ];
 
@@ -71,8 +73,8 @@ class AppCubit extends Cubit<AppStates> {
         );
         titles = [
           lang == 'en' ? 'Home' : 'الرئيسية',
-          // lang == 'en' ? 'Chat' : 'المحادثات',
-          // lang == 'en' ? 'Notifications' : 'الاشعارات',
+          lang == 'en' ? 'Chat' : 'المحادثات',
+          lang == 'en' ? 'Notifications' : 'الاشعارات',
           lang == 'en' ? 'Profile' : 'الملف الشخصي',
         ];
         emit(AppChangeLanguageState());

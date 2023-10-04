@@ -55,7 +55,11 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context,state){
         if (state is CreatePostSuccessState){
-          AppCubit.get(context).getPosts();
+          if(AppCubit.get(context).currentIndex==0) {
+            AppCubit.get(context).getPosts();
+          }else if(AppCubit.get(context).currentIndex==3){
+            AppCubit.get(context).getMyPosts();
+          }
           Navigator.pop(context);
         }
       },
