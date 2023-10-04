@@ -37,6 +37,7 @@ class PostModel{
 
   Map<String,dynamic>toMap(){
     return {
+      'postId':postId,
       'text':text,
       'date':date,
       'userName':userName,

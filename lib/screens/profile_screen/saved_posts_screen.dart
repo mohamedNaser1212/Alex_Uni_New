@@ -244,6 +244,15 @@ class SavedScreen extends StatelessWidget {
                             const SizedBox(
                               width: 5,
                             ),
+                            Text(
+                              '${model.likes!.length}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
                             InkWell(
                                 onTap: () {
                                   AppCubit.get(context).getComments(postId: model.postId!,);

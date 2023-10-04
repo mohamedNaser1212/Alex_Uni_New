@@ -270,8 +270,7 @@ class AppCubit extends Cubit<AppStates> {
       // You can throw the error or return an error message if needed
     }
   }
-
-  // List<Map<String, PostModel>> posts = [];
+  
   List<PostModel> post = [];
   List postsId = [];
   getPosts() {
@@ -308,6 +307,11 @@ class AppCubit extends Cubit<AppStates> {
         .doc(post.postId)
         .update(post.toMap())
         .then((value) {
+          FirebaseFirestore.instance.collectionGroup('savedPosts').where('postId',isEqualTo: post.postId).get().then((value) {
+            for(var element in value.docs){
+              element.reference.update(post.toMap());
+            }
+          });
       emit(LikePostSuccessState());
     }).catchError((error) {});
   }
