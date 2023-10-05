@@ -883,7 +883,7 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  List<PostModel> selectedUserPosts = [];
+  List selectedUserPosts = [];
   List<String> selectedUserPhotos = [];
   getSelectedUserPosts(String id) {
     emit(GetSelectedUserPostsLoadingState());
@@ -897,12 +897,15 @@ class AppCubit extends Cubit<AppStates> {
       selectedUserPosts = [];
       selectedUserPhotos = [];
       for (var element in value.docs) {
-        PostModel postModel = PostModel.fromJson(element.data());
-        postModel.postId = element.id;
-        selectedUserPosts.add(postModel);
-        element.data()['image'].forEach((element) {
-          selectedUserPhotos.add(element);
-        });
+        if(element.data()['isShared']==false){
+          PostModel currentPost = PostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          selectedUserPosts.add(currentPost);
+        }else{
+          SharePostModel currentPost = SharePostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          selectedUserPosts.add(currentPost);
+        }
       }
       emit(GetSelectedUserPostsSuccessState());
     }).catchError((error) {

@@ -480,17 +480,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const Spacer(),
                           if (isGuest == false)
-                            if (model.userId != uId)
-                              InkWell(
-                                onTap: () {
-                                  _showSharePostSheet(context: context, model: model,);
-                                },
-                                child: const Icon(
-                                  Icons.share_outlined,
-                                  size: 18,
-                                  color: Colors.white,
-                                ),
+                            InkWell(
+                              onTap: () {
+                                _showSharePostSheet(
+                                  context: context,
+                                  model: model,
+                                );
+                              },
+                              child: const Icon(
+                                Icons.share_outlined,
+                                size: 18,
+                                color: Colors.white,
                               ),
+                            ),
                           if (isGuest == false)
                             const SizedBox(
                               width: 20,
@@ -646,17 +648,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const Spacer(),
                           if (isGuest == false)
-                            if (model.userId != uId)
-                              InkWell(
-                                onTap: () {
-                                  _showSharePostSheet(context: context, model: model,);
-                                },
-                                child: const Icon(
-                                  Icons.share_outlined,
-                                  size: 18,
-                                  color: Colors.white,
-                                ),
+                            InkWell(
+                              onTap: () {
+                                _showSharePostSheet(
+                                  context: context,
+                                  model: model,
+                                );
+                              },
+                              child: const Icon(
+                                Icons.share_outlined,
+                                size: 18,
+                                color: Colors.white,
                               ),
+                            ),
                           if (isGuest == false) const SizedBox(width: 20),
                           if (isGuest == false)
                             InkWell(
@@ -760,7 +764,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: Colors.white,
                         ),
                       ),
-                    if (isGuest == false) const SizedBox(width: 20),
+                    if (isGuest == false)
+                      const SizedBox(width: 20),
                     if (isGuest == false)
                       InkWell(
                         onTap: () {
@@ -1135,29 +1140,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const SizedBox(
                               width: 20,
                             ),
-                          // if (isGuest == false)
-                          //   InkWell(
-                          //     onTap: () {
-                          //       AppCubit.get(context).savedPostsId.any(
-                          //               (element) =>
-                          //           element == model.postId)
-                          //           ? AppCubit.get(context).removeSavedPost(
-                          //         postId: model.postId!,
-                          //       )
-                          //           : AppCubit.get(context).addSavePosts(
-                          //         model: model,
-                          //       );
-                          //     },
-                          //     child: Icon(
-                          //       AppCubit.get(context).savedPostsId.any(
-                          //               (element) =>
-                          //           element == model.postId)
-                          //           ? Icons.bookmark
-                          //           : Icons.bookmark_outline,
-                          //       size: 18.0,
-                          //       color: Colors.white,
-                          //     ),
-                          //   ),
+                          if (isGuest == false)
+                            InkWell(
+                              onTap: () {
+                                AppCubit.get(context)
+                                    .savedPostsId
+                                    .any((element) => element == model.postId)
+                                    ? AppCubit.get(context).removeSavedPost(
+                                  postId: model.postId!,
+                                )
+                                    : AppCubit.get(context).addSavePosts(
+                                  model: model,
+                                );
+                              },
+                              child: Icon(
+                                AppCubit.get(context)
+                                    .savedPostsId
+                                    .any((element) => element == model.postId)
+                                    ? Icons.bookmark
+                                    : Icons.bookmark_outline,
+                                size: 18.0,
+                                color: Colors.white,
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -1297,29 +1302,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                           if (isGuest == false) const SizedBox(width: 20),
-                          // if (isGuest == false)
-                          //   InkWell(
-                          //     onTap: () {
-                          //       AppCubit.get(context).savedPostsId.any(
-                          //               (element) =>
-                          //           element == model.postId)
-                          //           ? AppCubit.get(context).removeSavedPost(
-                          //         postId: model.postId!,
-                          //       )
-                          //           : AppCubit.get(context).addSavePosts(
-                          //         model: model,
-                          //       );
-                          //     },
-                          //     child: Icon(
-                          //       AppCubit.get(context).savedPostsId.any(
-                          //               (element) =>
-                          //           element == model.postId)
-                          //           ? Icons.bookmark
-                          //           : Icons.bookmark_outline,
-                          //       size: 18.0,
-                          //       color: Colors.white,
-                          //     ),
-                          //   ),
+                          if (isGuest == false)
+                            InkWell(
+                              onTap: () {
+                                AppCubit.get(context)
+                                    .savedPostsId
+                                    .any((element) => element == model.postId)
+                                    ? AppCubit.get(context).removeSavedPost(
+                                  postId: model.postId!,
+                                )
+                                    : AppCubit.get(context).addSavePosts(
+                                  model: model,
+                                );
+                              },
+                              child: Icon(
+                                AppCubit.get(context)
+                                    .savedPostsId
+                                    .any((element) => element == model.postId)
+                                    ? Icons.bookmark
+                                    : Icons.bookmark_outline,
+                                size: 18.0,
+                                color: Colors.white,
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -1399,29 +1404,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     if (isGuest == false) const SizedBox(width: 20),
-                    // if (isGuest == false)
-                    // InkWell(
-                    //   onTap: () {
-                    //     AppCubit.get(context)
-                    //         .savedPostsId
-                    //         .any((element) => element == model.postId)
-                    //         ? AppCubit.get(context).removeSavedPost(
-                    //       postId: model.postId!,
-                    //     )
-                    //         : AppCubit.get(context).addSavePosts(
-                    //       model: model,
-                    //     );
-                    //   },
-                    //   child: Icon(
-                    //     AppCubit.get(context)
-                    //         .savedPostsId
-                    //         .any((element) => element == model.postId)
-                    //         ? Icons.bookmark
-                    //         : Icons.bookmark_outline,
-                    //     size: 18.0,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
+                    if (isGuest == false)
+                      InkWell(
+                        onTap: () {
+                          AppCubit.get(context)
+                              .savedPostsId
+                              .any((element) => element == model.postId)
+                              ? AppCubit.get(context).removeSavedPost(
+                            postId: model.postId!,
+                          )
+                              : AppCubit.get(context).addSavePosts(
+                            model: model,
+                          );
+                        },
+                        child: Icon(
+                          AppCubit.get(context)
+                              .savedPostsId
+                              .any((element) => element == model.postId)
+                              ? Icons.bookmark
+                              : Icons.bookmark_outline,
+                          size: 18.0,
+                          color: Colors.white,
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -1437,72 +1442,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }) {
     TextEditingController controller = TextEditingController();
     return showModalBottomSheet(
+      isDismissible: false,
       context: context,
       builder: (context) =>
-          Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: SingleChildScrollView(
-              child: Container(
-                color: const Color(0xffE6EEFA),
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(
+          WillPopScope(
+            onWillPop: () async => false,
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: SingleChildScrollView(
+                child: Container(
+                  color: const Color(0xffE6EEFA),
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              AppCubit
+                                  .get(context)
+                                  .user!
+                                  .image!,
+                            ),
+                            radius: 25,
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Text(
                             AppCubit
                                 .get(context)
                                 .user!
-                                .image!,
+                                .name!,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          radius: 25,
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      reusableTextFormField(
+                        label: lang == 'en' ? 'Write your post' : 'اكتب منشورك',
+                        onTap: () {},
+                        controller: controller,
+                        keyboardType: TextInputType.text,),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: reusableElevatedButton(
+                                label: lang == 'en' ? 'Share' : 'مشاركة',
+                                function: () async {
+                                  await AppCubit.get(context).sharePost(
+                                    model: model,
+                                    text: controller.text,
+                                    context: context,
+                                  );
+                                  if(!context.mounted)return;
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: reusableElevatedButton(
+                                label: lang == 'en' ? 'Cancel' : 'الغاء',
+                                function: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          AppCubit
-                              .get(context)
-                              .user!
-                              .name!,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    reusableTextFormField(
-                      label: lang == 'en' ? 'Write your post' : 'اكتب منشورك',
-                      onTap: () {},
-                      controller: controller,
-                      keyboardType: TextInputType.text,),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    reusableElevatedButton(
-                      label: lang == 'en' ? 'Share' : 'مشاركة',
-                      function: (){
-                        AppCubit.get(context).sharePost(
-                          model: model,
-                          text: controller.text,
-                          context: context,
-                        );
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                  ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

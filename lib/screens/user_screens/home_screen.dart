@@ -407,7 +407,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     } else {
-                      AppCubit.get(context).changeBottomNavBar(1);
+                      AppCubit.get(context).changeBottomNavBar(3);
                     }
                   } else {
                     navigateTo(
@@ -451,7 +451,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         );
                                       } else {
                                         AppCubit.get(context)
-                                            .changeBottomNavBar(1);
+                                            .changeBottomNavBar(3);
                                       }
                                     } else {
                                       navigateTo(
@@ -590,17 +590,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const Spacer(),
                           if (isGuest == false)
-                            if (model.userId != uId)
                               InkWell(
-                                onTap: () {
-                                  _showSharePostSheet(context: context, model: model,);
-                                },
-                                child: const Icon(
-                                  Icons.share_outlined,
-                                  size: 18,
-                                  color: Colors.white,
-                                ),
+                              onTap: () {
+                                _showSharePostSheet(
+                                  context: context,
+                                  model: model,
+                                );
+                              },
+                              child: const Icon(
+                                Icons.share_outlined,
+                                size: 18,
+                                color: Colors.white,
                               ),
+                            ),
                           if (isGuest == false)
                             const SizedBox(
                               width: 20,
@@ -756,17 +758,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const Spacer(),
                           if (isGuest == false)
-                            if (model.userId != uId)
-                              InkWell(
-                                onTap: () {
-                                  _showSharePostSheet(context: context, model: model,);
-                                },
-                                child: const Icon(
-                                  Icons.share_outlined,
-                                  size: 18,
-                                  color: Colors.white,
-                                ),
+                            InkWell(
+                              onTap: () {
+                                _showSharePostSheet(
+                                  context: context,
+                                  model: model,
+                                );
+                              },
+                              child: const Icon(
+                                Icons.share_outlined,
+                                size: 18,
+                                color: Colors.white,
                               ),
+                            ),
                           if (isGuest == false) const SizedBox(width: 20),
                           if (isGuest == false)
                             InkWell(
@@ -1081,6 +1085,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1100,7 +1105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         );
                                       } else {
                                         AppCubit.get(context)
-                                            .changeBottomNavBar(1);
+                                            .changeBottomNavBar(3);
                                       }
                                     } else {
                                       navigateTo(
@@ -1140,7 +1145,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        const Spacer(),
                       ],
                     ),
                   ],
@@ -1240,29 +1244,29 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SizedBox(
                               width: 20,
                             ),
-                          // if (isGuest == false)
-                          //   InkWell(
-                          //     onTap: () {
-                          //       AppCubit.get(context).savedPostsId.any(
-                          //               (element) =>
-                          //           element == model.postId)
-                          //           ? AppCubit.get(context).removeSavedPost(
-                          //         postId: model.postId!,
-                          //       )
-                          //           : AppCubit.get(context).addSavePosts(
-                          //         model: model,
-                          //       );
-                          //     },
-                          //     child: Icon(
-                          //       AppCubit.get(context).savedPostsId.any(
-                          //               (element) =>
-                          //           element == model.postId)
-                          //           ? Icons.bookmark
-                          //           : Icons.bookmark_outline,
-                          //       size: 18.0,
-                          //       color: Colors.white,
-                          //     ),
-                          //   ),
+                          if (isGuest == false)
+                            InkWell(
+                              onTap: () {
+                                AppCubit.get(context)
+                                    .savedPostsId
+                                    .any((element) => element == model.postId)
+                                    ? AppCubit.get(context).removeSavedPost(
+                                  postId: model.postId!,
+                                )
+                                    : AppCubit.get(context).addSavePosts(
+                                  model: model,
+                                );
+                              },
+                              child: Icon(
+                                AppCubit.get(context)
+                                    .savedPostsId
+                                    .any((element) => element == model.postId)
+                                    ? Icons.bookmark
+                                    : Icons.bookmark_outline,
+                                size: 18.0,
+                                color: Colors.white,
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -1401,30 +1405,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.white,
                                 ),
                               ),
-                          if (isGuest == false) const SizedBox(width: 20),
-                          // if (isGuest == false)
-                          //   InkWell(
-                          //     onTap: () {
-                          //       AppCubit.get(context).savedPostsId.any(
-                          //               (element) =>
-                          //           element == model.postId)
-                          //           ? AppCubit.get(context).removeSavedPost(
-                          //         postId: model.postId!,
-                          //       )
-                          //           : AppCubit.get(context).addSavePosts(
-                          //         model: model,
-                          //       );
-                          //     },
-                          //     child: Icon(
-                          //       AppCubit.get(context).savedPostsId.any(
-                          //               (element) =>
-                          //           element == model.postId)
-                          //           ? Icons.bookmark
-                          //           : Icons.bookmark_outline,
-                          //       size: 18.0,
-                          //       color: Colors.white,
-                          //     ),
-                          //   ),
+                          if (isGuest == false)
+                            const SizedBox(width: 20),
+                          if (isGuest == false)
+                            InkWell(
+                              onTap: () {
+                                AppCubit.get(context)
+                                    .savedPostsId
+                                    .any((element) => element == model.postId)
+                                    ? AppCubit.get(context).removeSavedPost(
+                                  postId: model.postId!,
+                                )
+                                    : AppCubit.get(context).addSavePosts(
+                                  model: model,
+                                );
+                              },
+                              child: Icon(
+                                AppCubit.get(context)
+                                    .savedPostsId
+                                    .any((element) => element == model.postId)
+                                    ? Icons.bookmark
+                                    : Icons.bookmark_outline,
+                                size: 18.0,
+                                color: Colors.white,
+                              ),
+                            ),
                         ],
                       ),
                     ),
