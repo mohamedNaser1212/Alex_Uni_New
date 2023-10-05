@@ -927,35 +927,4 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetSelectedUserErrorState());
     });
   }
-
-
-
-  // addSharedSavedPosts({
-  //   required String postId,
-  //   required int index,
-  //   required context,
-  // }) {
-  //   emit(AddSharePostLoadingState());
-  //   SavePostsModel sharePostModel = SavePostsModel(
-  //     postId: postId,
-  //     text: posts[index].values.single.text,
-  //     date: posts[index].values.single.date,
-  //     userName: posts[index].values.single.userName,
-  //     userImage: posts[index].values.single.userImage,
-  //     userId: posts[index].values.single.userId,
-  //     likes: posts[index].values.single.likes,
-  //     image: posts[index].values.single.image,
-  //   );
-  //   FirebaseFirestore.instance.collection('users').doc(uId).update({
-  //     'sharePosts': FieldValue.arrayUnion([sharePostModel.toMap()]),
-  //   }).then((value) {
-  //     showFlushBar(
-  //       context: context,
-  //       message: 'Shared Successfully',
-  //     );
-  //     emit(AddSharePostSuccessState());
-  //   }).catchError((error) {
-  //     emit(AddSharePostErrorState());
-  //   });
-  // }
 }
