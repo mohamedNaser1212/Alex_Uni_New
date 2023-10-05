@@ -105,7 +105,6 @@ class RegisterCubit extends Cubit<RegisterStates>{
       address: address,
       universityname: universityname,
       country: country,
-     sharePosts: [],
     );
 
     FirebaseFirestore.instance

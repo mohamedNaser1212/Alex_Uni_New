@@ -122,7 +122,6 @@ required bool postGraduate,
         postGraduate: postGraduate,
         address: address,
         passportId: passportId,
-        sharePosts: []
     );
     FirebaseFirestore.instance.collection('users').doc(uId).set(userModel.toMap()).then((value){
       emit(CreateUserLoginSuccessState());

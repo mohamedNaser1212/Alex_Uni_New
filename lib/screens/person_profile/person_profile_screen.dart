@@ -1,4 +1,4 @@
-import 'package:alex_uni_new/models/post_model.dart';
+import 'package:alex_uni_new/models/posts/post_model.dart';
 import 'package:alex_uni_new/screens/profile_screen/photos_screen.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:intl/intl.dart';
-import '../../models/post_model.dart';
+import '../../models/posts/post_model.dart';
 
 class AddPostsScreen extends StatefulWidget {
   const AddPostsScreen({Key? key}) : super(key: key);
@@ -39,8 +39,10 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
       showPost: !AppCubit.get(context).settings!.reviewPosts!,
       isReviewed: !AppCubit.get(context).settings!.reviewPosts!,
     );
-    return FirebaseFirestore.instance.collection('posts').add(model.toMap()).then((value){
-
+    return FirebaseFirestore.instance.collection('posts').add({
+      ...model.toMap(),
+      'isShared': false,
+    }).then((value){
       AppCubit.get(context).getPosts();
       Navigator.pop(context);
       return value.path;
@@ -100,10 +102,8 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
                         controller: postTextController,
                         validator: (value) {
                           if (value!.isEmpty) {
-
                             return 'post body must not be empty';
                           }
-
                           return null;
                         },
                         keyboardType: TextInputType.text,
@@ -216,7 +216,7 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
                           color: Colors.white,
                           fontSize: 16.0,
                         ),
-                      ):const Center(child: CupertinoActivityIndicator(
+                      ):const Center(child: CircularProgressIndicator(
                         color: Colors.white,
                       )),
                     ),

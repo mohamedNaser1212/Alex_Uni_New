@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:alex_uni_new/cache_helper.dart';
 import 'package:alex_uni_new/models/both_news_model.dart';
 import 'package:alex_uni_new/models/department_model.dart';
-import 'package:alex_uni_new/models/post_model.dart';
+import 'package:alex_uni_new/models/posts/post_model.dart';
 import 'package:alex_uni_new/models/university_model.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
@@ -22,6 +22,7 @@ import '../main.dart';
 import '../models/admin_model.dart';
 import '../models/message_model.dart';
 import '../models/news_model.dart';
+import '../models/posts/shared_post_model.dart';
 import '../models/settings_model.dart';
 import '../models/user_model.dart';
 import '../screens/chat_screens/chat_screen.dart';
@@ -111,7 +112,6 @@ class AppCubit extends Cubit<AppStates> {
         country: user!.country,
         passportId: user!.passportId,
         address: user!.address,
-        sharePosts: user!.sharePosts,
         underGraduate: user!.underGraduate,
         postGraduate: user!.postGraduate);
 
@@ -263,17 +263,18 @@ class AppCubit extends Cubit<AppStates> {
       );
 
       // Add the model to Firestore
-      await FirebaseFirestore.instance.collection('posts').add(model.toMap());
+      await FirebaseFirestore.instance.collection('posts').add({
+        ...model.toMap(),
+        'isShared': false,
+      });
       imageFileList = [];
       emit(CreatePostSuccessState());
     } catch (error) {
-      // Handle any errors here
       print('Error uploading images: $error');
-      // You can throw the error or return an error message if needed
     }
   }
   
-  List<PostModel> post = [];
+  List post = [];
   List postsId = [];
   getPosts() {
     postsId = [];
@@ -286,10 +287,17 @@ class AppCubit extends Cubit<AppStates> {
         .get()
         .then((value) {
       for (var element in value.docs) {
-        PostModel currentPost = PostModel.fromJson(element.data());
-        currentPost.postId = element.id;
-        post.add(currentPost);
-        postsId.add(element.id);
+        if(element.data()['isShared']==false){
+          PostModel currentPost = PostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          post.add(currentPost);
+          postsId.add(element.id);
+        }else{
+          SharePostModel currentPost = SharePostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          post.add(currentPost);
+          postsId.add(element.id);
+        }
       }
     }).then((value) {
       emit(GetPostsSuccessState());
@@ -298,20 +306,24 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  updatePostLikes(PostModel post) {
-    if (post.likes!.any((element) => element == user!.uId)) {
-      post.likes!.removeWhere((element) => element == user!.uId);
-    } else {
-      post.likes!.add(user!.uId!);
+  updatePostLikes(post) {
+    if (post.likes!.any((element) => element == uId)) {
+      post.likes!.removeWhere((element) => element == uId);
+    }
+    else {
+      post.likes!.add(uId!);
     }
     FirebaseFirestore.instance
         .collection('posts')
         .doc(post.postId)
-        .update(post.toMap())
-        .then((value) {
+        .update({
+        'likes': post.likes!.map((e) => e).toList(),
+      }).then((value) {
           FirebaseFirestore.instance.collectionGroup('savedPosts').where('postId',isEqualTo: post.postId).get().then((value) {
             for(var element in value.docs){
-              element.reference.update(post.toMap());
+              element.reference.update({
+                'likes': post.likes!.map((e) => e).toList(),
+              });
             }
           });
       emit(LikePostSuccessState());
@@ -526,7 +538,7 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  List< PostModel> myPosts = [];
+  List myPosts = [];
   List<String> myphotos = [];
   List myPostsId = [];
   getMyPosts() {
@@ -542,13 +554,17 @@ class AppCubit extends Cubit<AppStates> {
         .get()
         .then((value) {
       for (var element in value.docs) {
-        PostModel currentPost = PostModel.fromJson(element.data());
-        currentPost.postId = element.id;
-        myPosts.add(currentPost);
-        myPostsId.add(element.id);
-        element.data()['image'].forEach((element) {
-          myphotos.add(element);
-        });
+        if(element.data()['isShared']==false){
+          PostModel currentPost = PostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          myPosts.add(currentPost);
+          myPostsId.add(element.id);
+        }else{
+          SharePostModel currentPost = SharePostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          myPosts.add(currentPost);
+          myPostsId.add(element.id);
+        }
       }
     }).then((value) {
       emit(GetPostsSuccessState());
@@ -558,7 +574,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   addSavePosts({
-    required PostModel model,
+    required model,
   }) {
     emit(AddSavePostLoadingState());
     FirebaseFirestore.instance
@@ -575,19 +591,25 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  List<PostModel> savedPosts = [];
+  List savedPosts = [];
   List<String> savedPostsId = [];
-
   getSavePosts() {
     emit(GetSavedPostsLoadingState());
     FirebaseFirestore.instance.collection('users').doc(uId).collection('savedPosts').get().then((value) {
       savedPosts = [];
       savedPostsId = [];
       for (var element in value.docs) {
-        PostModel currentPost = PostModel.fromJson(element.data());
-        currentPost.postId = element.id;
-        savedPosts.add(currentPost);
-        savedPostsId.add(element.id);
+        if(element.data()['isShared']==false){
+          PostModel currentPost = PostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          savedPosts.add(currentPost);
+          savedPostsId.add(element.id);
+        }else{
+          SharePostModel currentPost = SharePostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          savedPosts.add(currentPost);
+          savedPostsId.add(element.id);
+        }
       }
       emit(GetSavedPostsSuccessState());
     }).catchError((error) {
@@ -595,46 +617,23 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-
-  List<SharePostModel> sharePosts = [];
-  // addSharedPosts({
-  //   required PostModel model,
-  //   required context,
-  // }) {
-  //   emit(AddSharePostLoadingState());
-  //   SharePostModel sharePostModel = SharePostModel(
-  //     postId: model.postId,
-  //     text: model.text,
-  //     date: model.date,
-  //     userName: model.userName,
-  //     userImage: model.userImage,
-  //     userId: model.userId,
-  //     likes: model.likes,
-  //     image: model.image,
-  //   );
-  //   FirebaseFirestore.instance.collection('users').doc(uId).update({
-  //     'sharePosts': FieldValue.arrayUnion([sharePostModel.toMap()]),
-  //   }).then((value) {
-  //     showFlushBar(
-  //       context: context,
-  //       message: 'Shared Successfully',
-  //     );
-  //     emit(AddSharePostSuccessState());
-  //   }).catchError((error) {
-  //     emit(AddSharePostErrorState());
-  //   });
-  // }
-
-  getSharePosts() {
-    emit(GetSharedPostsLoadingState());
-    FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
-      sharePosts = [];
-      for (var element in value.data()!['sharePosts']) {
-        sharePosts.add(SharePostModel.fromJson(element));
-      }
-      emit(GetSharedPostsSuccessState());
+  sharePost({
+    required PostModel model,
+    required String text,
+    required BuildContext context,
+  }) {
+    emit(AddSharePostLoadingState());
+    SharePostModel sharePostModel = SharePostModel(
+      postModel: model,
+      shareUserName: user!.name!,
+      shareUserImage: user!.image!,
+      shareUserId: uId,
+      sharePostText: text,
+    );
+    FirebaseFirestore.instance.collection('posts').add(sharePostModel.toMap()).then((value) {
+      emit(AddSharePostSuccessState());
     }).catchError((error) {
-      emit(GetSharedPostsErrorState());
+      emit(AddSharePostErrorState());
     });
   }
 

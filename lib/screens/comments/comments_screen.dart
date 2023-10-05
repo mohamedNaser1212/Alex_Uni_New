@@ -3,7 +3,7 @@ import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../constants.dart';
-import '../../models/post_model.dart';
+import '../../models/posts/post_model.dart';
 
 var commentsController = TextEditingController();
 

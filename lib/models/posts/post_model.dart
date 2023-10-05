@@ -9,6 +9,7 @@ class PostModel{
   List<String> ?image=[];
   bool? showPost=false;
   bool? isReviewed=false;
+  bool isShared=false;
 
   PostModel({
     this.postId,
@@ -24,15 +25,29 @@ class PostModel{
 });
 
   PostModel.fromJson(Map<String,dynamic>json){
-    text=json['text']??'';
-    date=json['date']??'';
-    userName=json['userName']??'';
-    userImage=json['userImage']??'';
-    userId=json['userId']??'';
-    likes=List.from(json['likes']).map((e) => e.toString()).toList();
-    image=List.from(json['image']).map((e) => e.toString()).toList();
-    showPost=json['showPost'];
-    isReviewed=json['isReviewed'];
+    if(!json['isShared']){
+      text=json['text']??'';
+      date=json['date']??'';
+      userName=json['userName']??'';
+      userImage=json['userImage']??'';
+      userId=json['userId']??'';
+      likes=List.from(json['likes']).map((e) => e.toString()).toList();
+      image=List.from(json['image']).map((e) => e.toString()).toList();
+      showPost=json['showPost'];
+      isReviewed=json['isReviewed'];
+      isShared=json['isShared'];
+    }
+    else{
+      text=json['text']??'';
+      date=json['mainPostDate']??'';
+      userName=json['userName']??'';
+      userImage=json['userImage']??'';
+      userId=json['ownerId']??'';
+      likes=List.from(json['mainPostLikes']).map((e) => e.toString()).toList();
+      image=List.from(json['image']).map((e) => e.toString()).toList();
+      showPost=json['showPost'];
+      isReviewed=json['isReviewed'];
+    }
   }
 
   Map<String,dynamic>toMap(){
@@ -47,6 +62,7 @@ class PostModel{
       'image':image!.map((element) => element).toList(),
       'showPost':showPost,
       'isReviewed':isReviewed,
+      'isShared':isShared,
     };
   }
 }
