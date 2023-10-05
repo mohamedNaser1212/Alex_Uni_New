@@ -288,8 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget buildNewsItem({
     required BuildContext context,
     model,
-  }) =>
-      InkWell(
+  }) => InkWell(
         onTap: () {
           if (model is ArabicNewsModel) {
             navigateTo(

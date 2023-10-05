@@ -38,6 +38,7 @@ class PostModel{
       isShared=json['isShared'];
     }
     else{
+      postId=json['postId']??'';
       text=json['text']??'';
       date=json['mainPostDate']??'';
       userName=json['userName']??'';

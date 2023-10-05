@@ -406,8 +406,21 @@ class AppCubit extends Cubit<AppStates> {
         .doc(id)
         .delete()
         .then((value) {
-      getPosts();
-      getMyPosts();
+          FirebaseFirestore.instance.collectionGroup('savedPosts').where('postId',isEqualTo: id).get().then((value) {
+            for(var element in value.docs){
+              element.reference.delete();
+            }
+          });
+          FirebaseFirestore.instance.collection('posts').where('postId',isEqualTo: id).get().then((value) {
+            for(var element in value.docs){
+              element.reference.delete();
+            }
+          });
+          if(currentIndex==3){
+            getMyPosts();
+          }else{
+            getPosts();
+          }
       emit(DeletePostSuccessState());
     });
   }
@@ -630,6 +643,7 @@ class AppCubit extends Cubit<AppStates> {
       shareUserId: uId,
       sharePostText: text,
     );
+    sharePostModel.postModel!.postId=model.postId;
     FirebaseFirestore.instance.collection('posts').add(sharePostModel.toMap()).then((value) {
       emit(AddSharePostSuccessState());
     }).catchError((error) {
