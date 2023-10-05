@@ -383,19 +383,6 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                           ],
                         ),
                         const Spacer(),
-                        if (model.userId == uId)
-                          IconButton(
-                            onPressed: () {
-                              AppCubit.get(context).deletePost(
-                                model.postId!,
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.delete,
-                              size: 20,
-                              color: Colors.grey,
-                            ),
-                          ),
                       ],
                     ),
                   ],
@@ -896,19 +883,6 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                           ],
                         ),
                         const Spacer(),
-                        if (model.shareUserId == uId)
-                          IconButton(
-                            onPressed: () {
-                              AppCubit.get(context).deletePost(
-                                model.postId!,
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.delete,
-                              size: 20,
-                              color: Colors.grey,
-                            ),
-                          ),
                       ],
                     ),
                   ],

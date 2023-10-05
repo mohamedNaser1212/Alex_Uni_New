@@ -386,7 +386,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           IconButton(
                             onPressed: () {
                               AppCubit.get(context).deletePost(
-                                model.postId!,
+                                model
                               );
                             },
                             icon: const Icon(
@@ -911,7 +911,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           IconButton(
                             onPressed: () {
                               AppCubit.get(context).deletePost(
-                                model.postId!,
+                                model
                               );
                             },
                             icon: const Icon(

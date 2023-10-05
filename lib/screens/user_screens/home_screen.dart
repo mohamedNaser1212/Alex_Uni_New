@@ -497,7 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           IconButton(
                             onPressed: () {
                               AppCubit.get(context).deletePost(
-                                model.postId!,
+                                model,
                               );
                             },
                             icon: const Icon(
@@ -1016,7 +1016,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           IconButton(
                             onPressed: () {
                               AppCubit.get(context).deletePost(
-                                model.postId!,
+                                model,
                               );
                             },
                             icon: const Icon(

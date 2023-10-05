@@ -73,6 +73,8 @@ class LikePostSuccessState extends AppStates {}
 
 class LikePostErrorState extends AppStates {}
 
+class DeletePostLoadingState extends AppStates {}
+
 class DeletePostSuccessState extends AppStates {}
 
 class SendMessageSuccessState extends AppStates {}

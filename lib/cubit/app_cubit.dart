@@ -400,29 +400,48 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  deletePost(String id) {
-    FirebaseFirestore.instance
-        .collection('posts')
-        .doc(id)
-        .delete()
-        .then((value) {
-          FirebaseFirestore.instance.collectionGroup('savedPosts').where('postId',isEqualTo: id).get().then((value) {
-            for(var element in value.docs){
-              element.reference.delete();
-            }
-          });
-          FirebaseFirestore.instance.collection('posts').where('postId',isEqualTo: id).get().then((value) {
-            for(var element in value.docs){
-              element.reference.delete();
-            }
-          });
-          if(currentIndex==3){
-            getMyPosts();
-          }else{
-            getPosts();
+  deletePost(model) {
+    emit(DeletePostLoadingState());
+    if(model is PostModel){
+      
+      for(var element in model.image!){
+        FirebaseStorage.instance.refFromURL(element).delete();
+      }
+      
+      FirebaseFirestore.instance
+          .collection('posts')
+          .doc(model.postId)
+          .delete()
+          .then((value) {
+            FirebaseFirestore.instance.collectionGroup('savedPosts').where('postId',isEqualTo: model.postId).get().then((value) {
+              for(var element in value.docs){
+                element.reference.delete();
+              }
+            });
+            FirebaseFirestore.instance.collection('posts').where('isShared',isEqualTo: true).where('postId',isEqualTo: model.postId).get().then((value) {
+              for(var element in value.docs){
+                element.reference.delete();
+              }
+              if(currentIndex==0){
+                getPosts();
+              }else if(currentIndex==3){
+                getMyPosts();
+              }
+            });
+        emit(DeletePostSuccessState());
+      });
+    }
+    else if(model is SharePostModel){
+      print(model.postId);
+      FirebaseFirestore.instance.collection('posts').doc(model.postId).delete().then((value) {
+        FirebaseFirestore.instance.collectionGroup('savedPosts').where('sharedPostId',isEqualTo: model.postId).get().then((value) {
+          for(var element in value.docs){
+            element.reference.delete();
           }
-      emit(DeletePostSuccessState());
-    });
+        });
+      });
+    }
+    emit(DeletePostSuccessState());
   }
 
   List<MessageModel> messages = [];
@@ -595,7 +614,12 @@ class AppCubit extends Cubit<AppStates> {
         .doc(uId)
         .collection('savedPosts')
         .doc('${model.postId}')
-        .set(model.toMap())
+        .set(
+      model is PostModel?model.toMap():{
+        ...model.toMap(),
+        'sharedPostId':model.postId,
+      },
+    )
         .then((value) {
       getSavePosts();
       emit(AddSavePostSuccessState());

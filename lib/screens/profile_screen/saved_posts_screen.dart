@@ -149,7 +149,7 @@ class SavedScreen extends StatelessWidget {
                           IconButton(
                             onPressed: () {
                               AppCubit.get(context).deletePost(
-                                model.postId!,
+                                model
                               );
                             },
                             icon: const Icon(
@@ -664,7 +664,7 @@ class SavedScreen extends StatelessWidget {
                           IconButton(
                             onPressed: () {
                               AppCubit.get(context).deletePost(
-                                model.postId!,
+                                model
                               );
                             },
                             icon: const Icon(
