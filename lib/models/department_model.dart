@@ -7,7 +7,7 @@ class DepartmentModel{
   String? universityId;
   List<String?> sectionImages=[];
   List<String?> sectionDescriptions=[];
-
+  List<String?> arabicSectionDescriptions=[];
 
   DepartmentModel({
     this.id,
@@ -17,6 +17,7 @@ class DepartmentModel{
     this.universityId,
     this.sectionImages=const [],
     this.sectionDescriptions=const[],
+    this.arabicSectionDescriptions=const[],
   });
 
   DepartmentModel.fromJson(Map<String,dynamic>? json){
@@ -30,6 +31,9 @@ class DepartmentModel{
     json['sectionDescriptions'].forEach((element) {
       sectionDescriptions.add(element);
     });
+    json['arabicSectionDescriptions'].forEach((element) {
+      arabicSectionDescriptions.add(element);
+    });
   }
 
   Map<String,dynamic> toMap(){
@@ -40,6 +44,7 @@ class DepartmentModel{
       'universityId':universityId,
       'sectionImages':sectionImages,
       'sectionDescriptions':sectionDescriptions,
+      'arabicSectionDescriptions':arabicSectionDescriptions,
     };
   }
 }

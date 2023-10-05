@@ -392,12 +392,10 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                                 height: 20.0,
                               ),
                             Text(
-                              widget.departmentModel.sectionDescriptions[index]!,
+                              lang=='en'?widget.departmentModel.sectionDescriptions[index]!:widget.departmentModel.arabicSectionDescriptions[index]!,
                               style: const TextStyle(
                                 fontSize: 20.0,
                               ),
-                              textDirection: TextDirection.ltr,
-
                             ),
                             const SizedBox(
                               height: 10.0,

@@ -267,6 +267,7 @@ class _UserLayoutState extends State<UserLayout> {
           ): null,
           body: AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
           bottomNavigationBar: !isGuest? AnimatedBottomNavigationBar(
+            splashColor: defaultColor,
             icons: AppCubit.get(context).bottomNavIcons,
             backgroundColor: const Color(0xffE6EEFA),
             elevation: 10,

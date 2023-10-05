@@ -120,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ? StreamBuilder(
                             stream: FirebaseFirestore.instance
                                 .collection('News')
+                                .where('isFinished', isEqualTo: true)
                                 .orderBy('date', descending: true)
                                 .snapshots(),
                             builder: (context, snapshot) {
@@ -157,6 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             stream: FirebaseFirestore.instance
                                 .collection('News')
                                 .where('type', isEqualTo: 'both')
+                                .where('isFinished', isEqualTo: true)
                                 .orderBy('date', descending: true)
                                 .snapshots(),
                             builder: (context, snapshot) {
