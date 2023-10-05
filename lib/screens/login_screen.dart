@@ -8,6 +8,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:alex_uni_new/screens/registeration_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:icons_plus/icons_plus.dart';
 import '../constants.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -310,25 +311,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                             ),
                                           ),
                                         ),
-                                        // const SizedBox(
-                                        //   height: 30,
-                                        // ),
-                                        // InkWell(
-                                        //   onTap: (){
-                                        //     cubit.googleSignIn(
-                                        //         context: context,
-                                        //         phone: 'phone',
-                                        //         address: 'address',
-                                        //         country: 'country',
-                                        //         universityName: 'universityName',
-                                        //         underGraduate: true,
-                                        //         postGraduate: false,
-                                        //         passportId: 'passportId'
-                                        //     );
-                                        //   },
-                                        //   child: Center(child: Logo(Logos.google)),
-                                        // ),
-                                        // const SizedBox(height: 10),
+                                        const SizedBox(
+                                          height: 30,
+                                        ),
+                                        InkWell(
+                                          onTap: (){
+                                            cubit.googleSignIn(
+                                                context: context,
+                                                phone: 'phone',
+                                                address: 'address',
+                                                country: 'country',
+                                                universityName: 'universityName',
+                                                underGraduate: true,
+                                                postGraduate: false,
+                                                passportId: 'passportId'
+                                            );
+                                          },
+                                          child: Center(child: Logo(Logos.google)),
+                                        ),
+                                        const SizedBox(height: 10),
                                         const SizedBox(height: 28),
                                         Row(
                                           mainAxisAlignment:

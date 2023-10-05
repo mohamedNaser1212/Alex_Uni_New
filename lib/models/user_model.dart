@@ -12,8 +12,6 @@ class UserModel {
   String? country;
   bool? underGraduate;
   bool? postGraduate;
-
-
   List<SharePostModel>? sharePosts;
 
   UserModel({

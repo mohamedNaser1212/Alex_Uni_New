@@ -1,12 +1,10 @@
 import 'dart:io';
-
 import 'package:alex_uni_new/cache_helper.dart';
 import 'package:alex_uni_new/constants.dart';
-import 'package:alex_uni_new/cubit/app_cubit.dart';
-import 'package:alex_uni_new/cubit/register_cubit.dart';
+import 'package:alex_uni_new/cubit/login_cubit.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
-import 'package:alex_uni_new/screens/user_screens/home_screen.dart';
-import 'package:alex_uni_new/states/register_states.dart';
+import 'package:alex_uni_new/screens/user_layout_screen.dart';
+import 'package:alex_uni_new/states/login_states.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,11 +20,6 @@ class CompleteInformationScreen extends StatefulWidget {
 }
 
 class _CompleteInformationScreenState extends State<CompleteInformationScreen> {
-
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController idController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController countryController = TextEditingController();
@@ -36,443 +29,493 @@ class _CompleteInformationScreenState extends State<CompleteInformationScreen> {
   String? departmentError;
   bool postGraduateCheckbox = false;
   bool isUndergraduateSelected = true;
+
+  @override
+  void initState() {
+    super.initState();
+    LoginCubit.get(context).getUniversities();
+  }
+
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     bool isArabic = lang == 'ar';
     TextDirection textDirection =
     isArabic ? TextDirection.rtl : TextDirection.ltr;
-    return BlocProvider(
-      create: (context) => RegisterCubit(),
-      child: BlocConsumer<RegisterCubit, RegisterStates>(
-        listener: (context, state) {
-          if (state is RegisterErrorState) {
-            showFlushBar(
-              context: context,
-              message: state.error,
-            );
-          } else if (state is CreateUserSuccessState) {
-            Navigator.pop(context);
-          }
-        },
-        builder: (context, state) {
-          RegisterCubit cubit = RegisterCubit.get(context);
-          return Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/Waiting-image.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Scaffold(
-              body: Form(
-                key: formKey,
-                child: SingleChildScrollView(
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          height: MediaQuery.of(context).size.height / 2.5,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image:
-                              AssetImage('assets/images/Waiting-image.png'),
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(20),
-                          decoration: const BoxDecoration(
-                            color: Color(0xff3E657B),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(50),
-                              topRight: Radius.circular(50),
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            textDirection: textDirection,
-                            children: [
-                              Text(
-                                isArabic ? ' اضافه حساب' : 'Sign Up',
-                                style: const TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w900,
-                                  color: Color(0xffffffff),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                isArabic ? ' اسم المستخدم' : 'User Name',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xffffffff),
-                                  fontFamily: 'Inter',
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                style: const TextStyle(
-                                  color: Color(0xffffffff),
-                                ),
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                textDirection: textDirection,
-                                controller: nameController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return isArabic
-                                        ? 'من فضلك أدخل اسم المستخدم'
-                                        : 'Please enter a username';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                isArabic ? 'البريد الألكتروني' : 'Your Email',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Inter',
-                                  color: Color(0xffffffff),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                isArabic ? 'رقم الهاتف' : 'Phone Number',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xffffffff),
-                                  fontFamily: 'Inter',
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              IntlPhoneField(
-                                style: const TextStyle(
-                                  color: Color(0xffffffff),
-                                ),
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: Color(0xffFFFFFF),
-                                    ),
-                                  ),
-                                ),
-                                initialCountryCode: 'EG',
-                                onChanged: (data) {
-                                  phone = data.completeNumber;
-                                },
-                              ),
+    return BlocConsumer<LoginCubit, LoginStates>(
+      listener: (context, state) {
+        if(state is CreateUserLoginSuccessState){
+          CacheHelper.saveData(key: 'uId', value: uId).then((value){
+            navigateAndFinish(context:context, screen:const UserLayout());
+          });
+        }
+      },
+      builder: (context, state) {
 
-                              const SizedBox(
-                                height: 10,
+        LoginCubit cubit = LoginCubit.get(context);
+        isUndergraduateSelected = cubit.selecteddegree;
+
+        return Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/Waiting-image.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Scaffold(
+            body: ConditionalBuilder(
+              condition: state is! GetUniversityLoadingState,
+              builder: (context)=> SafeArea(
+                child: Form(
+                  key: formKey,
+                  child: SingleChildScrollView(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: MediaQuery.of(context).size.height * 0.35,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image:
+                                AssetImage('assets/images/Waiting-image.png'),
+                                fit: BoxFit.fitWidth,
                               ),
-                              Text(
-                                isArabic ? 'رقم الباسبور' : 'ID',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xffffffff),
-                                  fontFamily: 'Inter',
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(20),
+                            decoration: const BoxDecoration(
+                              color: Color(0xff3E657B),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(50),
+                                topRight: Radius.circular(50),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              textDirection: textDirection,
+                              children: [
+                                const SizedBox(
+                                  height: 20,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                style: const TextStyle(
-                                  color: Color(0xffffffff),
-                                ),
-                                controller: idController,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
+                                Text(
+                                  isArabic ? ' اضافه حساب' : 'Sign Up',
+                                  style: const TextStyle(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.w900,
+                                    color: Color(0xffffffff),
                                   ),
                                 ),
-                                obscureText: false,
-                                textDirection: textDirection,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return isArabic
-                                        ? 'من فضلك أدخل الرقم القومي'
-                                        : 'Please enter an ID';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                isArabic ? 'العنوان' : 'Address',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xffffffff),
-                                  fontFamily: 'Inter',
+                                const SizedBox(
+                                  height: 20,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                style: const TextStyle(
-                                  color: Color(0xffffffff),
-                                ),
-                                controller: addressController,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
+                                Text(
+                                  isArabic ? 'رقم الهاتف' : 'Phone Number',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xffffffff),
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
-                                obscureText: false,
-                                textDirection: textDirection,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return isArabic
-                                        ? 'من فضلك أدخل العنوان'
-                                        : 'Please enter an address';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                isArabic ? 'الدولة' : 'Country',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xffffffff),
-                                  fontFamily: 'Inter',
+                                const SizedBox(
+                                  height: 10,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                style: const TextStyle(
-                                  color: Color(0xffffffff),
-                                ),
-                                onTap: () {
-                                  FocusScope.of(context)
-                                      .requestFocus(FocusNode());
-                                  showCountryPicker(
-                                    context: context,
-                                    onSelect: (Country country) {
-                                      countryController.text =
-                                          country.flagEmoji +
-                                              country.displayNameNoCountryCode;
-                                    },
-                                  );
-                                },
-                                controller: countryController,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                ),
-                                obscureText: false,
-                                textDirection: textDirection,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return isArabic
-                                        ? 'من فضلك أدخل الدولة'
-                                        : 'Please select country';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                isArabic ? 'الكلية' : 'College',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xffffffff),
-                                  fontFamily: 'Inter',
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  border: Border.all(
-                                    color: Colors.black,
-                                    width: 2.0,
-                                  ),
-                                ),
-                                child: DropdownButton(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0),
-                                  underline: const SizedBox(),
-                                  alignment: Alignment.center,
-                                  isExpanded: true,
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  iconSize: 35,
-                                  icon: const Icon(
+                                IntlPhoneField(
+                                  dropdownIcon: const Icon(
                                     Icons.arrow_drop_down_sharp,
-                                    size: 28,
+                                    color: Color(0xffffffff),
                                   ),
-                                  value: cubit.currentSelectedUniversity,
-                                  items: cubit.universities
-                                      .map(
-                                        (e) => DropdownMenuItem(
+                                  dropdownTextStyle: const TextStyle(
+                                    color: Color(0xffffffff),
+                                  ),
+                                  style: const TextStyle(
+                                    color: Color(0xffffffff),
+                                  ),
+                                  decoration: InputDecoration(
+                                    counterStyle: const TextStyle(
+                                      color: Color(0xffffffff),
+                                    ),
+
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                  initialCountryCode: 'EG',
+                                  onChanged: (data) {
+                                    phone = data.completeNumber;
+                                  },
+                                ),
+
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  isArabic ? 'رقم الباسبور' : 'ID',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xffffffff),
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                TextFormField(
+                                  style: const TextStyle(
+                                    color: Color(0xffffffff),
+                                  ),
+                                  controller: idController,
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                  obscureText: false,
+                                  textDirection: textDirection,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return isArabic
+                                          ? 'من فضلك أدخل الرقم القومي'
+                                          : 'Please enter an ID';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  isArabic ? 'العنوان' : 'Address',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xffffffff),
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                TextFormField(
+                                  style: const TextStyle(
+                                    color: Color(0xffffffff),
+                                  ),
+                                  controller: addressController,
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                  obscureText: false,
+                                  textDirection: textDirection,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return isArabic
+                                          ? 'من فضلك أدخل العنوان'
+                                          : 'Please enter an address';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  isArabic ? 'الدولة' : 'Country',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xffffffff),
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                TextFormField(
+                                  style: const TextStyle(
+                                    color: Color(0xffffffff),
+                                  ),
+                                  onTap: () {
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                    showCountryPicker(
+                                      context: context,
+                                      onSelect: (Country country) {
+                                        countryController.text =
+                                            country.flagEmoji +
+                                                country.displayNameNoCountryCode;
+                                      },
+                                    );
+                                  },
+                                  controller: countryController,
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                  obscureText: false,
+                                  textDirection: textDirection,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return isArabic
+                                          ? 'من فضلك أدخل الدولة'
+                                          : 'Please select country';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  isArabic ? 'الكلية' : 'College',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xffffffff),
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    border: Border.all(
+                                      color: const Color(0xffffffff),
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  child: DropdownButton(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0,
+                                    ),
+                                    underline: const SizedBox(),
+                                    dropdownColor: const Color(0xff3E657B),
+                                    style: const TextStyle(
+                                      color: Color(0xffffffff),
+                                    ),
+                                    alignment: Alignment.center,
+                                    isExpanded: true,
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    iconSize: 35,
+                                    icon: const Icon(
+                                      Icons.arrow_drop_down_sharp,
+                                      size: 28,
+                                    ),
+                                    value: cubit.currentSelectedUniversity??cubit.universities.first,
+                                    items: cubit.universities
+                                        .map((e) => DropdownMenuItem(
                                       value: e,
                                       child: Text(e.name!),
                                     ),
-                                  )
-                                      .toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      cubit.currentSelectedUniversity = value;
-
-                                      // Clear the university error when a selection is made
-                                      universityError = null;
-                                    });
-                                  },
+                                    ).toList(),
+                                    onChanged: (value) {
+                                      cubit.changeSelectedUniversity(value!);
+                                    },
+                                  ),
                                 ),
-                              ),
-                              if (universityError !=
-                                  null) // Display error message if no university is selected
+                                if (universityError != null)
+                                  Text(
+                                    universityError!,
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12.0,
+                                    ),
+                                  ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
                                 Text(
-                                  universityError!,
+                                  isArabic
+                                      ? 'المرحلة الدراسية'
+                                      : 'Academic Level',
                                   style: const TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xffffffff),
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
+                                Row(
+                                  children: [
+                                    Radio<bool>(
+                                      value: true,
+                                      activeColor: Colors.white,
+                                      groupValue: isUndergraduateSelected,
+                                      onChanged: (bool? value) {
+                                        cubit.changRadioValue(value!);
+                                      },
+                                    ),
+                                    Text(
+                                      isArabic ? 'البكالوريوس' : 'Undergraduate',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xffffffff),
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                    Radio<bool>(
+                                      activeColor: Colors.white,
 
-                              //make a radio botton to choose between post and under graduate
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                isArabic
-                                    ? 'المرحلة الدراسية'
-                                    : 'Academic Level',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xffffffff),
-                                  fontFamily: 'Inter',
+                                      value: false,
+                                      groupValue: isUndergraduateSelected,
+                                      onChanged: (bool? value) {
+                                        cubit.changRadioValue(value!);
+                                      },
+                                    ),
+                                    Text(
+                                      isArabic ? 'الماجستير' : 'Postgraduate',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xffffffff),
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-
-                              Row(
-                                children: [
-                                  Radio<bool>(
-                                    value: true,
-                                    groupValue: isUndergraduateSelected,
-                                    onChanged: (bool? value) {
-                                      setState(() {
-                                        isUndergraduateSelected = value!;
-                                      });
-                                    },
-                                  ),
-                                  Text(
-                                    isArabic ? 'البكالوريوس' : 'Undergraduate',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xffffffff),
-                                      fontFamily: 'Inter',
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      lang == 'ar'
+                                          ? 'لديك حساب بالفعل؟'
+                                          : 'Already have an account?',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  Radio<bool>(
-                                    value: false,
-                                    groupValue: isUndergraduateSelected,
-                                    onChanged: (bool? value) {
-                                      setState(() {
-                                        isUndergraduateSelected = value!;
-                                      });
-                                    },
-                                  ),
-                                  Text(
-                                    isArabic ? 'الماجستير' : 'Postgraduate',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xffffffff),
-                                      fontFamily: 'Inter',
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        lang == 'ar' ? 'تسجيل الدخول' : 'Login',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    lang == 'ar'
-                                        ? 'لديك حساب بالفعل؟'
-                                        : 'Already have an account?',
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      lang == 'ar' ? 'تسجيل الدخول' : 'Login',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              ConditionalBuilder(
-                                condition: state is! RegisterLoadingState,
-                                builder: (context) => reusableElevatedButton(
-                                    label: 'Sign Up',
-                                    function: () {
-                                    CacheHelper.saveData(key: 'uId', value: 'uId').then((value) {
-                                      navigateAndFinish(context: context, screen: const HomeScreen());
-                                    });
-                                    }),
-                                fallback: (context) => Center(
-                                    child: Platform.isIOS
-                                        ? const CupertinoActivityIndicator()
-                                        : const CircularProgressIndicator()),
-                              )
-                            ],
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                ConditionalBuilder(
+                                  condition: state is! CreateUserLoginLoadingState,
+                                  builder: (context) => reusableElevatedButton(
+                                      label: 'Sign Up',
+                                      backColor: Colors.white,
+                                      textColor: defaultColor,
+                                      function: () {
+                                        if (formKey.currentState!.validate()) {
+                                          cubit.userCreate(
+                                              name: name!,
+                                              image: image!,
+                                              email: email!,
+                                              uId: uId!,
+                                              phone: phone!,
+                                              address: addressController.text,
+                                              country: countryController.text,
+                                              universityName: cubit.currentSelectedUniversity!.name!,
+                                              underGraduate: isUndergraduateSelected,
+                                              postGraduate: !isUndergraduateSelected,
+                                              passportId: idController.text,
+                                              context: context,
+                                          );
+                                        }
+                                      }
+                                      ),
+                                  fallback: (context) => Center(
+                                      child: Platform.isIOS
+                                          ? const CupertinoActivityIndicator()
+                                          : const CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
+              fallback: (context)=> const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

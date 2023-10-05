@@ -1,6 +1,7 @@
 import 'package:alex_uni_new/cache_helper.dart';
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/cubit/bloc_observer.dart';
+import 'package:alex_uni_new/cubit/login_cubit.dart';
 import 'package:alex_uni_new/cubit/register_cubit.dart';
 import 'package:alex_uni_new/firebase_options.dart';
 import 'package:alex_uni_new/screens/login_screen.dart';
@@ -82,6 +83,9 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (BuildContext context) => RegisterCubit(),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => LoginCubit(),
         ),
       ],
       child: MaterialApp(

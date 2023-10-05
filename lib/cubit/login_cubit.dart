@@ -1,14 +1,16 @@
 import 'package:alex_uni_new/constants.dart';
 import 'package:alex_uni_new/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/complete_information.dart';
+import 'package:alex_uni_new/screens/user_layout_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../cache_helper.dart';
 import '../firebase_options.dart';
+import '../models/department_model.dart';
+import '../models/university_model.dart';
 import '../models/user_model.dart';
-import '../screens/user_screens/home_screen.dart';
 import '../states/login_states.dart';
 
 class LoginCubit extends Cubit<LoginStates> {
@@ -67,27 +69,16 @@ required bool postGraduate,
         );
         FirebaseAuth.instance.signInWithCredential(credential).then((value){
           uId=value.user!.uid;
+          email=value.user!.email!;
+          name=value.user!.displayName!;
+          image=value.user!.photoURL!;
           FirebaseFirestore.instance.collection('users').doc(uId).get().then((n){
             if(n.exists){
               CacheHelper.saveData(key: 'uId', value: uId).then((value){
                   emit(GoogleSignInSuccessState());
-                  navigateAndFinish(context: context, screen: const HomeScreen());
+                  navigateAndFinish(context: context, screen: const UserLayout());
               });
             }else{
-              userCreate(
-                  name: value.user!.displayName!,
-                  image: value.user!.photoURL!,
-                  email: value.user!.email!,
-                  uId: value.user!.uid,
-                  phone: phone,
-                  address: address,
-                  country: country,
-                  universityName: universityName,
-                  underGraduate: underGraduate,
-                  postGraduate: postGraduate,
-                  passportId: passportId,
-                  context: context
-              );
               navigateTo(context: context, screen: const CompleteInformationScreen());
             }
           });
@@ -116,7 +107,7 @@ required bool postGraduate,
 
     required context,
   }){
-    emit(CreateUserLoadingState());
+    emit(CreateUserLoginLoadingState());
     UserModel userModel=UserModel(
         uId: uId,
         name: name,
@@ -134,10 +125,10 @@ required bool postGraduate,
         sharePosts: []
     );
     FirebaseFirestore.instance.collection('users').doc(uId).set(userModel.toMap()).then((value){
-      emit(CreateUserSuccessState());
+      emit(CreateUserLoginSuccessState());
 
     }).catchError((error){
-      emit(CreateUserErrorState(error: error.toString()));
+      emit(CreateUserLoginErrorState());
     });
   }
 
@@ -150,6 +141,42 @@ required bool postGraduate,
     }).catchError((error){
       emit(ResetPasswordErrorState(error: error.toString()));
     });
+  }
+
+  List<UniversityModel> universities = [];
+  getUniversities() {
+    universities = [];
+    emit(GetUniversityLoadingState());
+    FirebaseFirestore.instance
+        .collection('Universities')
+        .orderBy('name')
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        UniversityModel currentUniversity=UniversityModel.fromJson(element.data());
+        currentUniversity.id=element.id;
+        universities.add(currentUniversity);
+      }
+    }).then((value) {
+      emit(GetUniversitySuccessState());
+    }).catchError((error) {
+      emit(GetUniversityErrorState(error: error.toString()));
+    });
+  }
+
+  UniversityModel? currentSelectedUniversity;
+  DepartmentModel? currentSelectedDepartment;
+  bool selecteddegree=false;
+
+  void changRadioValue(bool value){
+    selecteddegree=value;
+    emit(ChangeRadioValueState());
+  }
+
+  void changeSelectedUniversity(UniversityModel universityModel) {
+    currentSelectedUniversity = universityModel;
+    currentSelectedDepartment = null;
+    emit(RegisterChangeSelectedUniversityState());
   }
 
 }

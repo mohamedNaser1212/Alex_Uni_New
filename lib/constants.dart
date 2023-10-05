@@ -5,5 +5,8 @@ import 'package:flutter/material.dart';
 
  String? lang;
  String? uId;
+ String? email;
+ String? image;
+  String? name;
 
  bool isGuest=false;

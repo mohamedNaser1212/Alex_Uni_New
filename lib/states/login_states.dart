@@ -40,3 +40,16 @@ class CreateUserErrorState extends LoginStates{
   String error;
   CreateUserErrorState({required this.error});
 }
+
+class GetUniversityLoadingState extends LoginStates{}
+
+class GetUniversitySuccessState extends LoginStates{}
+
+class GetUniversityErrorState extends LoginStates{
+  String error;
+  GetUniversityErrorState({required this.error});
+}
+
+class ChangeRadioValueState extends LoginStates{}
+
+class RegisterChangeSelectedUniversityState extends LoginStates{}
