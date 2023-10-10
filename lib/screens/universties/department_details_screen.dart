@@ -267,8 +267,7 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.departmentModel.name!,
-          textDirection: TextDirection.rtl,
+          lang=='en'?widget.departmentModel.name!:widget.departmentModel.arabicName!,
         ),
         centerTitle: true,
       ),
