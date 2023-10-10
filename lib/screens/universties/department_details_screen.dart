@@ -270,6 +270,17 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
           lang=='en'?widget.departmentModel.name!:widget.departmentModel.arabicName!,
         ),
         centerTitle: true,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(0.0),
+          child: Text(
+            lang=='en'?'Degree: ${widget.departmentModel.degree!}':'الدرجة العلمية: ${widget.departmentModel.arabicDegree!}',
+            style: const TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        )
       ),
       body: Column(
         children: [

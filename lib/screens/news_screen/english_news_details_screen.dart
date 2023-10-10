@@ -61,7 +61,7 @@ class _BothNewsDetailsScreenState extends State<BothNewsDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-         lang=='ar'? widget.newsModel.arabicTitle!:widget.newsModel.title!,
+         widget.newsModel.title!,
         ),
         centerTitle: true,
       ),
@@ -162,7 +162,7 @@ class _BothNewsDetailsScreenState extends State<BothNewsDetailsScreen> {
                             ),
                             if(index==0)
                               Text(
-                                lang=='ar'? widget.newsModel.arabicTitle!:widget.newsModel.title!,
+                                widget.newsModel.title!,
                                 style:  TextStyle(
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.bold,
@@ -184,7 +184,7 @@ class _BothNewsDetailsScreenState extends State<BothNewsDetailsScreen> {
                                 height: 20.0,
                               ),
                             Text(
-                              lang=='ar'? widget.newsModel.arabicDescriptions![index]!:widget.newsModel.descriptions![index]!,
+                              widget.newsModel.descriptions![index]!,
                               style: const TextStyle(
                                 fontSize: 20.0,
                               height: 1.5,
