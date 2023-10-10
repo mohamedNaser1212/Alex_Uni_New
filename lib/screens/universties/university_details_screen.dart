@@ -32,7 +32,7 @@ class UniversityDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 title: Text(
-                  'Faculty of ${university.name}',
+                  lang=='en'?'Faculty of ${university.name}':'كلية ${university.arabicName}',
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -43,10 +43,10 @@ class UniversityDetailsScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   tabs: [
                     Tab(
-                      text: 'Undergraduate Stage',
+                      text: lang=='en'?'Undergraduate Stage':'المرحلة الجامعية',
                     ),
                     Tab(
-                      text: 'Postgraduate Stage',
+                      text: lang=='en'?'Postgraduate Stage':'المرحلة العليا',
                     ),
                   ],
                 ),

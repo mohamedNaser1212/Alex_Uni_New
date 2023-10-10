@@ -21,7 +21,7 @@ class UnderGraduateTab extends StatelessWidget {
         return ConditionalBuilder(
           condition: state is! GetDepartmentLoadingState,
           builder: (context) {
-            return cubit.unGraduateDepartments.length > 0
+            return cubit.unGraduateDepartments.isNotEmpty
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -109,7 +109,7 @@ class UnderGraduateTab extends StatelessWidget {
                     0,
                   ),
                   child: Text(
-                    '${department.name}',
+                    lang=='en'?department.name!:department.arabicName!,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     textAlign: TextAlign.center,

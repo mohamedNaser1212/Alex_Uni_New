@@ -274,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 10,
             ),
             Text(
-              '${model.name}',
+              lang=='en'?model.name!:model.arabicName!,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: MediaQuery.of(context).size.width / 20,

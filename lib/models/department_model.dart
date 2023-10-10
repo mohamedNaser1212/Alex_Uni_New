@@ -2,6 +2,7 @@ class DepartmentModel{
 
   String? id;
   String? name;
+  String? arabicName;
   bool? isUnderGraduate;
   bool? isPostGraduate;
   String? universityId;
@@ -12,6 +13,7 @@ class DepartmentModel{
   DepartmentModel({
     this.id,
     this.name,
+    this.arabicName,
     this.isUnderGraduate,
     this.isPostGraduate,
     this.universityId,
@@ -22,6 +24,7 @@ class DepartmentModel{
 
   DepartmentModel.fromJson(Map<String,dynamic>? json){
     name=json!['name'];
+    arabicName=json['arabicName'];
     isUnderGraduate=json['isUndergraduate'];
     isPostGraduate=json['isPostgraduate'];
     universityId=json['universityId'];
@@ -39,6 +42,7 @@ class DepartmentModel{
   Map<String,dynamic> toMap(){
     return {
       'name':name,
+      'arabicName':arabicName,
       'underGraduate':isUnderGraduate,
       'postGraduate':isPostGraduate,
       'universityId':universityId,

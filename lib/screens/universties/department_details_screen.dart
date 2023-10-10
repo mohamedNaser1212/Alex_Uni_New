@@ -298,7 +298,7 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                               onTap: goToPreviousImage,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Color(0xff2238455E).withOpacity(0.9),
+                                  color: const Color(0xff2238455E).withOpacity(0.9),
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 child: IconButton(
@@ -319,12 +319,12 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                               onTap: goToNextImage,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Color(0xff2238455E).withOpacity(0.9),
+                                  color: const Color(0xff2238455E).withOpacity(0.9),
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 child: IconButton(
                                   onPressed: goToNextImage,
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.arrow_forward_ios,
                                     color: Color(0xffFFFFFF),
                                   ),
@@ -370,7 +370,7 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                             ),
                             if(index==0)
                               Text(
-                                widget.departmentModel.name!,
+                                lang=='en'?widget.departmentModel.name!:widget.departmentModel.arabicName!,
                                 style:  TextStyle(
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.bold,
@@ -414,7 +414,7 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Divider(
+          const Divider(
             height: 1.0,
             color: Colors.grey,
           ),
