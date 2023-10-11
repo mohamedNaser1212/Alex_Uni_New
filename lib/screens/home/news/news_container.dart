@@ -58,7 +58,7 @@ Widget buildNewsItem({
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  flex: 4,
+                  flex: 3,
                   child: Container(
                     width: double.infinity,
                     height: MediaQuery.of(context).size.height * 0.2,
@@ -77,8 +77,9 @@ Widget buildNewsItem({
                 Expanded(
                   flex: 3,
                   child: Container(
+
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        const EdgeInsets.symmetric(horizontal: 8),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.7299999713897705),
                       borderRadius: const BorderRadius.only(
@@ -95,7 +96,7 @@ Widget buildNewsItem({
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Expanded(
-                              flex: 3,
+                              flex: 4,
                               child: Text(
                                 model.title,
                                 maxLines: 1,

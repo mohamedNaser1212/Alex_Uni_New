@@ -10,6 +10,8 @@ import 'package:alex_uni_new/screens/profile/person_profile/person_profile_scree
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 
+import '../../view_image_screen.dart';
+
 Widget buildPostItem(
   model,
   context,

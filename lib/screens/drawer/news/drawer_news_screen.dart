@@ -38,43 +38,45 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
         centerTitle: true,
       ),
       body: lang == 'ar'
-          ? Column(
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.02,
-                ),
-                StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('News')
-                      .orderBy('date', descending: true)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          DocumentSnapshot ds = snapshot.data!.docs[index];
-                          ArabicNewsModel model = ArabicNewsModel.fromJson(
-                              ds.data()! as Map<String, dynamic>?);
+          ? SingleChildScrollView(
+            child: Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('News')
+                        .orderBy('date', descending: true)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot ds = snapshot.data!.docs[index];
+                            ArabicNewsModel model = ArabicNewsModel.fromJson(
+                                ds.data()! as Map<String, dynamic>?);
 
-                          return buildNewsItem(
-                            context: context,
-                            model: model,
-                          );
-                        },
-                        itemCount: snapshot.data!.docs.length,
-                      );
-                    } else {
-                      return Center(
-                        child: Text(
-                            lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات '),
-                      );
-                    }
-                  },
-                ),
-              ],
-            )
+                            return buildNewsItem(
+                              context: context,
+                              model: model,
+                            );
+                          },
+                          itemCount: snapshot.data!.docs.length,
+                        );
+                      } else {
+                        return Center(
+                          child: Text(
+                              lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات '),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+          )
           : StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('News')

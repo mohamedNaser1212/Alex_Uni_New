@@ -65,7 +65,8 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(0.0),
+          preferredSize: const Size.fromHeight(2.0),
+
           child: Row(
             children: [
               IconButton(
@@ -89,14 +90,22 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                       color: Colors.grey,
                     ),
                   ),
-                  Text(
-                    lang == 'en'
-                        ? widget.departmentModel.name!
-                        : widget.departmentModel.arabicName!,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      color: defaultColor,
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    child: Center(
+                      child: Text(
+                        lang == 'en'
+                            ? widget.departmentModel.name!
+                            : widget.departmentModel.arabicName!,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: defaultColor,
+                          overflow: TextOverflow.ellipsis,
+
+                        ),
+                        maxLines: 1,
+                      ),
                     ),
                   ),
                 ],
