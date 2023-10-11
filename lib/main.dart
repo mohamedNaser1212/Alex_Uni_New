@@ -1,10 +1,10 @@
-import 'package:alex_uni_new/cache_helper.dart';
-import 'package:alex_uni_new/constants.dart';
+import 'package:alex_uni_new/constants/cache_helper.dart';
+import 'package:alex_uni_new/constants/constants.dart';
 import 'package:alex_uni_new/cubit/bloc_observer.dart';
 import 'package:alex_uni_new/cubit/login_cubit.dart';
 import 'package:alex_uni_new/cubit/register_cubit.dart';
-import 'package:alex_uni_new/firebase_options.dart';
-import 'package:alex_uni_new/screens/login_screen.dart';
+import 'package:alex_uni_new/constants/firebase_options.dart';
+import 'package:alex_uni_new/screens/auth/login_screen.dart';
 import 'package:alex_uni_new/screens/user_layout_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -48,18 +48,18 @@ class MyApp extends StatefulWidget {
   final Widget startPage;
 
   static void setLocale(BuildContext context, Locale newLocale) {
-    final _MyAppState state = context.findAncestorStateOfType<_MyAppState>()!;
+    final MyAppState state = context.findAncestorStateOfType<MyAppState>()!;
     state.setLocale(newLocale);
   }
 
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   late Locale _selectedLocale;
 
-  _MyAppState() {
+  MyAppState() {
     _selectedLocale = Locale(lang ?? 'en');
   }
 
@@ -126,6 +126,7 @@ class _MyAppState extends State<MyApp> {
           UserLayout.id: (context) => const UserLayout(),
           // ... define other named routes if needed ...
         },
+        // home: ResetPasswordScreen(),
         home: widget.startPage,
       ),
     );

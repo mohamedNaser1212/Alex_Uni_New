@@ -1,8 +1,10 @@
-import 'package:alex_uni_new/cache_helper.dart';
-import 'package:alex_uni_new/constants.dart';
+// ignore_for_file: library_private_types_in_public_api, avoid_print
+
+import 'package:alex_uni_new/constants/cache_helper.dart';
+import 'package:alex_uni_new/constants/constants.dart';
+import 'package:alex_uni_new/screens/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
-import 'login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -24,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _changeLanguage(Locale? newLocale) {
     if (newLocale != null) {
-      lang=newLocale.toString();
+      lang = newLocale.toString();
       CacheHelper.saveData(
         key: 'lang',
         value: newLocale.toString(),
@@ -88,20 +90,35 @@ class _SplashScreenState extends State<SplashScreen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: DropdownButton<Locale>(
+                        underline: Container(
+                          height: 0,
+                        ), // removing the black underlined color
+                        borderRadius: BorderRadius.circular(17),
                         value: _selectedLocale,
                         onChanged: (newLocale) {
                           _changeLanguage(newLocale);
                           _navigateToLoginScreen(
-                              newLocale!); // Navigate when language changes
+                            newLocale!,
+                          ); // Navigate when language changes
                         },
                         items: const [
                           DropdownMenuItem(
                             value: Locale('en'),
-                            child: Text('English'),
+                            child: Text(
+                              'EN',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                           DropdownMenuItem(
                             value: Locale('ar'),
-                            child: Text('Arabic'),
+                            child: Text(
+                              'AR',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -116,14 +133,18 @@ class _SplashScreenState extends State<SplashScreen> {
                   children: [
                     const SizedBox(height: 30),
                     const Spacer(),
-                    Image.asset('assets/images/University-Logo.png'),
-                    Spacer(),
+                    SizedBox(
+                      height: 290,
+                      width: 338,
+                      child: Image.asset('assets/images/university_text.png'),
+                    ),
+                    const Spacer(),
                     const Padding(
-                      padding: EdgeInsets.only(bottom: 8.0),
+                      padding: EdgeInsets.only(bottom: 21.0),
                       child: Text(
                         'Empowering Minds,\nEnriching Futures',
                         style: TextStyle(
-                          fontSize: 26,
+                          fontSize: 17,
                           fontWeight: FontWeight.w400,
                           fontFamily: 'Belleza',
                           color: Color(0xffD1DFF3),
@@ -131,8 +152,6 @@ class _SplashScreenState extends State<SplashScreen> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-
-
                   ],
                 ),
               ),

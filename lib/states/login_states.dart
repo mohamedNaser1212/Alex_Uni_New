@@ -23,6 +23,8 @@ class ResetPasswordErrorState extends LoginStates{
   ResetPasswordErrorState({required this.error});
 }
 
+class ChangeVisibility extends LoginStates {}
+
 class GoogleSignInLoadingState extends LoginStates{}
 
 class GoogleSignInSuccessState extends LoginStates{}

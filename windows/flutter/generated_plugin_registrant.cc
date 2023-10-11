@@ -10,6 +10,7 @@
 #include <firebase_core/firebase_core_plugin_c_api.h>
 #include <flutter_localization/flutter_localization_plugin_c_api.h>
 #include <modal_progress_hud_nsn/modal_progress_hud_nsn_plugin_c_api.h>
+#include <rive_common/rive_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   FileSelectorWindowsRegisterWithRegistrar(
@@ -20,4 +21,6 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("FlutterLocalizationPluginCApi"));
   ModalProgressHudNsnPluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("ModalProgressHudNsnPluginCApi"));
+  RivePluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("RivePlugin"));
 }

@@ -32,7 +32,8 @@ class RegisterUploadImageProfileLoadingState extends RegisterStates {}
 
 class RegisterShowImagePickerChangedState extends RegisterStates {}
 
-
+class ChangeSelectedDepartment extends RegisterStates {}
+class ChangeVisibility extends RegisterStates {}
 
 class GetUniversitiesLoadingState extends RegisterStates {}
 class GetUniversitiesSuccessState extends RegisterStates {}

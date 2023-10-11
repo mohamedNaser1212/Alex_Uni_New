@@ -1,4 +1,6 @@
-import 'package:alex_uni_new/constants.dart';
+// ignore_for_file: unnecessary_null_in_if_null_operators
+
+import 'package:alex_uni_new/constants/constants.dart';
 import 'package:alex_uni_new/states/register_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,16 +9,16 @@ import '../models/department_model.dart';
 import '../models/university_model.dart';
 import '../models/user_model.dart';
 
-class RegisterCubit extends Cubit<RegisterStates>{
+class RegisterCubit extends Cubit<RegisterStates> {
   RegisterCubit() : super(RegisterInitialState());
 
   static RegisterCubit get(context) => BlocProvider.of(context);
   UniversityModel? currentSelectedUniversity;
   DepartmentModel? currentSelectedDepartment;
-  bool selecteddegree=false;
+  bool selecteddegree = false;
 
-  void changRadioValue(bool value){
-    selecteddegree=value;
+  void changRadioValue(bool value) {
+    selecteddegree = value;
     emit(ChangeRadioValueState());
   }
 
@@ -25,7 +27,6 @@ class RegisterCubit extends Cubit<RegisterStates>{
     currentSelectedDepartment = null;
     emit(RegisterChangeSelectedUniversityState());
   }
-
 
   void userRegister({
     required String name,
@@ -37,7 +38,6 @@ class RegisterCubit extends Cubit<RegisterStates>{
     required String universityname,
     required bool underGraduate,
     required bool postGraduate,
-
     required String country,
   }) {
     emit(RegisterLoadingState());
@@ -47,7 +47,7 @@ class RegisterCubit extends Cubit<RegisterStates>{
       password: password,
     )
         .then((value) {
-          uId= value.user!.uid;
+      uId = value.user!.uid;
       userCreate(
         name: name,
         email: email,
@@ -57,7 +57,6 @@ class RegisterCubit extends Cubit<RegisterStates>{
         passportId: passportId,
         address: address,
         universityname: universityname,
-
         country: country,
         uId: value.user!.uid,
       );
@@ -65,7 +64,9 @@ class RegisterCubit extends Cubit<RegisterStates>{
     }).catchError((error) {
       if (error is FirebaseAuthException) {
         if (error.code == 'weak-password') {
-          emit(RegisterErrorState( error: 'كلمه السر ضعيفه',));
+          emit(RegisterErrorState(
+            error: 'كلمه السر ضعيفه',
+          ));
         } else if (error.code == 'email-already-in-use') {
           emit(RegisterErrorState(error: 'هذا البريد الالكتروني مسجل بالفعل'));
         } else {
@@ -87,17 +88,17 @@ class RegisterCubit extends Cubit<RegisterStates>{
     required String universityname,
     required bool underGraduate,
     required bool postGraduate,
-
     required String country,
   }) {
     emit(CreateUserLoadingState());
-   UserModel user = UserModel(
+    UserModel user = UserModel(
       name: name,
       uId: uId,
       email: email,
       phone: phone,
-      image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-      cover:'',
+      image:
+          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+      cover: '',
       bio: '',
       passportId: passportId,
       underGraduate: underGraduate,
@@ -117,6 +118,7 @@ class RegisterCubit extends Cubit<RegisterStates>{
       emit(CreateUserErrorState());
     });
   }
+
   List<UniversityModel> universities = [];
   getUniversities() {
     universities = [];
@@ -127,11 +129,13 @@ class RegisterCubit extends Cubit<RegisterStates>{
         .get()
         .then((value) {
       for (var element in value.docs) {
-        UniversityModel currentUniversity=UniversityModel.fromJson(element.data());
-        currentUniversity.id=element.id;
+        UniversityModel currentUniversity =
+            UniversityModel.fromJson(element.data());
+        currentUniversity.id = element.id;
         universities.add(currentUniversity);
       }
     }).then((value) {
+      getDepartments(universityId: universities.first.id!);
       emit(GetUniversitiesSuccessState());
     }).catchError((error) {
       emit(GetUniversitiesErrorState(error: error.toString()));
@@ -152,13 +156,35 @@ class RegisterCubit extends Cubit<RegisterStates>{
 //
 // }
 
+  bool isvisible1 = true;
+  bool isvisible2 = true;
+
+  void changeVisibility1(){
+    isvisible1 = !isvisible1;
+    emit(ChangeVisibility());
+  }
+  void changeVisibility2(){
+    isvisible2 = !isvisible2;
+    emit(ChangeVisibility());
+  }
+
+  void changeSelectedDepartment(DepartmentModel model) {
+    currentSelectedDepartment = model;
+    emit(ChangeSelectedDepartment());
+  }
+
+  // DepartmentModel? currentSelectedDepartmet ;
+
   List<DepartmentModel> unGraduateDepartments = [];
   List<DepartmentModel> postGraduateDepartments = [];
+  List<DepartmentModel> departments = [];
   getDepartments({
     required String universityId,
   }) {
+    bool addDepartments = true;
     unGraduateDepartments = [];
     postGraduateDepartments = [];
+    departments = [];
     emit(GetDepartmentsLoadingState());
     FirebaseFirestore.instance
         .collection('Universities')
@@ -168,15 +194,27 @@ class RegisterCubit extends Cubit<RegisterStates>{
         .get()
         .then((value) {
       for (var element in value.docs) {
-        DepartmentModel currentDepartment=DepartmentModel.fromJson(element.data());
-        currentDepartment.id=element.id;
-        if(currentDepartment.isUnderGraduate==true){
+        DepartmentModel currentDepartment =
+            DepartmentModel.fromJson(element.data());
+        currentDepartment.id = element.id;
+        for (var element in departments) {
+          if (element.name == currentDepartment.name) {
+            addDepartments = false;
+            continue;
+          }
+        }
+        if (addDepartments) {
+          departments.add(currentDepartment);
+        }
+        addDepartments = true;
+        if (currentDepartment.isUnderGraduate == true) {
           unGraduateDepartments.add(currentDepartment);
         }
-        if(currentDepartment.isPostGraduate==true){
+        if (currentDepartment.isPostGraduate == true) {
           postGraduateDepartments.add(currentDepartment);
         }
       }
+      currentSelectedDepartment = departments.first ?? null;
     }).then((value) {
       emit(GetDepartmentsSuccessState());
     }).catchError((error) {
@@ -185,7 +223,4 @@ class RegisterCubit extends Cubit<RegisterStates>{
       ));
     });
   }
-
-
-
 }

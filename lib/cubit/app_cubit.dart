@@ -1,23 +1,28 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
-import 'package:alex_uni_new/cache_helper.dart';
+import 'package:alex_uni_new/constants/cache_helper.dart';
+import 'package:alex_uni_new/constants/constants.dart';
 import 'package:alex_uni_new/models/both_news_model.dart';
 import 'package:alex_uni_new/models/department_model.dart';
 import 'package:alex_uni_new/models/posts/post_model.dart';
 import 'package:alex_uni_new/models/university_model.dart';
-import 'package:alex_uni_new/reusable_widgets.dart';
-import 'package:alex_uni_new/screens/login_screen.dart';
-import 'package:alex_uni_new/screens/profile_screen/profile_screen.dart';
-import 'package:alex_uni_new/screens/user_screens/home_screen.dart';
+import 'package:alex_uni_new/widgets/reusable_widgets.dart';
+import 'package:alex_uni_new/screens/auth/login_screen.dart';
+import 'package:alex_uni_new/screens/chat/chat_screen.dart';
+import 'package:alex_uni_new/screens/home/home_screen.dart';
+import 'package:alex_uni_new/screens/profile/profile_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gmt/gmt.dart';
+import 'package:iconly/iconly.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import '../constants.dart';
 import '../main.dart';
 import '../models/admin_model.dart';
 import '../models/message_model.dart';
@@ -25,8 +30,7 @@ import '../models/news_model.dart';
 import '../models/posts/shared_post_model.dart';
 import '../models/settings_model.dart';
 import '../models/user_model.dart';
-import '../screens/chat_screens/chat_screen.dart';
-import '../screens/user_screens/notification_screen.dart';
+import '../screens/notifications/notification_screen.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitialState());
@@ -41,16 +45,30 @@ class AppCubit extends Cubit<AppStates> {
     const ProfileScreen(),
   ];
   List<IconData> bottomNavIcons = [
-    Icons.home,
-    Icons.chat,
-    Icons.notifications,
-    Icons.person,
+    IconlyBold.home,
+    IconlyBold.message,
+    IconlyBold.notification,
+    IconlyBold.profile,
   ];
+
   List<String> titles = [
-    lang == 'en' ? 'Home' : 'الرئيسية',
-    lang == 'en' ? 'Chat' : 'المحادثات',
+    lang == 'en' ? 'Good Morning !' : 'اهلا بك !',
+    // lang == 'en' ? 'Chat' : 'المحادثات',
     lang == 'en' ? 'Notifications' : 'الاشعارات',
     lang == 'en' ? 'Profile' : 'الملف الشخصي',
+  ];
+
+  List<IconData> settingsIcons = [
+    Icons.public,
+    IconlyBold.lock,
+    IconlyBold.delete,
+    Icons.headset_mic,
+  ];
+  List<String> settingsTitles = [
+    lang == 'en' ? 'Langauge' : 'اللغة',
+    lang == 'en' ? 'Change Password' : 'تغيير كلمة السر',
+    lang == 'en' ? 'Delete Account' : 'حذف الحساب',
+    lang == 'en' ? 'Help & FAQs' : 'مساعدة',
   ];
 
   void changeBottomNavBar(int index) {
@@ -73,10 +91,16 @@ class AppCubit extends Cubit<AppStates> {
           newLocale,
         );
         titles = [
-          lang == 'en' ? 'Home' : 'الرئيسية',
-          lang == 'en' ? 'Chat' : 'المحادثات',
+          lang == 'en' ? 'Good Morning !' : 'اهلا بك !',
+          // lang == 'en' ? 'Chat' : 'المحادثات',
           lang == 'en' ? 'Notifications' : 'الاشعارات',
           lang == 'en' ? 'Profile' : 'الملف الشخصي',
+        ];
+        settingsTitles = [
+          lang == 'en' ? 'Langauge' : 'اللغة',
+          lang == 'en' ? 'Change Password' : 'تغيير كلمة السر',
+          lang == 'en' ? 'Delete Account' : 'حذف الحساب',
+          lang == 'en' ? 'Help & FAQs' : 'مساعدة',
         ];
         emit(AppChangeLanguageState());
       }).catchError((e) {
@@ -273,7 +297,7 @@ class AppCubit extends Cubit<AppStates> {
       print('Error uploading images: $error');
     }
   }
-  
+
   List post = [];
   List postsId = [];
   getPosts() {
@@ -287,12 +311,12 @@ class AppCubit extends Cubit<AppStates> {
         .get()
         .then((value) {
       for (var element in value.docs) {
-        if(element.data()['isShared']==false){
+        if (element.data()['isShared'] == false) {
           PostModel currentPost = PostModel.fromJson(element.data());
           currentPost.postId = element.id;
           post.add(currentPost);
           postsId.add(element.id);
-        }else{
+        } else {
           SharePostModel currentPost = SharePostModel.fromJson(element.data());
           currentPost.postId = element.id;
           post.add(currentPost);
@@ -309,23 +333,23 @@ class AppCubit extends Cubit<AppStates> {
   updatePostLikes(post) {
     if (post.likes!.any((element) => element == uId)) {
       post.likes!.removeWhere((element) => element == uId);
-    }
-    else {
+    } else {
       post.likes!.add(uId!);
     }
-    FirebaseFirestore.instance
-        .collection('posts')
-        .doc(post.postId)
-        .update({
-        'likes': post.likes!.map((e) => e).toList(),
-      }).then((value) {
-          FirebaseFirestore.instance.collectionGroup('savedPosts').where('postId',isEqualTo: post.postId).get().then((value) {
-            for(var element in value.docs){
-              element.reference.update({
-                'likes': post.likes!.map((e) => e).toList(),
-              });
-            }
+    FirebaseFirestore.instance.collection('posts').doc(post.postId).update({
+      'likes': post.likes!.map((e) => e).toList(),
+    }).then((value) {
+      FirebaseFirestore.instance
+          .collectionGroup('savedPosts')
+          .where('postId', isEqualTo: post.postId)
+          .get()
+          .then((value) {
+        for (var element in value.docs) {
+          element.reference.update({
+            'likes': post.likes!.map((e) => e).toList(),
           });
+        }
+      });
       emit(LikePostSuccessState());
     }).catchError((error) {});
   }
@@ -402,40 +426,55 @@ class AppCubit extends Cubit<AppStates> {
 
   deletePost(model) {
     emit(DeletePostLoadingState());
-    if(model is PostModel){
-      
-      for(var element in model.image!){
+    if (model is PostModel) {
+      for (var element in model.image!) {
         FirebaseStorage.instance.refFromURL(element).delete();
       }
-      
+
       FirebaseFirestore.instance
           .collection('posts')
           .doc(model.postId)
           .delete()
           .then((value) {
-            FirebaseFirestore.instance.collectionGroup('savedPosts').where('postId',isEqualTo: model.postId).get().then((value) {
-              for(var element in value.docs){
-                element.reference.delete();
-              }
-            });
-            FirebaseFirestore.instance.collection('posts').where('isShared',isEqualTo: true).where('postId',isEqualTo: model.postId).get().then((value) {
-              for(var element in value.docs){
-                element.reference.delete();
-              }
-              if(currentIndex==0){
-                getPosts();
-              }else if(currentIndex==3){
-                getMyPosts();
-              }
-            });
+        FirebaseFirestore.instance
+            .collectionGroup('savedPosts')
+            .where('postId', isEqualTo: model.postId)
+            .get()
+            .then((value) {
+          for (var element in value.docs) {
+            element.reference.delete();
+          }
+        });
+        FirebaseFirestore.instance
+            .collection('posts')
+            .where('isShared', isEqualTo: true)
+            .where('postId', isEqualTo: model.postId)
+            .get()
+            .then((value) {
+          for (var element in value.docs) {
+            element.reference.delete();
+          }
+          if (currentIndex == 0) {
+            getPosts();
+          } else if (currentIndex == 3) {
+            getMyPosts();
+          }
+        });
         emit(DeletePostSuccessState());
       });
-    }
-    else if(model is SharePostModel){
+    } else if (model is SharePostModel) {
       print(model.postId);
-      FirebaseFirestore.instance.collection('posts').doc(model.postId).delete().then((value) {
-        FirebaseFirestore.instance.collectionGroup('savedPosts').where('sharedPostId',isEqualTo: model.postId).get().then((value) {
-          for(var element in value.docs){
+      FirebaseFirestore.instance
+          .collection('posts')
+          .doc(model.postId)
+          .delete()
+          .then((value) {
+        FirebaseFirestore.instance
+            .collectionGroup('savedPosts')
+            .where('sharedPostId', isEqualTo: model.postId)
+            .get()
+            .then((value) {
+          for (var element in value.docs) {
             element.reference.delete();
           }
         });
@@ -586,12 +625,12 @@ class AppCubit extends Cubit<AppStates> {
         .get()
         .then((value) {
       for (var element in value.docs) {
-        if(element.data()['isShared']==false){
+        if (element.data()['isShared'] == false) {
           PostModel currentPost = PostModel.fromJson(element.data());
           currentPost.postId = element.id;
           myPosts.add(currentPost);
           myPostsId.add(element.id);
-        }else{
+        } else {
           SharePostModel currentPost = SharePostModel.fromJson(element.data());
           currentPost.postId = element.id;
           myPosts.add(currentPost);
@@ -615,11 +654,13 @@ class AppCubit extends Cubit<AppStates> {
         .collection('savedPosts')
         .doc('${model.postId}')
         .set(
-      model is PostModel?model.toMap():{
-        ...model.toMap(),
-        'sharedPostId':model.postId,
-      },
-    )
+          model is PostModel
+              ? model.toMap()
+              : {
+                  ...model.toMap(),
+                  'sharedPostId': model.postId,
+                },
+        )
         .then((value) {
       getSavePosts();
       emit(AddSavePostSuccessState());
@@ -632,16 +673,21 @@ class AppCubit extends Cubit<AppStates> {
   List<String> savedPostsId = [];
   getSavePosts() {
     emit(GetSavedPostsLoadingState());
-    FirebaseFirestore.instance.collection('users').doc(uId).collection('savedPosts').get().then((value) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('savedPosts')
+        .get()
+        .then((value) {
       savedPosts = [];
       savedPostsId = [];
       for (var element in value.docs) {
-        if(element.data()['isShared']==false){
+        if (element.data()['isShared'] == false) {
           PostModel currentPost = PostModel.fromJson(element.data());
           currentPost.postId = element.id;
           savedPosts.add(currentPost);
           savedPostsId.add(element.id);
-        }else{
+        } else {
           SharePostModel currentPost = SharePostModel.fromJson(element.data());
           currentPost.postId = element.id;
           savedPosts.add(currentPost);
@@ -667,8 +713,11 @@ class AppCubit extends Cubit<AppStates> {
       shareUserId: uId,
       sharePostText: text,
     );
-    sharePostModel.postModel!.postId=model.postId;
-    FirebaseFirestore.instance.collection('posts').add(sharePostModel.toMap()).then((value) {
+    sharePostModel.postModel!.postId = model.postId;
+    FirebaseFirestore.instance
+        .collection('posts')
+        .add(sharePostModel.toMap())
+        .then((value) {
       emit(AddSharePostSuccessState());
     }).catchError((error) {
       emit(AddSharePostErrorState());
@@ -935,11 +984,11 @@ class AppCubit extends Cubit<AppStates> {
       selectedUserPosts = [];
       selectedUserPhotos = [];
       for (var element in value.docs) {
-        if(element.data()['isShared']==false){
+        if (element.data()['isShared'] == false) {
           PostModel currentPost = PostModel.fromJson(element.data());
           currentPost.postId = element.id;
           selectedUserPosts.add(currentPost);
-        }else{
+        } else {
           SharePostModel currentPost = SharePostModel.fromJson(element.data());
           currentPost.postId = element.id;
           selectedUserPosts.add(currentPost);
@@ -964,5 +1013,142 @@ class AppCubit extends Cubit<AppStates> {
     }).catchError((error) {
       emit(GetSelectedUserErrorState());
     });
+  }
+
+  customDialog({
+    required BuildContext context,
+    void Function()? leftBtn,
+    void Function()? rightBtn,
+    String leftBtnText = "Cancel",
+    String rightBtnText = "Delete",
+    CrossAxisAlignment crossAxis = CrossAxisAlignment.start,
+    String title = "Attention",
+    String desc1 =
+        "Alexandria University is not responsible for this action, you will lose your data forever and won't be able to restore it again.",
+    String desc2 = "Do you want to proceed ?",
+    DialogType type = DialogType.warning,
+    bool hasDesc2 = true,
+    Color bgColor = const Color.fromARGB(255, 216, 229, 239),
+    Color leftBtnColor = Colors.green,
+    Color rightBtnColor = Colors.red,
+  }) {
+    AwesomeDialog(
+      context: context,
+      dialogType: type,
+      dialogBackgroundColor: bgColor,
+      headerAnimationLoop: false,
+      animType: AnimType.bottomSlide,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: Column(
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 23,
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.015,
+            ),
+            Column(
+              crossAxisAlignment: crossAxis,
+              children: [
+                Text(
+                  desc1,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if (hasDesc2 == true)
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.012,
+                  ),
+                if (hasDesc2 == true)
+                  Text(
+                    desc2,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                    ),
+                  ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Material(
+                          color: leftBtnColor,
+                          borderRadius: BorderRadius.circular(21),
+                          child: InkWell(
+                            onTap: leftBtn,
+                            borderRadius: BorderRadius.circular(21),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 9,
+                              ),
+                              decoration: BoxDecoration(
+                                color: leftBtnColor,
+                                borderRadius: BorderRadius.circular(21),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  leftBtnText,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 9,
+                      ),
+                      Expanded(
+                        child: Material(
+                          color: rightBtnColor,
+                          borderRadius: BorderRadius.circular(18),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(18),
+                            onTap: rightBtn,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 9,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  rightBtnText,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    ).show();
   }
 }

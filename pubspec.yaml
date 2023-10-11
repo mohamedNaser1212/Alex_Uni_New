@@ -64,6 +64,13 @@ dependencies:
   photo_view: ^0.14.0
   google_sign_in: ^5.0.0
   icons_plus: ^3.0.0
+  svg_flutter: ^0.0.1
+  flutter_localizations:
+    sdk: flutter
+  iconly: ^1.0.1
+  awesome_dialog: ^3.1.0
+  shimmer: ^3.0.0
+  fancy_shimmer_image: ^2.0.3
 
 dev_dependencies:
   flutter_test:
