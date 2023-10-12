@@ -23,6 +23,8 @@ import 'package:gmt/gmt.dart';
 import 'package:iconly/iconly.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import '../constants/constants.dart';
+import '../constants/constants.dart';
 import '../main.dart';
 import '../models/admin_model.dart';
 import '../models/message_model.dart';
@@ -122,7 +124,11 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   updateUser(
-      {required String name, String? image, String? phone, String? cover}) {
+      {required String name,
+      String? image,
+      String? phone,
+      String? cover,
+      String? bio}) {
     emit(UserModelUpdateLoadingState());
     UserModel user2 = UserModel(
         name: name,
@@ -131,7 +137,7 @@ class AppCubit extends Cubit<AppStates> {
         uId: user!.uId,
         image: image ?? user!.image,
         cover: cover ?? user!.cover,
-        bio: user!.bio,
+        bio: bio,
         universityname: user!.universityname,
         country: user!.country,
         passportId: user!.passportId,
@@ -223,6 +229,7 @@ class AppCubit extends Cubit<AppStates> {
   void uploadProfileImage({
     required String name,
     required String phone,
+    required String bio,
   }) {
     emit(UserModelUpdateLoadingState());
     FirebaseStorage.instance
@@ -231,7 +238,7 @@ class AppCubit extends Cubit<AppStates> {
         .putFile(profileImage!)
         .then((value) {
       value.ref.getDownloadURL().then((value) {
-        updateUser(name: name, image: value, phone: phone);
+        updateUser(name: name, image: value, phone: phone, bio: bio);
         profileImage = null;
       }).catchError((error) {
         emit(UploadImageErrorState(error().toString()));
@@ -629,12 +636,15 @@ class AppCubit extends Cubit<AppStates> {
           PostModel currentPost = PostModel.fromJson(element.data());
           currentPost.postId = element.id;
           myPosts.add(currentPost);
+          myphotos.addAll(currentPost.image!);
+
           myPostsId.add(element.id);
         } else {
           SharePostModel currentPost = SharePostModel.fromJson(element.data());
           currentPost.postId = element.id;
           myPosts.add(currentPost);
           myPostsId.add(element.id);
+          myphotos.addAll(currentPost.postModel!.image!);
         }
       }
     }).then((value) {
@@ -988,10 +998,12 @@ class AppCubit extends Cubit<AppStates> {
           PostModel currentPost = PostModel.fromJson(element.data());
           currentPost.postId = element.id;
           selectedUserPosts.add(currentPost);
+          selectedUserPhotos.addAll(currentPost.image!);
         } else {
           SharePostModel currentPost = SharePostModel.fromJson(element.data());
           currentPost.postId = element.id;
           selectedUserPosts.add(currentPost);
+          selectedUserPhotos.addAll(currentPost.postModel!.image!);
         }
       }
       emit(GetSelectedUserPostsSuccessState());
@@ -1151,4 +1163,54 @@ class AppCubit extends Cubit<AppStates> {
       ),
     ).show();
   }
+
+  changePassword({
+    required String newPassword,
+  }) async {
+    emit(changePasswordLoadingState());
+    User user = await FirebaseAuth.instance.currentUser!;
+    user.updatePassword(newPassword).then((_) {
+      emit(changePasswordSuccessState());
+    }).catchError((error) {
+      print("Password can't be changed" + error.toString());
+      emit(ChangePasswordErrorState());
+    });
+  }
+  // bool hasMore = false;
+  // loadMorePosts(){
+  //   emit(LoadMorePostsLoadingState());
+  //   FirebaseFirestore.instance
+  //       .collection('posts')
+  //       .where('showPost', isEqualTo: true)
+  //       .orderBy('date', descending: true)
+  //       .startAfterDocument(post[10])
+  //       .limit(10)
+  //       .get()
+  //       .then((value) {
+  //     for (var element in value.docs) {
+  //       if (element.data()['isShared'] == false) {
+  //         PostModel currentPost = PostModel.fromJson(element.data());
+  //         currentPost.postId = element.id;
+  //         post.add(currentPost);
+  //         postsId.add(element.id);
+  //         hasMore = true;
+  //       } else {
+  //         SharePostModel currentPost = SharePostModel.fromJson(element.data());
+  //         currentPost.postId = element.id;
+  //         post.add(currentPost);
+  //         postsId.add(element.id);
+  //         hasMore = true;
+  //       }
+  //
+  //       if (value.docs.length < 10) {
+  //         hasMore = false;
+  //       }
+  //     }
+  //     emit(LoadMorePostsSuccessState());
+  //   }).catchError((error) {
+  //     emit(LoadMorePostsErrorState(error.toString()));
+  //   });
+  // }
+
+
 }

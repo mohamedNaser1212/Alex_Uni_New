@@ -64,6 +64,7 @@ class EditProfile extends StatelessWidget {
                       AppCubit.get(context).updateUser(
                         name: nameController.text,
                         phone: phoneController.text,
+                        bio: bioController.text,
                       );
                     },
                     child: Center(
@@ -273,6 +274,7 @@ class EditProfile extends StatelessWidget {
                                                   .uploadProfileImage(
                                                 name: nameController.text,
                                                 phone: phoneController.text,
+                                                bio: bioController.text,
                                               );
                                             },
                                             child: Text(

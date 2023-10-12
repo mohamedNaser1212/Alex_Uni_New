@@ -200,3 +200,16 @@ class RemoveSavedPostLoadingState extends AppStates {}
 class RemoveSavedPostSuccessState extends AppStates {}
 class RemoveSavedPostErrorState extends AppStates {}
 
+class changePasswordSuccessState extends AppStates{}
+class changePasswordLoadingState extends AppStates{}
+
+class ChangePasswordErrorState extends AppStates{}
+
+class LoadMorePostsLoadingState extends AppStates{}
+class LoadMorePostsSuccessState extends AppStates{}
+class LoadMorePostsErrorState extends AppStates{
+  final String error;
+
+  LoadMorePostsErrorState(this.error);
+}
+

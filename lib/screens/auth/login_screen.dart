@@ -62,7 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Stack(
                 children: [
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.488,
+                    height: MediaQuery.of(context).size.height *0.65,
+                    width: double.infinity,
                     child: Image.asset(
                       'assets/images/Background-image.png',
                       fit: BoxFit.cover,
@@ -187,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             cubit.changeVisibility();
                                           },
                                           icon: Icon(
-                                            cubit.isvisible ? IconlyBold.lock : IconlyBold.unlock, 
+                                            cubit.isvisible ? IconlyBold.lock : IconlyBold.unlock,
                                             color: defaultColor,
                                           ),
                                         ),

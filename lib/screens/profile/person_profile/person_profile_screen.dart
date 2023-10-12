@@ -16,6 +16,7 @@ import '../../../models/user_model.dart';
 import '../../../widgets/reusable_widgets.dart';
 import '../../../states/app_states.dart';
 import '../../home/posts/comments/comments_screen.dart';
+import '../../view_image_screen.dart';
 
 class PersonProfileScreen extends StatefulWidget {
   PersonProfileScreen({super.key, this.userId});
@@ -49,197 +50,221 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
         AppCubit cubit = AppCubit.get(context);
 
         return Scaffold(
-          body: ConditionalBuilder(
-            condition: widget.showPost,
-            builder: (context) {
-              UserModel userModel = cubit.selectedUser!;
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.36,
-                      child: Stack(
-                        alignment: AlignmentDirectional.bottomCenter,
-                        children: [
-                          Align(
-                            alignment: AlignmentDirectional.center,
-                            child: Container(
-                              width: double.infinity,
-                              height: MediaQuery.of(context).size.height * 0.33,
-                              decoration: const BoxDecoration(
-                                color: Colors.grey,
+          body: SafeArea(
+            child: ConditionalBuilder(
+              condition: widget.showPost,
+              builder: (context) {
+                UserModel userModel = cubit.selectedUser!;
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.36,
+                        child: Stack(
+                          alignment: AlignmentDirectional.bottomCenter,
+                          children: [
+                            Align(
+                              alignment: AlignmentDirectional.center,
+                              child: Container(
+                                width: double.infinity,
+                                height: MediaQuery.of(context).size.height * 0.33,
+                                decoration: const BoxDecoration(
+                                  color: Colors.grey,
+                                ),
+                                child: userModel.cover != ''
+                                    ? Image(
+                                  image: NetworkImage('${userModel.cover}'),
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                )
+                                    : Container(),
                               ),
-                              child: userModel.cover != ''
-                                  ? Image(
-                                      image: NetworkImage('${userModel.cover}'),
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Container(),
                             ),
-                          ),
-                          Positioned(
-                            top: 0,
-                            right: 7,
-                            child: SizedBox(
-                              height: 116,
-                              child: InkWell(
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () {
-                                  cubit.logout(context);
-                                },
-                                child: Container(
-                                  margin:
-                                      const EdgeInsets.only(right: 13, top: 6),
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white,
-                                  ),
-                                  child: const Center(
-                                    child: Icon(
-                                      IconlyBold.logout,
-                                      color: Color.fromARGB(255, 228, 39, 25),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+                              child: Align(
+                                alignment: AlignmentDirectional.topStart,
+                                child: Material(
+                                  color: defaultColor,
+                                  borderRadius: BorderRadius.circular(28),
+                                  child: InkWell(
+                                    onTap: (){
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      height: 44,
+                                      width: 44,
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        lang == "en" ?
+                                        Icons.keyboard_arrow_left_rounded : Icons.keyboard_arrow_right_rounded,
+                                        color: Colors.white,
+                                        size: 35,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              width: double.infinity,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(40.72),
-                                  topRight: Radius.circular(40.72),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: CircleAvatar(
-                              radius: MediaQuery.of(context).size.width * 0.15,
-                              backgroundColor:
-                                  Theme.of(context).scaffoldBackgroundColor,
+                            Align(
+                              alignment: Alignment.bottomCenter,
                               child: Container(
-                                decoration: const BoxDecoration(),
-                                child: CircleAvatar(
-                                  backgroundColor:
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                  backgroundImage: NetworkImage(
-                                    '${userModel.image}',
+                                width: double.infinity,
+                                height: MediaQuery.of(context).size.height * 0.08,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(40.72),
+                                    topRight: Radius.circular(40.72),
                                   ),
-                                  radius:
-                                      MediaQuery.of(context).size.width * 0.14,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: CircleAvatar(
+                                radius: MediaQuery.of(context).size.width * 0.15,
+                                backgroundColor: Colors.white,
+                                child: Container(
+                                  decoration: const BoxDecoration(),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    backgroundImage: NetworkImage(
+                                      '${userModel.image}',
+                                    ),
+                                    radius:
+                                    MediaQuery.of(context).size.width * 0.14,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            height: 30,
+                            child: Align(
+                              alignment: AlignmentDirectional.center,
+                              child: Text(
+                                '${userModel.name}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
                                 ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          height: 30,
-                          child: Align(
-                            alignment: AlignmentDirectional.center,
-                            child: Text(
-                              '${userModel.name}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                    fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                                  ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 19,
-                      ),
-                      child: Column(
-                        children: [
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: 19,
+                            ),
                             child: Column(
                               children: [
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          'Year:',
-                                          style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.w700,
-                                            color:
-                                                Color.fromARGB(255, 56, 56, 56),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 12.0),
+                                  child: Column(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              const Text(
+                                                'Year:',
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color.fromARGB(
+                                                      255, 56, 56, 56),
+                                                ),
+                                              ),
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                  top: 2,
+                                                  left: 4,
+                                                ),
+                                                child: const Text(
+                                                  'Third year',
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color(0xff6C7A9C),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                            top: 2,
-                                            left: 4,
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                lang == 'en'
+                                                    ? 'Faculty:'
+                                                    : 'الكليه:',
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color.fromARGB(
+                                                      255, 56, 56, 56),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                    0.6,
+                                                padding: const EdgeInsets.only(
+                                                    left: 4),
+                                                child: Text(
+                                                  'Faculty of ${userModel.universityname}',
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color(0xff6C7A9C),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          child: const Text(
-                                            'Third year',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff6C7A9C),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          'Department:',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            color:
-                                                Color.fromARGB(255, 56, 56, 56),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.6,
-                                          padding:
-                                              const EdgeInsets.only(left: 4),
-                                          child: const Text(
-                                            'Managment Information Systems',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff6C7A9C),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                SizedBox(
+                                  height:
+                                  MediaQuery.of(context).size.height * 0.01,
+                                ),
+                                reusableElevatedButton(
+                                  label: lang == 'en'
+                                      ? 'Share Profile'
+                                      : ' مشاركة البيانات ',
+                                  fontSize: 13.4,
+                                  radius: 21.49,
+                                  shadowColor: Colors.transparent,
+                                  backColor:
+                                  const Color.fromARGB(255, 47, 90, 115),
+                                  height: 40,
+                                  function: () {
+                                    navigateTo(
+                                      context: context,
+                                      screen: const EditProfile(),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -247,170 +272,148 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.01,
                           ),
-                          reusableElevatedButton(
-                            label: lang == 'en'
-                                      ? 'Share Profile'
-                                      : ' مشاركة البيانات ',
-                            fontSize: 13.4,
-                            radius: 21.49,
-                            shadowColor: Colors.transparent,
-                            backColor:
-                                const Color.fromARGB(255, 47, 90, 115),
-                            height: 40,
-                            function: () {
-                              navigateTo(
-                                context: context,
-                                screen: const EditProfile(),
-                              );
-                            },
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 10, left: 32, right: 32),
+                            child: Text(
+                              '${userModel.bio}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromARGB(255, 119, 129, 151),
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.01,
-                    ),
-                    const Padding(
-                      padding:
-                          EdgeInsets.only(bottom: 10, left: 32, right: 32),
-                      child: Text(
-                        'My name is Kareem, I\'m a student at faculty of business English department',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromARGB(255, 119, 129, 151),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Column(
-                                children: [
-                                  Text(
-                                    lang == 'en' ? 'Posts' : 'المنشورات',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall!
-                                        .copyWith(
-                                          fontSize: 18,
-                                        ),
-                                  ),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  Container(
-                                    width: 45,
-                                    height: 3,
-                                    color: defaultColor,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  navigateTo(
-                                      context: context,
-                                      screen: PhotoScreen(
-                                          photos: AppCubit.get(context)
-                                              .selectedUserPhotos));
-                                },
-                                child: Column(
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Column(
                                   children: [
                                     Text(
-                                      lang == 'en' ? 'Photos' : 'الصور',
+                                      lang == 'en' ? 'Posts' : 'المنشورات',
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleSmall!
                                           .copyWith(
-                                            fontSize: 18,
-                                          ),
+                                        fontSize: 18,
+                                      ),
                                     ),
                                     const SizedBox(
                                       height: 3,
                                     ),
-                                    const SizedBox(
+                                    Container(
                                       width: 45,
                                       height: 3,
+                                      color: defaultColor,
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                         margin: const EdgeInsets.only(top: 29),
-                      decoration: const BoxDecoration(
-                        color: Color(0xffE6EEFA),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(43),
-                          topRight: Radius.circular(43),
-                        ),
-                      ),
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                          left: 7,
-                          right: 7,
-                        ),
-                        margin: const EdgeInsets.only(bottom: 10),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(40),
-                            topRight: Radius.circular(40),
-                          ),
-                          color: Color(0xffE6EEFA),
-                        ),
-                            child: Column(
-                              children: [
-                                ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) =>
-                                      buildMyPostItem(
-                                          AppCubit.get(context)
-                                              .selectedUserPosts[index],
-                                          context),
-                                  itemCount: AppCubit.get(context)
-                                      .selectedUserPosts
-                                      .length,
+                                const SizedBox(
+                                  width: 20,
                                 ),
-                                // ListView.builder(
-                                //   physics: const NeverScrollableScrollPhysics(),
-                                //   shrinkWrap: true,
-                                //   itemBuilder: (context, index) =>
-                                //       buildShareItem(
-                                //           AppCubit.get(context)
-                                //               .selectedUserSharedPosts,
-                                //           index,
-                                //           context),
-                                //   itemCount: AppCubit.get(context)
-                                //       .selectedUserSharedPosts
-                                //       .length,
-                                // ),
+                                InkWell(
+                                  onTap: () {
+                                    navigateTo(
+                                        context: context,
+                                        screen: PhotoScreen(
+                                            photos: AppCubit.get(context)
+                                                .selectedUserPhotos
+                                        ));
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        lang == 'en' ? 'Photos' : 'الصور',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall!
+                                            .copyWith(
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      const SizedBox(
+                                        width: 45,
+                                        height: 3,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                          Container(
+                            margin: const EdgeInsets.only(top: 29),
+                            decoration: const BoxDecoration(
+                              color: Color(0xffE6EEFA),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(43),
+                                topRight: Radius.circular(43),
+                              ),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                top: 15,
+                                left: 7,
+                                right: 7,
+                              ),
+                              margin: const EdgeInsets.only(bottom: 10),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(40),
+                                  topRight: Radius.circular(40),
+                                ),
+                                color: Color(0xffE6EEFA),
+                              ),
+                              child: Column(
+                                children: [
+                                  ListView.builder(
+                                    padding: const EdgeInsets.all(0),
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) =>
+                                        buildMyPostItem(
+                                            AppCubit.get(context)
+                                                .selectedUserPosts[index],
+                                            context),
+                                    itemCount: AppCubit.get(context)
+                                        .selectedUserPosts
+                                        .length,
+                                  ),
+                                  // ListView.builder(
+                                  //   physics: const NeverScrollableScrollPhysics(),
+                                  //   shrinkWrap: true,
+                                  //   itemBuilder: (context, index) =>
+                                  //       buildShareItem(
+                                  //           AppCubit.get(context)
+                                  //               .selectedUserSharedPosts,
+                                  //           index,
+                                  //           context),
+                                  //   itemCount: AppCubit.get(context)
+                                  //       .selectedUserSharedPosts
+                                  //       .length,
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              },
+              fallback: (context) => Center(
+                child: CircularProgressIndicator(
+                  color: defaultColor,
                 ),
-              );
-            },
-            fallback: (context) => Center(
-              child: CircularProgressIndicator(
-                color: defaultColor,
               ),
             ),
           ),
@@ -424,9 +427,9 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
       : buildSharedPostItem(model, context);
 
   Widget buildNotSharedPostItem(
-    PostModel model,
-    context,
-  ) =>
+      PostModel model,
+      context,
+      ) =>
       Container(
         decoration: const BoxDecoration(
           border: Border(
@@ -439,8 +442,8 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
         ),
         child: Card(
           shadowColor: Colors.transparent,
-            color: const Color(0xffE6EEFA),
-            clipBehavior: Clip.none,
+          color: const Color(0xffE6EEFA),
+          clipBehavior: Clip.none,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -470,6 +473,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                         }
                       },
                       child: CircleAvatar(
+                        backgroundColor: Colors.white,
                         backgroundImage: NetworkImage(
                           '${model.userImage}',
                         ),
@@ -493,7 +497,9 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                       InkWell(
                                         onTap: () {
                                           if (!isGuest) {
-                                            if (AppCubit.get(context).user!.uId !=
+                                            if (AppCubit.get(context)
+                                                .user!
+                                                .uId !=
                                                 model.userId) {
                                               navigateTo(
                                                 context: context,
@@ -507,22 +513,23 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                             }
                                           } else {
                                             navigateTo(
-                                                context: context,
-                                                screen: PersonProfileScreen(
-                                                  userId: model.userId,
-                                                ),);
+                                              context: context,
+                                              screen: PersonProfileScreen(
+                                                userId: model.userId,
+                                              ),
+                                            );
                                           }
                                         },
                                         child: Text(
                                           '${model.userName}',
                                           style: const TextStyle(
-                                              height: 1.4,
-                                              fontSize: 17.3,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w900,
-                                              fontFamily: 'Poppins',
-                                            ),
+                                            height: 1.4,
+                                            fontSize: 17.3,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w900,
+                                            fontFamily: 'Poppins',
                                           ),
+                                        ),
                                       ),
                                       const Icon(
                                         Icons.verified,
@@ -534,13 +541,13 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                   Text(
                                     '${model.date}',
                                     style: const TextStyle(
-                                        height: 1.4,
-                                        fontSize: 12,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Poppins',
-                                      ),
+                                      height: 1.4,
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Poppins',
                                     ),
+                                  ),
                                 ],
                               ),
                             ],
@@ -557,16 +564,17 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                     height: 1,
                   ),
                 ),
-                Text(
-                  '${model.text}',
-                  style: const TextStyle(
+                if (model.text!.isNotEmpty)
+                  Text(
+                    '${model.text}',
+                    style: const TextStyle(
                       fontSize: 16.4,
                       fontWeight: FontWeight.w500,
                       color: Color.fromARGB(255, 50, 50, 50),
                     ),
-                ),
-                const SizedBox(
-                  height: 10,
+                  ),
+                SizedBox(
+                  height: model.text!.isNotEmpty ? 10 : 4,
                 ),
                 if (model.image!.isNotEmpty && model.image!.length == 1)
                   Container(
@@ -599,7 +607,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                     },
                                     child: Icon(
                                       model.likes!
-                                              .any((element) => element == uId)
+                                          .any((element) => element == uId)
                                           ? IconlyBold.heart
                                           : IconlyLight.heart,
                                       size: 25.0,
@@ -656,18 +664,19 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                     onTap: () {
                                       AppCubit.get(context).savedPostsId.any(
                                               (element) =>
-                                                  element == model.postId)
-                                          ? AppCubit.get(context).removeSavedPost(
-                                              postId: model.postId!,
-                                            )
+                                          element == model.postId)
+                                          ? AppCubit.get(context)
+                                          .removeSavedPost(
+                                        postId: model.postId!,
+                                      )
                                           : AppCubit.get(context).addSavePosts(
-                                              model: model,
-                                            );
+                                        model: model,
+                                      );
                                     },
                                     child: Icon(
                                       AppCubit.get(context).savedPostsId.any(
                                               (element) =>
-                                                  element == model.postId)
+                                          element == model.postId)
                                           ? IconlyBold.bookmark
                                           : IconlyLight.bookmark,
                                       size: 24,
@@ -700,97 +709,97 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                           childAspectRatio: 1 / 1,
                           children: List.generate(
                             model.image!.length > 4 ? 4 : model.image!.length,
-                            (index1) => Container(
+                                (index1) => Container(
                               color: Colors.white,
                               child: Column(
                                 children: [
                                   Expanded(
                                     child: InkWell(
-                                      // onTap: () {
-                                      //   navigateTo(
-                                      //       context: context,
-                                      //       screen: ViewImagesScreen(
-                                      //           view: AppCubit.get(context).posts,
-                                      //           index1: index,
-                                      //           index2: index1,
-                                      //           id: AppCubit.get(context)
-                                      //               .postsId));
-                                      // },
+                                      onTap: (){
+                                        navigateTo(
+                                          context: context,
+                                          screen: ViewImagesScreen(
+                                            photos: model.image!,
+                                            selectedIndex: index1,
+                                          ),
+                                        );
+                                      },
                                       child: model.image!.length > 4
                                           ? index1 == 3
-                                              ? Stack(
-                                                  alignment: Alignment.center,
-                                                  children: [
-                                                    Container(
-                                                      width: double.infinity,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        image: DecorationImage(
-                                                          image: NetworkImage(
-                                                            model
-                                                                .image![index1],
-                                                          ),
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    ClipRRect(
-                                                      child: BackdropFilter(
-                                                        filter:
-                                                            ImageFilter.blur(
-                                                          sigmaY: 3,
-                                                          sigmaX: 3,
-                                                        ),
-                                                        child: Container(
-                                                          decoration:
-                                                              const BoxDecoration(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    76,
-                                                                    11,
-                                                                    36,
-                                                                    50),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    // ---------------EXCEEDING IMAGE NUMBER---------------
-                                                    Container(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                        horizontal: 16,
-                                                        vertical: 6,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        color: const Color
-                                                            .fromARGB(
-                                                            136, 4, 25, 47),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(23),
-                                                      ),
-                                                      child: Text(
-                                                        '${model.image!.length - 4}+',
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 25,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              : Image.network(
-                                                  model.image![index1],
-                                                  width: double.infinity,
-                                                  fit: BoxFit.cover,
-                                                )
-                                          : Image.network(
-                                              model.image![index1],
-                                              width: double.infinity,
-                                              fit: BoxFit.cover,
+                                          ? Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          // ---------------BLURED IMAGE---------------
+                                          Container(
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                  model
+                                                      .image![index1],
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
+                                          ),
+                                          ClipRRect(
+                                            child: BackdropFilter(
+                                              filter:
+                                              ImageFilter.blur(
+                                                sigmaY: 3,
+                                                sigmaX: 3,
+                                              ),
+                                              child: Container(
+                                                decoration:
+                                                const BoxDecoration(
+                                                  color:
+                                                  Color.fromARGB(
+                                                      76,
+                                                      11,
+                                                      36,
+                                                      50),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          // ---------------EXCEEDING IMAGE NUMBER---------------
+                                          Container(
+                                            padding: const EdgeInsets
+                                                .symmetric(
+                                              horizontal: 16,
+                                              vertical: 6,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: const Color
+                                                  .fromARGB(
+                                                  136, 4, 25, 47),
+                                              borderRadius:
+                                              BorderRadius
+                                                  .circular(23),
+                                            ),
+                                            child: Text(
+                                              '${model.image!.length - 4}+',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 25,
+                                                fontWeight:
+                                                FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                          : Image.network(
+                                        model.image![index1],
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      )
+                                          : Image.network(
+                                        model.image![index1],
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -815,8 +824,8 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                     },
                                     child: Icon(
                                       model.likes!.any((element) =>
-                                              element ==
-                                              AppCubit.get(context).user!.uId)
+                                      element ==
+                                          AppCubit.get(context).user!.uId)
                                           ? IconlyBold.heart
                                           : IconlyLight.heart,
                                       size: 25.0,
@@ -871,18 +880,19 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                     onTap: () {
                                       AppCubit.get(context).savedPostsId.any(
                                               (element) =>
-                                                  element == model.postId)
-                                          ? AppCubit.get(context).removeSavedPost(
-                                              postId: model.postId!,
-                                            )
+                                          element == model.postId)
+                                          ? AppCubit.get(context)
+                                          .removeSavedPost(
+                                        postId: model.postId!,
+                                      )
                                           : AppCubit.get(context).addSavePosts(
-                                              model: model,
-                                            );
+                                        model: model,
+                                      );
                                     },
                                     child: Icon(
                                       AppCubit.get(context).savedPostsId.any(
                                               (element) =>
-                                                  element == model.postId)
+                                          element == model.postId)
                                           ? IconlyBold.bookmark
                                           : IconlyLight.bookmark,
                                       size: 24,
@@ -917,8 +927,8 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                               },
                               child: Icon(
                                 model.likes!.any((element) =>
-                                        element ==
-                                        AppCubit.get(context).user!.uId)
+                                element ==
+                                    AppCubit.get(context).user!.uId)
                                     ? IconlyBold.heart
                                     : IconlyLight.heart,
                                 size: 25.0,
@@ -977,20 +987,18 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                           if (isGuest == false)
                             InkWell(
                               onTap: () {
-                                AppCubit.get(context)
-                                        .savedPostsId
-                                        .any((element) => element == model.postId)
+                                AppCubit.get(context).savedPostsId.any(
+                                        (element) => element == model.postId)
                                     ? AppCubit.get(context).removeSavedPost(
-                                        postId: model.postId!,
-                                      )
+                                  postId: model.postId!,
+                                )
                                     : AppCubit.get(context).addSavePosts(
-                                        model: model,
-                                      );
+                                  model: model,
+                                );
                               },
                               child: Icon(
-                                AppCubit.get(context)
-                                        .savedPostsId
-                                        .any((element) => element == model.postId)
+                                AppCubit.get(context).savedPostsId.any(
+                                        (element) => element == model.postId)
                                     ? IconlyBold.bookmark
                                     : IconlyLight.bookmark,
                                 size: 24,
@@ -1008,9 +1016,9 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
       );
 
   Widget buildSharedPostItem(
-    SharePostModel model,
-    context,
-  ) =>
+      SharePostModel model,
+      context,
+      ) =>
       Container(
         decoration: const BoxDecoration(
           border: Border(
@@ -1047,13 +1055,15 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                           }
                         } else {
                           navigateTo(
-                              context: context,
-                              screen: PersonProfileScreen(
-                                userId: model.shareUserId,
-                              ));
+                            context: context,
+                            screen: PersonProfileScreen(
+                              userId: model.shareUserId,
+                            ),
+                          );
                         }
                       },
                       child: CircleAvatar(
+                        backgroundColor: Colors.white,
                         backgroundImage: NetworkImage(
                           '${model.shareUserImage}',
                         ),
@@ -1140,20 +1150,25 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                     height: 1,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                  child: Text(
-                    '${model.sharePostText}',
-                    style: const TextStyle(
-                      fontSize: 16.4,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromARGB(255, 50, 50, 50),
+                if (model.sharePostText!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                    child: Text(
+                      '${model.sharePostText}',
+                      style: const TextStyle(
+                        fontSize: 16.4,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromARGB(255, 50, 50, 50),
+                      ),
                     ),
                   ),
-                ),
-                if (model.sharePostText == "")
+                if (model.sharePostText!.isNotEmpty)
                   const SizedBox(
-                    height: 7,
+                    height: 10,
+                  ),
+                if (model.sharePostText!.isEmpty)
+                  const SizedBox(
+                    height: 4,
                   ),
                 Container(
                   padding: const EdgeInsets.all(9),
@@ -1183,14 +1198,16 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                 }
                               } else {
                                 navigateTo(
-                                    context: context,
-                                    screen: PersonProfileScreen(
-                                      userId: model.postModel!.userId,
-                                    ),);
+                                  context: context,
+                                  screen: PersonProfileScreen(
+                                    userId: model.postModel!.userId,
+                                  ),
+                                );
                               }
                             },
                             // ------------------SHARED USER PROFILE PICTURE------------------
                             child: CircleAvatar(
+                              backgroundColor: Colors.white,
                               backgroundImage: NetworkImage(
                                 '${model.postModel!.userImage}',
                               ),
@@ -1207,19 +1224,24 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                 Row(
                                   children: [
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           children: [
                                             InkWell(
                                               onTap: () {
                                                 if (!isGuest) {
-                                                  if (AppCubit.get(context).user!.uId !=
+                                                  if (AppCubit.get(context)
+                                                      .user!
+                                                      .uId !=
                                                       model.postModel!.userId) {
                                                     navigateTo(
                                                       context: context,
-                                                      screen: PersonProfileScreen(
-                                                        userId: model.postModel!.userId,
+                                                      screen:
+                                                      PersonProfileScreen(
+                                                        userId: model
+                                                            .postModel!.userId,
                                                       ),
                                                     );
                                                   } else {
@@ -1228,10 +1250,12 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                                   }
                                                 } else {
                                                   navigateTo(
-                                                      context: context,
-                                                      screen: PersonProfileScreen(
-                                                        userId: model.postModel!.userId,
-                                                      ),);
+                                                    context: context,
+                                                    screen: PersonProfileScreen(
+                                                      userId: model
+                                                          .postModel!.userId,
+                                                    ),
+                                                  );
                                                 }
                                               },
                                               child: Text(
@@ -1253,7 +1277,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                           ],
                                         ),
                                         Text(
-                                          '${model.postModel!.date}',
+                                          'Shared by ${model.shareUserName}.',
                                           style: const TextStyle(
                                             height: 1.4,
                                             fontSize: 11,
@@ -1278,396 +1302,283 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                           height: 1,
                         ),
                       ),
-                      Text(
-                        '${model.postModel!.text}',
-                        style: const TextStyle(
-                          fontSize: 15.6,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromARGB(255, 50, 50, 50),
+                      if (model.postModel!.text!.isNotEmpty)
+                        Text(
+                          '${model.postModel!.text}',
+                          style: const TextStyle(
+                            fontSize: 15.6,
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromARGB(255, 50, 50, 50),
+                          ),
                         ),
-                      ),
+                      if (model.postModel!.text!.isNotEmpty)
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      if (model.postModel!.text!.isEmpty)
+                        const SizedBox(
+                          height: 4,
+                        ),
+                      // ----------------SHARED POST CONTAINER----------------
+                      if (model.postModel!.image!.isNotEmpty &&
+                          model.postModel!.image!.length == 1)
+                        Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Image.network(
+                            model.postModel!.image![0],
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      if (model.postModel!.image!.isNotEmpty &&
+                          model.postModel!.image!.length > 1)
+                        Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Stack(
+                            alignment: AlignmentDirectional.bottomCenter,
+                            children: [
+                              GridView.count(
+                                physics: const BouncingScrollPhysics(),
+                                padding: const EdgeInsets.all(0),
+                                shrinkWrap: true,
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 10,
+                                crossAxisSpacing: 10,
+                                childAspectRatio: 1 / 1,
+                                children: List.generate(
+                                  model.postModel!.image!.length > 4
+                                      ? 4
+                                      : model.postModel!.image!.length,
+                                      (index1) => Container(
+                                    color: Colors.white,
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: InkWell(
+                                            onTap: (){
+                                              navigateTo(
+                                                context: context,
+                                                screen: ViewImagesScreen(
+                                                  photos: model.postModel!.image!,
+                                                  selectedIndex: index1,
+                                                ),
+                                              );
+                                            },
+                                            child: model.postModel!.image!
+                                                .length >
+                                                4
+                                                ? index1 == 3
+                                                ? Stack(
+                                              alignment:
+                                              Alignment.center,
+                                              children: [
+                                                // ---------------BLURED IMAGE---------------
+                                                Container(
+                                                  width:
+                                                  double.infinity,
+                                                  decoration:
+                                                  BoxDecoration(
+                                                    color:
+                                                    Colors.white,
+                                                    image:
+                                                    DecorationImage(
+                                                      image:
+                                                      NetworkImage(
+                                                        model.postModel!
+                                                            .image![
+                                                        index1],
+                                                      ),
+                                                      fit: BoxFit
+                                                          .cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                ClipRRect(
+                                                  child:
+                                                  BackdropFilter(
+                                                    filter:
+                                                    ImageFilter
+                                                        .blur(
+                                                      sigmaY: 3,
+                                                      sigmaX: 3,
+                                                    ),
+                                                    child: Container(
+                                                      decoration:
+                                                      const BoxDecoration(
+                                                        color: Color
+                                                            .fromARGB(
+                                                          76,
+                                                          11,
+                                                          36,
+                                                          50,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                // ---------------EXCEEDING IMAGE NUMBER---------------
+                                                Container(
+                                                  padding:
+                                                  const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 6,
+                                                  ),
+                                                  decoration:
+                                                  BoxDecoration(
+                                                    color: const Color
+                                                        .fromARGB(136,
+                                                        4, 25, 47),
+                                                    borderRadius:
+                                                    BorderRadius
+                                                        .circular(
+                                                        23),
+                                                  ),
+                                                  child: Text(
+                                                    '${model.postModel!.image!.length - 4}+',
+                                                    style:
+                                                    const TextStyle(
+                                                      color: Colors
+                                                          .white,
+                                                      fontSize: 25,
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                                : Image.network(
+                                              model.postModel!
+                                                  .image![index1],
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                            )
+                                                : Image.network(
+                                              model.postModel!
+                                                  .image![index1],
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                     ],
                   ),
                 ),
-                if (model.postModel!.image!.isNotEmpty &&
-                    model.postModel!.image!.length == 1)
-                  Container(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Stack(
-                      alignment: AlignmentDirectional.bottomCenter,
-                      children: [
-                        Image.network(
-                          model.postModel!.image![0],
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
-                        Container(
-                          width: double.infinity,
-                          color: Colors.black.withOpacity(0.6),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                if (isGuest == false)
-                                  InkWell(
-                                    onTap: () {
-                                      AppCubit.get(context).updatePostLikes(
-                                        model,
-                                      );
-                                    },
-                                    child: Icon(
-                                      model.likes.any((element) => element == uId)
-                                          ? Icons.favorite
-                                          : Icons.favorite_border_outlined,
-                                      size: 18.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                if (isGuest == false) const SizedBox(width: 5),
-                                if (isGuest == false)
-                                  Text(
-                                    '${model.likes.length}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                if (isGuest == false) const SizedBox(width: 20),
-                                InkWell(
-                                  onTap: () {
-                                    AppCubit.get(context)
-                                        .getComments(postId: model.postId!);
-                                    navigateTo(
-                                      context: context,
-                                      screen: CommentsScreen(
-                                        postId: model.postId!,
-                                      ),
-                                    );
-                                  },
-                                  child: const Icon(
-                                    Icons.comment_outlined,
-                                    size: 18,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const Spacer(),
-                                if (isGuest == false)
-                                  InkWell(
-                                    onTap: () {
-                                      _showSharePostSheet(
-                                        context: context,
-                                        model: model.postModel!,
-                                      );
-                                    },
-                                    child: const Icon(
-                                      Icons.share_outlined,
-                                      size: 18,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                if (isGuest == false)
-                                  const SizedBox(
-                                    width: 20,
-                                  ),
-                                if (isGuest == false)
-                                  InkWell(
-                                    onTap: () {
-                                      AppCubit.get(context).savedPostsId.any(
-                                              (element) =>
-                                                  element == model.postId)
-                                          ? AppCubit.get(context).removeSavedPost(
-                                              postId: model.postId!,
-                                            )
-                                          : AppCubit.get(context).addSavePosts(
-                                              model: model,
-                                            );
-                                    },
-                                    child: Icon(
-                                      AppCubit.get(context).savedPostsId.any(
-                                              (element) =>
-                                                  element == model.postId)
-                                          ? Icons.bookmark
-                                          : Icons.bookmark_outline,
-                                      size: 18.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                if (model.postModel!.image!.isNotEmpty &&
-                    model.postModel!.image!.length > 1)
-                  Container(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Stack(
-                      alignment: AlignmentDirectional.bottomCenter,
-                      children: [
-                        GridView.count(
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                          childAspectRatio: 1 / 1,
-                          children: List.generate(
-                            model.postModel!.image!.length > 4
-                                ? 4
-                                : model.postModel!.image!.length,
-                            (index1) => Container(
-                              color: Colors.white,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: InkWell(
-                                      // onTap: () {
-                                      //   navigateTo(
-                                      //       context: context,
-                                      //       screen: ViewImagesScreen(
-                                      //           view: AppCubit.get(context).posts,
-                                      //           index1: index,
-                                      //           index2: index1,
-                                      //           id: AppCubit.get(context)
-                                      //               .postsId));
-                                      // },
-                                      child: model.postModel!.image!.length > 4
-                                          ? index1 == 3
-                                              ? Stack(
-                                                  alignment: Alignment.center,
-                                                  children: [
-                                                    Image.network(
-                                                      model.postModel!
-                                                          .image![index1],
-                                                      width: double.infinity,
-                                                    ),
-                                                    Text(
-                                                      '${model.postModel!.image!.length - 4}+',
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 25,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              : Image.network(
-                                                  model.postModel!.image![index1],
-                                                  width: double.infinity,
-                                                )
-                                          : Image.network(
-                                              model.postModel!.image![index1],
-                                              width: double.infinity,
-                                            ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          color: Colors.black.withOpacity(0.6),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                if (isGuest == false)
-                                  InkWell(
-                                    onTap: () {
-                                      AppCubit.get(context).updatePostLikes(
-                                        model,
-                                      );
-                                    },
-                                    child: Icon(
-                                      model.likes.any((element) =>
-                                              element ==
-                                              AppCubit.get(context).user!.uId)
-                                          ? Icons.favorite
-                                          : Icons.favorite_border_outlined,
-                                      size: 18.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                if (isGuest == false) const SizedBox(width: 5),
-                                if (isGuest == false)
-                                  Text(
-                                    '${model.likes.length}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                if (isGuest == false) const SizedBox(width: 20),
-                                InkWell(
-                                  onTap: () {
-                                    AppCubit.get(context)
-                                        .getComments(postId: model.postId!);
-                                    navigateTo(
-                                      context: context,
-                                      screen: CommentsScreen(
-                                        postId: model.postId!,
-                                      ),
-                                    );
-                                  },
-                                  child: const Icon(
-                                    Icons.comment_outlined,
-                                    size: 18,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const Spacer(),
-                                if (isGuest == false)
-                                  InkWell(
-                                    onTap: () {
-                                      _showSharePostSheet(
-                                        context: context,
-                                        model: model.postModel!,
-                                      );
-                                    },
-                                    child: const Icon(
-                                      Icons.share_outlined,
-                                      size: 18,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                if (isGuest == false) const SizedBox(width: 20),
-                                if (isGuest == false)
-                                  InkWell(
-                                    onTap: () {
-                                      AppCubit.get(context).savedPostsId.any(
-                                              (element) =>
-                                                  element == model.postId)
-                                          ? AppCubit.get(context).removeSavedPost(
-                                              postId: model.postId!,
-                                            )
-                                          : AppCubit.get(context).addSavePosts(
-                                              model: model,
-                                            );
-                                    },
-                                    child: Icon(
-                                      AppCubit.get(context).savedPostsId.any(
-                                              (element) =>
-                                                  element == model.postId)
-                                          ? Icons.bookmark
-                                          : Icons.bookmark_outline,
-                                      size: 18.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                if (model.postModel!.image!.isEmpty)
-                  Container(
-                    width: double.infinity,
+                // --------------LIKES, COMMENTS, SHARE & SAVE (for shared posts)--------------
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 7),
+                  decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.6),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          if (isGuest == false)
-                            InkWell(
-                              onTap: () {
-                                AppCubit.get(context).updatePostLikes(
-                                  model,
-                                );
-                              },
-                              child: Icon(
-                                model.likes.any((element) => element == uId)
-                                    ? Icons.favorite
-                                    : Icons.favorite_border_outlined,
-                                size: 18.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          if (isGuest == false)
-                            const SizedBox(
-                              width: 5,
-                            ),
-                          if (isGuest == false)
-                            Text(
-                              '${model.likes.length}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                          if (isGuest == false)
-                            const SizedBox(
-                              width: 20,
-                            ),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        if (isGuest == false)
                           InkWell(
                             onTap: () {
-                              AppCubit.get(context)
-                                  .getComments(postId: model.postId!);
-                              navigateTo(
+                              AppCubit.get(context).updatePostLikes(
+                                model,
+                              );
+                            },
+                            child: Icon(
+                              model.likes.any((element) =>
+                              element ==
+                                  AppCubit.get(context).user!.uId)
+                                  ? IconlyBold.heart
+                                  : IconlyLight.heart,
+                              size: 25.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        if (isGuest == false) const SizedBox(width: 5),
+                        if (isGuest == false)
+                          Text(
+                            '${model.likes.length}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                            ),
+                          ),
+                        if (isGuest == false) const SizedBox(width: 30),
+                        InkWell(
+                          onTap: () {
+                            AppCubit.get(context)
+                                .getComments(postId: model.postId!);
+                            navigateTo(
+                              context: context,
+                              screen: CommentsScreen(
+                                postId: model.postId!,
+                              ),
+                            );
+                          },
+                          child: const Icon(
+                            IconlyLight.chat,
+                            size: 25,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const Spacer(),
+                        if (isGuest == false)
+                          InkWell(
+                            onTap: () {
+                              _showSharePostSheet(
                                 context: context,
-                                screen: CommentsScreen(
-                                  postId: model.postId!,
-                                ),
+                                model: model.postModel!,
                               );
                             },
                             child: const Icon(
-                              Icons.comment_outlined,
-                              size: 18,
+                              IconlyBold.send,
+                              size: 24,
                               color: Colors.white,
                             ),
                           ),
-                          const Spacer(),
-                          if (isGuest == false)
-                            InkWell(
-                              onTap: () {
-                                _showSharePostSheet(
-                                  context: context,
-                                  model: model.postModel!,
-                                );
-                              },
-                              child: const Icon(
-                                Icons.share_outlined,
-                                size: 18,
-                                color: Colors.white,
-                              ),
+                        if (isGuest == false) const SizedBox(width: 30),
+                        if (isGuest == false)
+                          InkWell(
+                            onTap: () {
+                              AppCubit.get(context)
+                                  .savedPostsId
+                                  .any((element) => element == model.postId)
+                                  ? AppCubit.get(context).removeSavedPost(
+                                postId: model.postId!,
+                              )
+                                  : AppCubit.get(context).addSavePosts(
+                                model: model,
+                              );
+                            },
+                            child: Icon(
+                              AppCubit.get(context)
+                                  .savedPostsId
+                                  .any((element) => element == model.postId)
+                                  ? IconlyBold.bookmark
+                                  : IconlyLight.bookmark,
+                              size: 24,
+                              color: Colors.white,
                             ),
-                          if (isGuest == false) const SizedBox(width: 20),
-                          if (isGuest == false)
-                            InkWell(
-                              onTap: () {
-                                AppCubit.get(context)
-                                        .savedPostsId
-                                        .any((element) => element == model.postId)
-                                    ? AppCubit.get(context).removeSavedPost(
-                                        postId: model.postId!,
-                                      )
-                                    : AppCubit.get(context).addSavePosts(
-                                        model: model,
-                                      );
-                              },
-                              child: Icon(
-                                AppCubit.get(context)
-                                        .savedPostsId
-                                        .any((element) => element == model.postId)
-                                    ? Icons.bookmark
-                                    : Icons.bookmark_outline,
-                                size: 18.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                        ],
-                      ),
+                          ),
+                      ],
                     ),
                   ),
+                ),
               ],
             ),
           ),
@@ -1698,6 +1609,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       CircleAvatar(
+                        backgroundColor: Colors.white,
                         backgroundImage: NetworkImage(
                           AppCubit.get(context).user!.image!,
                         ),

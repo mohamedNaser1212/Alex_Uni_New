@@ -96,17 +96,19 @@ Widget buildNewsItem({
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Expanded(
-                              flex: 4,
-                              child: Text(
-                                model.title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                              flex: 3,
+
+                                child: Text(
+                                  model.title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
+
                             ),
                             const SizedBox(
                               width: 5,

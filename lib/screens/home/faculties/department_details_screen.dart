@@ -1,7 +1,6 @@
 import 'package:alex_uni_new/constants/constants.dart';
 import 'package:alex_uni_new/models/department_model.dart';
 import 'package:flutter/material.dart';
-import 'package:iconly/iconly.dart';
 
 class DepartmentDetailsScreen extends StatefulWidget {
   const DepartmentDetailsScreen({super.key, required this.departmentModel});
@@ -63,62 +62,61 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
         index < widget.departmentModel.sectionImages.length - 1;
 
     return Scaffold(
-      appBar: AppBar(
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(2.0),
-
-          child: Row(
+      appBar: PreferredSize(
+        preferredSize: Size(
+          double.infinity,
+          widget.departmentModel.name!.length > 32 ||
+              widget.departmentModel.arabicName!.length > 32
+              ? 63
+              : 50,
+        ),
+        child: AppBar(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.keyboard_arrow_right,
-                  color: Colors.black,
-                  size: 32,
+              Text(
+                lang == 'en'
+                    ? 'Degree: ${widget.departmentModel.degree!}'
+                    : 'الدرجة العلمية: ${widget.departmentModel.arabicDegree!}',
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
                 ),
               ),
-              Column(
-                children: [
-                  Text(
-                    lang == 'en'
-                        ? 'Degree: ${widget.departmentModel.degree!}'
-                        : 'الدرجة العلمية: ${widget.departmentModel.arabicDegree!}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  lang == 'en'
+                      ? widget.departmentModel.name!
+                      : widget.departmentModel.arabicName!,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: widget.departmentModel.name!.length > 17 ||
+                      widget.departmentModel.arabicName!.length > 17
+                      ? 2
+                      : 1,
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w900,
+                    color: defaultColor,
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.75,
-                    child: Center(
-                      child: Text(
-                        lang == 'en'
-                            ? widget.departmentModel.name!
-                            : widget.departmentModel.arabicName!,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          color: defaultColor,
-                          overflow: TextOverflow.ellipsis,
-
-                        ),
-                        maxLines: 1,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
-        ),
-        leading: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              IconlyBold.arrow_right,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              lang == 'en'
+                  ? Icons.keyboard_arrow_left
+                  : Icons.keyboard_arrow_right,
               color: Colors.black,
-            )),
+              size: 32,
+            ),
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -147,7 +145,7 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   color:
-                                      const Color(0xff38455e).withOpacity(0.9),
+                                  const Color(0xff38455e).withOpacity(0.9),
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 child: IconButton(
@@ -169,7 +167,7 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   color:
-                                      const Color(0xff38455e).withOpacity(0.9),
+                                  const Color(0xff38455e).withOpacity(0.9),
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 child: IconButton(
@@ -247,9 +245,9 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                             Text(
                               lang == 'en'
                                   ? widget.departmentModel
-                                      .sectionDescriptions[index]!
+                                  .sectionDescriptions[index]!
                                   : widget.departmentModel
-                                      .arabicSectionDescriptions[index]!,
+                                  .arabicSectionDescriptions[index]!,
                               style: const TextStyle(
                                 fontSize: 16.0,
                                 height: 1.5,
@@ -492,27 +490,27 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
 //     );
 //   }
 //
-// //   Widget buildAdminItem({
-// //     required BuildContext context,
-// //     required AdminModel admin,
-// // })=>Row(
-// //     children: [
-// //       Container(
-// //         width: 12,
-// //         height: 12,
-// //         decoration: BoxDecoration(
-// //           color: admin.isAvailable! ? Colors.green : Colors.red,
-// //           shape: BoxShape.circle,
-// //         ),
-// //       ),
-// //       SizedBox(width: 10,),
-// //       Text('${admin.name}',),
-// //       Spacer(),
-// //       IconButton(onPressed: (){}, icon: Icon(Icons.call),),
-// //       IconButton(onPressed: (){}, icon: Icon(Icons.chat_outlined),),
-// //     ],
-// //   );
-// //
+//   Widget buildAdminItem({
+//     required BuildContext context,
+//     required AdminModel admin,
+// })=>Row(
+//     children: [
+//       Container(
+//         width: 12,
+//         height: 12,
+//         decoration: BoxDecoration(
+//           color: admin.isAvailable! ? Colors.green : Colors.red,
+//           shape: BoxShape.circle,
+//         ),
+//       ),
+//       SizedBox(width: 10,),
+//       Text('${admin.name}',),
+//       Spacer(),
+//       IconButton(onPressed: (){}, icon: Icon(Icons.call),),
+//       IconButton(onPressed: (){}, icon: Icon(Icons.chat_outlined),),
+//     ],
+//   );
+//
 //
 //
 // }

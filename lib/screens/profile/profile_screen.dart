@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:alex_uni_new/constants/constants.dart';
+import 'package:alex_uni_new/constants/strings.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/widgets/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/drawer/settings/edit_screen.dart';
@@ -14,6 +15,7 @@ import '../../models/posts/post_model.dart';
 import '../../models/posts/shared_post_model.dart';
 import '../../models/user_model.dart';
 import '../home/posts/comments/comments_screen.dart';
+import '../view_image_screen.dart';
 import 'person_profile/person_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -58,10 +60,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           child: userModel.cover != ''
                               ? Image(
-                                  image: NetworkImage('${userModel.cover}'),
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                )
+                            image: NetworkImage('${userModel.cover}'),
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          )
                               : Container(),
                         ),
                       ),
@@ -74,7 +76,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             splashColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () {
-                              cubit.logout(context);
+                              cubit.customDialog(
+                                title: lang == "en"
+                                    ? customDialogTitle
+                                    : customDialogTitleArabic,
+                                desc1: lang == "en"
+                                    ? customDialogLeaveDesc
+                                    : customDialogLeaveDescArabic,
+                                hasDesc2: false,
+                                crossAxis: CrossAxisAlignment.center,
+                                leftBtnText: lang == "en"
+                                    ? customDialogCancelBtn
+                                    : customDialogCancelBtnArabic,
+                                rightBtnText: lang == "en"
+                                    ? customDialogLogoutBtn
+                                    : customDialogLogoutBtnArabic,
+                                leftBtn: () {
+                                  Navigator.pop(context);
+                                },
+                                rightBtn: () {
+                                  cubit.logout(context);
+                                },
+                                context: context,
+                              );
                             },
                             child: Container(
                               margin: const EdgeInsets.only(right: 13, top: 6),
@@ -111,13 +135,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: CircleAvatar(
                           radius: MediaQuery.of(context).size.width * 0.15,
-                          backgroundColor:
-                              Theme.of(context).scaffoldBackgroundColor,
+                          backgroundColor: Colors.white,
                           child: Container(
                             decoration: const BoxDecoration(),
                             child: CircleAvatar(
-                              backgroundColor:
-                                  Theme.of(context).scaffoldBackgroundColor,
+                              backgroundColor: Colors.white,
                               backgroundImage: NetworkImage(
                                 '${userModel.image}',
                               ),
@@ -161,22 +183,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   children: [
                                     Row(
                                       children: [
-                                        const Text(
-                                          'Year:',
+                                        Text(
+                                          lang=='en' ? 'Faculty:':'الكليه:',
                                           style: TextStyle(
-                                            fontSize: 17,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.w700,
-                                            color:
-                                                Color.fromARGB(255, 56, 56, 56),
+                                            color: Color.fromARGB(
+                                                255, 56, 56, 56),
                                           ),
                                         ),
                                         Container(
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width *
+                                              0.6,
                                           padding: const EdgeInsets.only(
-                                            top: 2,
-                                            left: 4,
-                                          ),
-                                          child: const Text(
-                                            'Third year',
+                                              left: 4),
+                                          child:  Text(
+                                            'Faculty of ${userModel.universityname}',
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
@@ -186,32 +211,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                       ],
                                     ),
+
                                   ],
                                 ),
                                 Column(
                                   children: [
                                     Row(
                                       children: [
-                                        const Text(
-                                          'Department:',
-                                          style: TextStyle(
-                                            fontSize: 16,
+                                        Text(
+                                          lang=='en'?'Country:':'البلد:',
+                                          style:const TextStyle(
+                                            fontSize: 17,
                                             fontWeight: FontWeight.w700,
                                             color:
-                                                Color.fromARGB(255, 56, 56, 56),
+                                            Color.fromARGB(255, 56, 56, 56),
                                           ),
                                         ),
                                         Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.6,
-                                          padding:
-                                              const EdgeInsets.only(left: 4),
-                                          child: const Text(
-                                            'Managment Information Systems',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
+                                          padding: const EdgeInsets.only(
+                                            top: 2,
+                                            left: 4,
+                                          ),
+                                          child:  Text(
+                                            '${userModel.country}',
+                                            style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
                                               color: Color(0xff6C7A9C),
@@ -240,7 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   radius: 21.49,
                                   shadowColor: Colors.transparent,
                                   backColor:
-                                      const Color.fromARGB(255, 47, 90, 115),
+                                  const Color.fromARGB(255, 47, 90, 115),
                                   height: 40,
                                   function: () {
                                     navigateTo(
@@ -262,9 +285,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   radius: 21.49,
                                   shadowColor: Colors.transparent,
                                   textColor:
-                                      const Color.fromARGB(255, 36, 59, 72),
+                                  const Color.fromARGB(255, 36, 59, 72),
                                   backColor:
-                                      const Color.fromARGB(255, 220, 234, 255),
+                                  const Color.fromARGB(255, 220, 234, 255),
                                   height: 40,
                                   function: () {},
                                 ),
@@ -277,13 +300,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.01,
                     ),
-                    const Padding(
+
+                     Padding(
                       padding:
-                          EdgeInsets.only(bottom: 19.0, left: 32, right: 32),
+                      const EdgeInsets.only(bottom: 19.0, left: 32, right: 32),
                       child: Text(
-                        'My name is Kareem, I\'m a student at faculty of business English department',
+                        '${userModel.bio}',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style:const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Color.fromARGB(255, 119, 129, 151),
@@ -304,8 +328,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   .textTheme
                                   .titleSmall!
                                   .copyWith(
-                                    fontSize: 18,
-                                  ),
+                                fontSize: 18,
+                              ),
                             ),
                             const SizedBox(
                               height: 3,
@@ -321,8 +345,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: () {
                             navigateTo(
                               context: context,
-                              screen: const PhotoScreen(
-                                photos: [],
+                              screen:  PhotoScreen(
+                                photos:AppCubit.get(context).myphotos,
                               ),
                             );
                           },
@@ -334,8 +358,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     .textTheme
                                     .titleSmall!
                                     .copyWith(
-                                      fontSize: 18,
-                                    ),
+                                  fontSize: 18,
+                                ),
                               ),
                               const SizedBox(
                                 height: 3,
@@ -363,8 +387,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     .textTheme
                                     .titleSmall!
                                     .copyWith(
-                                      fontSize: 18,
-                                    ),
+                                  fontSize: 18,
+                                ),
                               ),
                               const SizedBox(
                                 height: 3,
@@ -435,17 +459,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget buildMyPostItem(
-    model,
-    context,
-  ) =>
+      model,
+      context,
+      ) =>
       model is PostModel
           ? buildNotSharedPostItem(model, context)
           : buildSharedPostItem(model, context);
 
   Widget buildNotSharedPostItem(
-    PostModel model,
-    context,
-  ) =>
+      PostModel model,
+      context,
+      ) =>
       Container(
         decoration: const BoxDecoration(
           border: Border(
@@ -492,6 +516,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                         },
                         child: CircleAvatar(
+                          backgroundColor: Colors.white,
                           backgroundImage: NetworkImage(
                             '${model.userImage}',
                           ),
@@ -516,8 +541,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           onTap: () {
                                             if (!isGuest) {
                                               if (AppCubit.get(context)
-                                                      .user!
-                                                      .uId !=
+                                                  .user!
+                                                  .uId !=
                                                   model.userId) {
                                                 navigateTo(
                                                   context: context,
@@ -595,19 +620,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 1,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(
-                    '${model.text}',
-                    style: const TextStyle(
-                      fontSize: 16.4,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromARGB(255, 50, 50, 50),
+                if (model.text!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      '${model.text}',
+                      style: const TextStyle(
+                        fontSize: 16.4,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromARGB(255, 50, 50, 50),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
+                SizedBox(
+                  height: model.text!.isNotEmpty ? 10 : 4,
                 ),
                 if (model.image!.isNotEmpty && model.image!.length == 1)
                   Container(
@@ -640,7 +666,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     },
                                     child: Icon(
                                       model.likes!
-                                              .any((element) => element == uId)
+                                          .any((element) => element == uId)
                                           ? IconlyBold.heart
                                           : IconlyLight.heart,
                                       size: 25.0,
@@ -698,19 +724,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     onTap: () {
                                       AppCubit.get(context).savedPostsId.any(
                                               (element) =>
-                                                  element == model.postId)
+                                          element == model.postId)
                                           ? AppCubit.get(context)
-                                              .removeSavedPost(
-                                              postId: model.postId!,
-                                            )
+                                          .removeSavedPost(
+                                        postId: model.postId!,
+                                      )
                                           : AppCubit.get(context).addSavePosts(
-                                              model: model,
-                                            );
+                                        model: model,
+                                      );
                                     },
                                     child: Icon(
                                       AppCubit.get(context).savedPostsId.any(
                                               (element) =>
-                                                  element == model.postId)
+                                          element == model.postId)
                                           ? IconlyBold.bookmark
                                           : IconlyLight.bookmark,
                                       size: 24,
@@ -743,98 +769,114 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           childAspectRatio: 1 / 1,
                           children: List.generate(
                             model.image!.length > 4 ? 4 : model.image!.length,
-                            (index1) => Container(
+                                (index1) => Container(
                               color: Colors.white,
                               child: Column(
                                 children: [
                                   Expanded(
                                     child: InkWell(
-                                      // onTap: () {
-                                      //   navigateTo(
-                                      //       context: context,
-                                      //       screen: ViewImagesScreen(
-                                      //           view: AppCubit.get(context).posts,
-                                      //           index1: index,
-                                      //           index2: index1,
-                                      //           id: AppCubit.get(context)
-                                      //               .postsId));
-                                      // },
+                                      onTap: () {
+                                        navigateTo(
+                                          context: context,
+                                          screen: ViewImagesScreen(
+
+                                            photos: model.image!,
+                                            selectedIndex: index1,
+
+
+                                          ),
+                                        );
+                                      },
                                       child: model.image!.length > 4
                                           ? index1 == 3
-                                              ? Stack(
-                                                  alignment: Alignment.center,
-                                                  children: [
-                                                    // ---------------BLURED IMAGE---------------
-                                                    Container(
-                                                      width: double.infinity,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        image: DecorationImage(
-                                                          image: NetworkImage(
-                                                            model
-                                                                .image![index1],
-                                                          ),
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    ClipRRect(
-                                                      child: BackdropFilter(
-                                                        filter:
-                                                            ImageFilter.blur(
-                                                          sigmaY: 3,
-                                                          sigmaX: 3,
-                                                        ),
-                                                        child: Container(
-                                                          decoration:
-                                                              const BoxDecoration(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    76,
-                                                                    11,
-                                                                    36,
-                                                                    50),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    // ---------------EXCEEDING IMAGE NUMBER---------------
-                                                    Container(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                        horizontal: 16,
-                                                        vertical: 6,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        color: const Color
-                                                            .fromARGB(
-                                                            136, 4, 25, 47),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(23),
-                                                      ),
-                                                      child: Text(
-                                                        '${model.image!.length - 4}+',
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 25,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              : Image.network(
-                                                  model.image![index1],
-                                                  width: double.infinity,
-                                                  fit: BoxFit.cover,
-                                                )
-                                          : Image.network(
-                                              model.image![index1],
+                                          ? Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          // ---------------BLURED IMAGE---------------
+                                          InkWell(
+                                            onTap: () {
+                                              navigateTo(
+                                                context: context,
+                                                screen: ViewImagesScreen(
+
+                                                  photos: model.image!,
+                                                  selectedIndex: index1,
+
+
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
                                               width: double.infinity,
-                                              fit: BoxFit.cover,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                image: DecorationImage(
+                                                  image: NetworkImage(
+                                                    model
+                                                        .image![index1],
+                                                  ),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
                                             ),
+                                          ),
+                                          ClipRRect(
+                                            child: BackdropFilter(
+                                              filter:
+                                              ImageFilter.blur(
+                                                sigmaY: 3,
+                                                sigmaX: 3,
+                                              ),
+                                              child: Container(
+                                                decoration:
+                                                const BoxDecoration(
+                                                  color:
+                                                  Color.fromARGB(
+                                                      76,
+                                                      11,
+                                                      36,
+                                                      50),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          // ---------------EXCEEDING IMAGE NUMBER---------------
+                                          Container(
+                                            padding: const EdgeInsets
+                                                .symmetric(
+                                              horizontal: 16,
+                                              vertical: 6,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: const Color
+                                                  .fromARGB(
+                                                  136, 4, 25, 47),
+                                              borderRadius:
+                                              BorderRadius
+                                                  .circular(23),
+                                            ),
+                                            child: Text(
+                                              '${model.image!.length - 4}+',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 25,
+                                                fontWeight:
+                                                FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                          : Image.network(
+                                        model.image![index1],
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      )
+                                          : Image.network(
+                                        model.image![index1],
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -859,8 +901,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     },
                                     child: Icon(
                                       model.likes!.any((element) =>
-                                              element ==
-                                              AppCubit.get(context).user!.uId)
+                                      element ==
+                                          AppCubit.get(context).user!.uId)
                                           ? IconlyBold.heart
                                           : IconlyLight.heart,
                                       size: 25.0,
@@ -915,19 +957,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     onTap: () {
                                       AppCubit.get(context).savedPostsId.any(
                                               (element) =>
-                                                  element == model.postId)
+                                          element == model.postId)
                                           ? AppCubit.get(context)
-                                              .removeSavedPost(
-                                              postId: model.postId!,
-                                            )
+                                          .removeSavedPost(
+                                        postId: model.postId!,
+                                      )
                                           : AppCubit.get(context).addSavePosts(
-                                              model: model,
-                                            );
+                                        model: model,
+                                      );
                                     },
                                     child: Icon(
                                       AppCubit.get(context).savedPostsId.any(
                                               (element) =>
-                                                  element == model.postId)
+                                          element == model.postId)
                                           ? IconlyBold.bookmark
                                           : IconlyLight.bookmark,
                                       size: 24,
@@ -962,8 +1004,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                               child: Icon(
                                 model.likes!.any((element) =>
-                                        element ==
-                                        AppCubit.get(context).user!.uId)
+                                element ==
+                                    AppCubit.get(context).user!.uId)
                                     ? IconlyBold.heart
                                     : IconlyLight.heart,
                                 size: 25.0,
@@ -1025,11 +1067,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 AppCubit.get(context).savedPostsId.any(
                                         (element) => element == model.postId)
                                     ? AppCubit.get(context).removeSavedPost(
-                                        postId: model.postId!,
-                                      )
+                                  postId: model.postId!,
+                                )
                                     : AppCubit.get(context).addSavePosts(
-                                        model: model,
-                                      );
+                                  model: model,
+                                );
                               },
                               child: Icon(
                                 AppCubit.get(context).savedPostsId.any(
@@ -1052,9 +1094,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // Shared Posts Container Done
   Widget buildSharedPostItem(
-    SharePostModel model,
-    context,
-  ) =>
+      SharePostModel model,
+      context,
+      ) =>
       Container(
         decoration: const BoxDecoration(
           border: Border(
@@ -1099,6 +1141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         }
                       },
                       child: CircleAvatar(
+                        backgroundColor: Colors.white,
                         backgroundImage: NetworkImage(
                           '${model.shareUserImage}',
                         ),
@@ -1198,21 +1241,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 1,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                  child: Text(
-                    '${model.sharePostText}',
-                    style: const TextStyle(
-                      fontSize: 16.4,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromARGB(255, 50, 50, 50),
+                if (model.sharePostText!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                    child: Text(
+                      '${model.sharePostText}',
+                      style: const TextStyle(
+                        fontSize: 16.4,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromARGB(255, 50, 50, 50),
+                      ),
                     ),
                   ),
+                SizedBox(
+                  height: model.sharePostText!.isNotEmpty ? 0 : 4,
                 ),
-                if (model.sharePostText == "")
-                  const SizedBox(
-                    height: 7,
-                  ),
                 Container(
                   padding: const EdgeInsets.all(9),
                   margin: const EdgeInsets.only(bottom: 9),
@@ -1241,14 +1284,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 }
                               } else {
                                 navigateTo(
-                                    context: context,
-                                    screen: PersonProfileScreen(
-                                      userId: model.postModel!.userId,
-                                    ),);
+                                  context: context,
+                                  screen: PersonProfileScreen(
+                                    userId: model.postModel!.userId,
+                                  ),
+                                );
                               }
                             },
                             // ------------------SHARED USER PROFILE PICTURE------------------
                             child: CircleAvatar(
+                              backgroundColor: Colors.white,
                               backgroundImage: NetworkImage(
                                 '${model.postModel!.userImage}',
                               ),
@@ -1267,7 +1312,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   children: [
                                     Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           children: [
@@ -1275,13 +1320,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               onTap: () {
                                                 if (!isGuest) {
                                                   if (AppCubit.get(context)
-                                                          .user!
-                                                          .uId !=
+                                                      .user!
+                                                      .uId !=
                                                       model.postModel!.userId) {
                                                     navigateTo(
                                                       context: context,
                                                       screen:
-                                                          PersonProfileScreen(
+                                                      PersonProfileScreen(
                                                         userId: model
                                                             .postModel!.userId,
                                                       ),
@@ -1359,7 +1404,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       if (model.postModel!.image!.isNotEmpty &&
                           model.postModel!.image!.length == 1)
-                        // ----------------SHARED POST CONTAINER----------------
+                      // ----------------SHARED POST CONTAINER----------------
                         Container(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           decoration: BoxDecoration(
@@ -1373,140 +1418,150 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       if (model.postModel!.image!.isNotEmpty &&
                           model.postModel!.image!.length > 1)
-                        // 4 images post container
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Stack(
-                            alignment: AlignmentDirectional.bottomCenter,
-                            children: [
-                              GridView.count(
-                                physics: const BouncingScrollPhysics(),
-                                padding: const EdgeInsets.all(0),
-                                shrinkWrap: true,
-                                crossAxisCount: 2,
-                                mainAxisSpacing: 10,
-                                crossAxisSpacing: 10,
-                                childAspectRatio: 1 / 1,
-                                children: List.generate(
-                                  model.postModel!.image!.length > 4
-                                      ? 4
-                                      : model.postModel!.image!.length,
-                                  (index1) => Column(
-                                    children: [
-                                      Expanded(
-                                        child: InkWell(
-                                          // onTap: () {
-                                          //   navigateTo(
-                                          //       context: context,
-                                          //       screen: ViewImagesScreen(
-                                          //           view: AppCubit.get(context).posts,
-                                          //           index1: index,
-                                          //           index2: index1,
-                                          //           id: AppCubit.get(context)
-                                          //               .postsId));
-                                          // },
-                                          child: model.postModel!.image!
-                                                      .length >
-                                                  4
-                                              ? index1 == 3
-                                                  ? Stack(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      children: [
-                                                        Container(
-                                                          width:
-                                                              double.infinity,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors.white,
-                                                            image:
-                                                                DecorationImage(
-                                                              image:
-                                                                  NetworkImage(
-                                                                model.postModel!
-                                                                        .image![
-                                                                    index1],
-                                                              ),
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        ClipRRect(
-                                                          child: BackdropFilter(
-                                                            filter: ImageFilter
-                                                                .blur(
-                                                              sigmaY: 3,
-                                                              sigmaX: 3,
-                                                            ),
-                                                            child: Container(
-                                                              decoration:
-                                                                  const BoxDecoration(
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                  76,
-                                                                  11,
-                                                                  36,
-                                                                  50,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        // ---------------EXCEEDING IMAGE NUMBER---------------
-                                                        Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                            horizontal: 16,
-                                                            vertical: 6,
-                                                          ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: const Color
-                                                                .fromARGB(
-                                                                136, 4, 25, 47),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        23),
-                                                          ),
-                                                          child: Text(
-                                                            '${model.postModel!.image!.length - 4}+',
-                                                            style:
-                                                                const TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 25,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  : Image.network(
-                                                      model.postModel!
-                                                          .image![index1],
-                                                      width: double.infinity,
+                      // 4 images post container
+                        InkWell(
+                          onTap: () {
+                            // navigateTo(
+                            //   context: context,
+                            //   screen: ViewImagesScreen(
+                            //     photos: model.postModel!.image!,
+                            //     index1: 0,
+                            //   ),
+                            // );
+                          },
+                          child: Container(
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Stack(
+                              alignment: AlignmentDirectional.bottomCenter,
+                              children: [
+                                GridView.count(
+                                  physics: const BouncingScrollPhysics(),
+                                  padding: const EdgeInsets.all(0),
+                                  shrinkWrap: true,
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 10,
+                                  crossAxisSpacing: 10,
+                                  childAspectRatio: 1 / 1,
+                                  children: List.generate(
+                                    model.postModel!.image!.length > 4
+                                        ? 4
+                                        : model.postModel!.image!.length,
+                                        (index1) => Column(
+                                      children: [
+                                        Expanded(
+                                          child: InkWell(
+                                             onTap: () {
+                                               navigateTo(
+                                                 context: context,
+                                                 screen: ViewImagesScreen(
+                                                   photos: model.postModel!.image!,
+                                                   selectedIndex: index1,
+                                                 ),
+                                               );
+                                             },
+                                            child: model.postModel!.image!
+                                                .length >
+                                                4
+                                                ? index1 == 3
+                                                ? Stack(
+                                              alignment:
+                                              Alignment.center,
+                                              children: [
+                                                Container(
+                                                  width:
+                                                  double.infinity,
+                                                  decoration:
+                                                  BoxDecoration(
+                                                    color: Colors.white,
+                                                    image:
+                                                    DecorationImage(
+                                                      image:
+                                                      NetworkImage(
+                                                        model.postModel!
+                                                            .image![
+                                                        index1],
+                                                      ),
                                                       fit: BoxFit.cover,
-                                                    )
-                                              : Image.network(
-                                                  model.postModel!
-                                                      .image![index1],
-                                                  width: double.infinity,
-                                                  fit: BoxFit.cover,
+                                                    ),
+                                                  ),
                                                 ),
+                                                ClipRRect(
+                                                  child: BackdropFilter(
+                                                    filter: ImageFilter
+                                                        .blur(
+                                                      sigmaY: 3,
+                                                      sigmaX: 3,
+                                                    ),
+                                                    child: Container(
+                                                      decoration:
+                                                      const BoxDecoration(
+                                                        color: Color
+                                                            .fromARGB(
+                                                          76,
+                                                          11,
+                                                          36,
+                                                          50,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                // ---------------EXCEEDING IMAGE NUMBER---------------
+                                                Container(
+                                                  padding:
+                                                  const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 6,
+                                                  ),
+                                                  decoration:
+                                                  BoxDecoration(
+                                                    color: const Color
+                                                        .fromARGB(
+                                                        136, 4, 25, 47),
+                                                    borderRadius:
+                                                    BorderRadius
+                                                        .circular(
+                                                        23),
+                                                  ),
+                                                  child: Text(
+                                                    '${model.postModel!.image!.length - 4}+',
+                                                    style:
+                                                    const TextStyle(
+                                                      color:
+                                                      Colors.white,
+                                                      fontSize: 25,
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                                : Image.network(
+                                              model.postModel!
+                                                  .image![index1],
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                            )
+                                                : Image.network(
+                                              model.postModel!
+                                                  .image![index1],
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                     ],
@@ -1533,8 +1588,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                             child: Icon(
                               model.likes.any((element) =>
-                                      element ==
-                                      AppCubit.get(context).user!.uId)
+                              element ==
+                                  AppCubit.get(context).user!.uId)
                                   ? IconlyBold.heart
                                   : IconlyLight.heart,
                               size: 25.0,
@@ -1588,19 +1643,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           InkWell(
                             onTap: () {
                               AppCubit.get(context)
-                                      .savedPostsId
-                                      .any((element) => element == model.postId)
+                                  .savedPostsId
+                                  .any((element) => element == model.postId)
                                   ? AppCubit.get(context).removeSavedPost(
-                                      postId: model.postId!,
-                                    )
+                                postId: model.postId!,
+                              )
                                   : AppCubit.get(context).addSavePosts(
-                                      model: model,
-                                    );
+                                model: model,
+                              );
                             },
                             child: Icon(
                               AppCubit.get(context)
-                                      .savedPostsId
-                                      .any((element) => element == model.postId)
+                                  .savedPostsId
+                                  .any((element) => element == model.postId)
                                   ? IconlyBold.bookmark
                                   : IconlyLight.bookmark,
                               size: 24,
@@ -1641,6 +1696,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       CircleAvatar(
+                        backgroundColor: Colors.white,
                         backgroundImage: NetworkImage(
                           AppCubit.get(context).user!.image!,
                         ),

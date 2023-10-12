@@ -1,6 +1,7 @@
 import 'package:alex_uni_new/constants/constants.dart';
 import 'package:alex_uni_new/models/both_news_model.dart';
 import 'package:alex_uni_new/models/news_model.dart';
+import 'package:alex_uni_new/screens/home/news/arabic_news_details_screen.dart';
 import 'package:alex_uni_new/widgets/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/home/news/english_news_details_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,7 +25,8 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
             Navigator.pop(context);
           },
           icon: Icon(
-            IconlyBold.arrow_left_circle,
+            lang == 'en' ?
+            IconlyBold.arrow_left_circle : IconlyBold.arrow_right_circle,
             color: defaultColor,
             size: 35,
           ),
@@ -39,69 +41,29 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
       ),
       body: lang == 'ar'
           ? SingleChildScrollView(
-            child: Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
-                  ),
-                  StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('News')
-                        .orderBy('date', descending: true)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            DocumentSnapshot ds = snapshot.data!.docs[index];
-                            ArabicNewsModel model = ArabicNewsModel.fromJson(
-                                ds.data()! as Map<String, dynamic>?);
-
-                            return buildNewsItem(
-                              context: context,
-                              model: model,
-                            );
-                          },
-                          itemCount: snapshot.data!.docs.length,
-                        );
-                      } else {
-                        return Center(
-                          child: Text(
-                              lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات '),
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-          )
-          : StreamBuilder(
+        child: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
+            StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('News')
-                  .where('type', isEqualTo: 'both')
                   .orderBy('date', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return ListView.builder(
+                    shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       DocumentSnapshot ds = snapshot.data!.docs[index];
-                      BothNewsModel model = BothNewsModel.fromJson(
+                      ArabicNewsModel model = ArabicNewsModel.fromJson(
                           ds.data()! as Map<String, dynamic>?);
-                      return Column(
-                        children: [
-                          if (index == 0)
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.03,
-                            ),
-                          buildNewsItem(
-                            context: context,
-                            model: model,
-                          ),
-                        ],
+
+                      return buildNewsItem(
+                        context: context,
+                        model: model,
                       );
                     },
                     itemCount: snapshot.data!.docs.length,
@@ -109,12 +71,53 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
                 } else {
                   return Center(
                     child: Text(
-                      lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات',
+                      lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات ',
                     ),
                   );
                 }
               },
             ),
+          ],
+        ),
+      )
+          : StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('News')
+            .where('type', isEqualTo: 'both')
+            .orderBy('date', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                DocumentSnapshot ds = snapshot.data!.docs[index];
+                BothNewsModel model = BothNewsModel.fromJson(
+                    ds.data()! as Map<String, dynamic>?);
+                return Column(
+                  children: [
+                    if (index == 0)
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.03,
+                      ),
+                    buildNewsItem(
+                      context: context,
+                      model: model,
+                    ),
+                  ],
+                );
+              },
+              itemCount: snapshot.data!.docs.length,
+            );
+          } else {
+            return Center(
+              child: Text(
+                lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات',
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -129,7 +132,11 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
           onTap: () {
             navigateTo(
               context: context,
-              screen: BothNewsDetailsScreen(
+              screen:
+              lang == "en" ?
+              BothNewsDetailsScreen(
+                newsModel: model,
+              ) : ArabicNewsDetailsScreen(
                 newsModel: model,
               ),
             );
@@ -185,9 +192,7 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
                           ),
                         ),
                         Row(
-                          mainAxisAlignment: lang == 'en'
-                              ? MainAxisAlignment.start
-                              : MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
                               model.date!,

@@ -53,7 +53,9 @@ Widget reusableTextFormField({
   String? Function(String?)? onSubmit,
   required TextEditingController controller,
   required TextInputType keyboardType,
+  EdgeInsetsGeometry? padding,
   Icon? prefix,
+  int? maxLines,
   TextStyle? style,
   Color? prefixColor,
   IconButton? suffix,
@@ -69,7 +71,9 @@ Widget reusableTextFormField({
         onTap: onTap,
         validator: validator,
         onFieldSubmitted: onSubmit,
+        maxLines: maxLines,
         decoration: InputDecoration(
+          contentPadding: padding,
           suffixIcon: suffix,
           prefixIcon: prefix,
           prefixIconColor: prefixColor,
@@ -122,7 +126,7 @@ void navigateAndFinish({
     MaterialPageRoute(
       builder: (builder) => screen,
     ),
-    (route) => false,
+        (route) => false,
   );
 }
 

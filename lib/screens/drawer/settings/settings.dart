@@ -2,8 +2,10 @@
 import 'dart:ui';
 
 import 'package:alex_uni_new/constants/constants.dart';
+import 'package:alex_uni_new/constants/strings.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/models/user_model.dart';
+import 'package:alex_uni_new/screens/change_password/change_password.dart';
 import 'package:alex_uni_new/widgets/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/drawer/settings/edit_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
@@ -30,7 +32,9 @@ class _SettingsState extends State<Settings> {
         UserModel userModel = cubit.user!;
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Settings"),
+            title: Text(
+              lang == "en" ? settings : settingsArabic,
+            ),
             centerTitle: true,
           ),
           body: SingleChildScrollView(
@@ -82,8 +86,8 @@ class _SettingsState extends State<Settings> {
                                         ),
                                         SizedBox(
                                           height:
-                                              MediaQuery.of(context).size.height *
-                                                  0.007,
+                                          MediaQuery.of(context).size.height *
+                                              0.007,
                                         ),
                                         Text(
                                           userModel.email!,
@@ -125,7 +129,7 @@ class _SettingsState extends State<Settings> {
                                           borderRadius: BorderRadius.circular(18),
                                         ),
                                         child: Text(
-                                          lang == 'en' ? "Edit" : "تعديل",
+                                          lang == 'en' ? edit : editArabic,
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 18,
@@ -147,13 +151,11 @@ class _SettingsState extends State<Settings> {
                         padding: const EdgeInsets.only(top: 9.0),
                         child: CircleAvatar(
                           radius: MediaQuery.of(context).size.width * 0.13,
-                          backgroundColor:
-                              Theme.of(context).scaffoldBackgroundColor,
+                          backgroundColor: Colors.white,
                           child: Container(
                             decoration: const BoxDecoration(),
                             child: CircleAvatar(
-                              backgroundColor:
-                                  Theme.of(context).scaffoldBackgroundColor,
+                              backgroundColor: Colors.white,
                               backgroundImage: NetworkImage(
                                 '${userModel.image}',
                               ),
@@ -187,142 +189,83 @@ class _SettingsState extends State<Settings> {
                               ),
                               child: index != 2
                                   ? ListTile(
-                                      title: Text(
-                                        cubit.settingsTitles[index],
-                                        style: const TextStyle(
+                                title: Text(
+                                  cubit.settingsTitles[index],
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                leading: Icon(
+                                  cubit.settingsIcons[index],
+                                  color: Colors.white,
+                                ),
+                                trailing: DropdownButton<Locale>(
+                                  borderRadius: BorderRadius.circular(13),
+                                  iconEnabledColor: Colors.white,
+                                  dropdownColor: defaultColor,
+                                  enableFeedback: true,
+                                  icon: const Icon(IconlyBold.arrow_down_2),
+                                  iconSize: 22,
+                                  underline: Container(
+                                    height: 0,
+                                  ),
+                                  value: lang == 'en'
+                                      ? const Locale('en')
+                                      : const Locale('ar'),
+                                  onChanged: (newLocale) {
+                                    cubit.changeAppLanguage(
+                                      context: context,
+                                      newLocale: newLocale,
+                                    );
+                                  },
+                                  items: const [
+                                    DropdownMenuItem(
+                                      value: Locale('en'),
+                                      child: Text(
+                                        'EN',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
                                           color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700,
                                         ),
-                                      ),
-                                      leading: Icon(
-                                        cubit.settingsIcons[index],
-                                        color: Colors.white,
-                                      ),
-                                      trailing: DropdownButton<Locale>(
-                                        borderRadius: BorderRadius.circular(13),
-                                        iconEnabledColor: Colors.white,
-                                        dropdownColor: defaultColor,
-                                        enableFeedback: true,
-                                        icon: const Icon(IconlyBold.arrow_down_2),
-                                        iconSize: 22,
-                                        underline: Container(
-                                          height: 0,
-                                        ),
-                                        value: lang == 'en'
-                                            ? const Locale('en')
-                                            : const Locale('ar'),
-                                        onChanged: (newLocale) {
-                                          // -----------------EDIT THIS---------------
-                                          cubit.changeAppLanguage(
-                                            context: context,
-                                            newLocale: newLocale,
-                                          );
-                                        },
-                                        items: const [
-                                          DropdownMenuItem(
-                                            value: Locale('en'),
-                                            child: Text(
-                                              'EN',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          DropdownMenuItem(
-                                            value: Locale('ar'),
-                                            child: Text(
-                                              'AR',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : ListTile(
-                                      title: Text(
-                                        cubit.settingsTitles[index],
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                      leading: Icon(
-                                        cubit.settingsIcons[index],
-                                        color: Colors.white,
                                       ),
                                     ),
+                                    DropdownMenuItem(
+                                      value: Locale('ar'),
+                                      child: Text(
+                                        'AR',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                                  : ListTile(
+                                title: Text(
+                                  cubit.settingsTitles[index],
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                leading: Icon(
+                                  cubit.settingsIcons[index],
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ],
                         );
                       }
                       if (index == 1) {
                         return InkWell(
-                          onTap: () {},
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 2),
-                            margin: const EdgeInsets.symmetric(vertical: 7),
-                            decoration: BoxDecoration(
-                              color: defaultColor,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: index != 2
-                                ? ListTile(
-                                    title: Text(
-                                      cubit.settingsTitles[index],
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    leading: Icon(
-                                      cubit.settingsIcons[index],
-                                      color: Colors.white,
-                                    ),
-                                    trailing: Icon(
-                                      lang == 'en'
-                                          ? Icons.keyboard_arrow_right
-                                          : Icons.keyboard_arrow_left,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : ListTile(
-                                    title: Text(
-                                      cubit.settingsTitles[index],
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    leading: Icon(
-                                      cubit.settingsIcons[index],
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                          ),
-                        );
-                      }
-                      if (index == 2) {
-                        return InkWell(
                           onTap: () {
-                            setState(() {
-                              AppCubit.get(context).customDialog(
-                                rightBtn: () {
-                                  AppCubit.get(context).deleteUser(
-                                    context: context,
-                                    id: uId!,
-                                  );
-                                },
-                                context: context,
-                              );
-                            });
+                            navigateTo(context: context, screen: ChangePassword());
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 2),
@@ -333,33 +276,110 @@ class _SettingsState extends State<Settings> {
                             ),
                             child: index != 2
                                 ? ListTile(
-                                    title: Text(
-                                      cubit.settingsTitles[index],
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    leading: Icon(
-                                      cubit.settingsIcons[index],
-                                      color: Colors.white,
-                                    ),
-                                  )
+                              title: Text(
+                                cubit.settingsTitles[index],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              leading: Icon(
+                                cubit.settingsIcons[index],
+                                color: Colors.white,
+                              ),
+                              trailing: Icon(
+                                lang == 'en'
+                                    ? Icons.keyboard_arrow_right
+                                    : Icons.keyboard_arrow_left,
+                                color: Colors.white,
+                              ),
+                            )
                                 : ListTile(
-                                    title: Text(
-                                      cubit.settingsTitles[index],
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    leading: Icon(
-                                      cubit.settingsIcons[index],
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                              title: Text(
+                                cubit.settingsTitles[index],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              leading: Icon(
+                                cubit.settingsIcons[index],
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      if (index == 2) {
+                        return InkWell(
+                          onTap: () {
+                            setState(
+                                  () {
+                                AppCubit.get(context).customDialog(
+                                  title: lang == "en"
+                                      ? customDialogTitle
+                                      : customDialogTitleArabic,
+                                  desc1: lang == "en"
+                                      ? customDialogDeleteAccount
+                                      : customDialogDeleteAccountArabic,
+                                  desc2: lang == "en"
+                                      ? customDialogDesc2
+                                      : customDialogDesc2Arabic,
+                                  leftBtnText: lang == "en"
+                                      ? customDialogCancelBtn
+                                      : customDialogCancelBtnArabic,
+                                  rightBtnText: lang == "en"
+                                      ? customDialogDeleteBtn
+                                      : customDialogDeleteBtnArabic,
+                                  rightBtn: () {
+                                    AppCubit.get(context).deleteUser(
+                                      context: context,
+                                      id: uId!,
+                                    );
+                                  },
+                                  context: context,
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            margin: const EdgeInsets.symmetric(vertical: 7),
+                            decoration: BoxDecoration(
+                              color: defaultColor,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: index != 2
+                                ? ListTile(
+                              title: Text(
+                                cubit.settingsTitles[index],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              leading: Icon(
+                                cubit.settingsIcons[index],
+                                color: Colors.white,
+                              ),
+                            )
+                                : ListTile(
+                              title: Text(
+                                cubit.settingsTitles[index],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              leading: Icon(
+                                cubit.settingsIcons[index],
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         );
                       }
@@ -375,39 +395,39 @@ class _SettingsState extends State<Settings> {
                             ),
                             child: index != 2
                                 ? ListTile(
-                                    title: Text(
-                                      cubit.settingsTitles[index],
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    leading: Icon(
-                                      cubit.settingsIcons[index],
-                                      color: Colors.white,
-                                    ),
-                                    trailing: Icon(
-                                      lang == 'en'
-                                          ? Icons.keyboard_arrow_right
-                                          : Icons.keyboard_arrow_left,
-                                      color: Colors.white,
-                                    ),
-                                  )
+                              title: Text(
+                                cubit.settingsTitles[index],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              leading: Icon(
+                                cubit.settingsIcons[index],
+                                color: Colors.white,
+                              ),
+                              trailing: Icon(
+                                lang == 'en'
+                                    ? Icons.keyboard_arrow_right
+                                    : Icons.keyboard_arrow_left,
+                                color: Colors.white,
+                              ),
+                            )
                                 : ListTile(
-                                    title: Text(
-                                      cubit.settingsTitles[index],
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    leading: Icon(
-                                      cubit.settingsIcons[index],
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                              title: Text(
+                                cubit.settingsTitles[index],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              leading: Icon(
+                                cubit.settingsIcons[index],
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         );
                       }
@@ -421,21 +441,29 @@ class _SettingsState extends State<Settings> {
                 if (isGuest == false)
                   InkWell(
                     onTap: () {
-                      setState(() {
-                        AppCubit.get(context).customDialog(
-                          desc1: "Are you sure you want to leave ?",
-                          hasDesc2: false,
-                          crossAxis: CrossAxisAlignment.center,
-                          rightBtnText: lang == 'en' ? 'Logout' : 'تسجيل الخروج',
-                          leftBtn: () {
-                            Navigator.pop(context);
-                          },
-                          rightBtn: () {
-                            cubit.logout(context);
-                          },
-                          context: context,
-                        );
-                      });
+                      AppCubit.get(context).customDialog(
+                        title: lang == "en"
+                            ? customDialogTitle
+                            : customDialogTitleArabic,
+                        desc1: lang == "en"
+                            ? customDialogLeaveDesc
+                            : customDialogLeaveDescArabic,
+                        hasDesc2: false,
+                        crossAxis: CrossAxisAlignment.center,
+                        leftBtnText: lang == "en"
+                            ? customDialogCancelBtn
+                            : customDialogCancelBtnArabic,
+                        rightBtnText: lang == "en"
+                            ? customDialogLogoutBtn
+                            : customDialogLogoutBtnArabic,
+                        leftBtn: () {
+                          Navigator.pop(context);
+                        },
+                        rightBtn: () {
+                          cubit.logout(context);
+                        },
+                        context: context,
+                      );
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 15),
@@ -448,7 +476,7 @@ class _SettingsState extends State<Settings> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            lang == 'en' ? 'Logout' : 'تسجيل الخروج',
+                            lang == 'en' ? logoutBtn : logoutBtnArabic,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,

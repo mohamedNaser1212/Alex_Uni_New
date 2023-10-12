@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -79,17 +80,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             },
                             separatorBuilder: (context, index) =>
-                                const SizedBox(
+                            const SizedBox(
                               width: 7,
                             ),
                             itemCount: snapshot.data!.docs.length,
                           );
                         } else {
-                          return Center(
-                            child: Text(
-                              lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات',
-                            ),
-                          );
+                          return ShimmerFacultiesList();  // Shimmer effect for faculties
                         }
                       },
                     ),
@@ -111,84 +108,72 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: lang == 'ar'
                         ? StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection('News')
-                                .where('isFinished', isEqualTo: true)
-                                .orderBy('date', descending: true)
-                                .snapshots(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return ListView.separated(
-                                  physics: const BouncingScrollPhysics(),
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (context, index) {
-                                    DocumentSnapshot ds =
-                                        snapshot.data!.docs[index];
-                                    ArabicNewsModel model =
-                                        ArabicNewsModel.fromJson(ds.data()!
-                                            as Map<String, dynamic>?);
-                                    return buildNewsItem(
-                                      context: context,
-                                      model: model,
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                    width: 15,
-                                  ),
-                                  itemCount: snapshot.data!.docs.length,
-                                );
-                              } else {
-                                return Center(
-                                  child: Text(
-                                    lang == 'en'
-                                        ? 'No Data Found'
-                                        : 'لا يوجد بيانات',
-                                  ),
-                                );
-                              }
+                      stream: FirebaseFirestore.instance
+                          .collection('News')
+                          .where('isFinished', isEqualTo: true)
+                          .orderBy('date', descending: true)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot ds =
+                              snapshot.data!.docs[index];
+                              ArabicNewsModel model =
+                              ArabicNewsModel.fromJson(ds.data()!
+                              as Map<String, dynamic>?);
+                              return buildNewsItem(
+                                context: context,
+                                model: model,
+                              );
                             },
-                          )
+                            separatorBuilder: (context, index) =>
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            itemCount: snapshot.data!.docs.length,
+                          );
+                        } else {
+                          return ShimmerNewsList();  // Shimmer effect for news
+                        }
+                      },
+                    )
                         : StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection('News')
-                                .where('type', isEqualTo: 'both')
-                                .where('isFinished', isEqualTo: true)
-                                .orderBy('date', descending: true)
-                                .snapshots(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return ListView.separated(
-                                  physics: const BouncingScrollPhysics(),
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (context, index) {
-                                    DocumentSnapshot ds =
-                                        snapshot.data!.docs[index];
-                                    BothNewsModel model =
-                                        BothNewsModel.fromJson(ds.data()!
-                                            as Map<String, dynamic>?);
-                                    return buildNewsItem(
-                                      context: context,
-                                      model: model,
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                    width: 15,
-                                  ),
-                                  itemCount: snapshot.data!.docs.length,
-                                );
-                              } else {
-                                return Center(
-                                  child: Text(
-                                    lang == 'en'
-                                        ? 'No Data Found'
-                                        : 'لا يوجد بيانات',
-                                  ),
-                                );
-                              }
+                      stream: FirebaseFirestore.instance
+                          .collection('News')
+                          .where('type', isEqualTo: 'both')
+                          .where('isFinished', isEqualTo: true)
+                          .orderBy('date', descending: true)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot ds =
+                              snapshot.data!.docs[index];
+                              BothNewsModel model =
+                              BothNewsModel.fromJson(ds.data()!
+                              as Map<String, dynamic>?);
+                              return buildNewsItem(
+                                context: context,
+                                model: model,
+                              );
                             },
-                          ),
+                            separatorBuilder: (context, index) =>
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            itemCount: snapshot.data!.docs.length,
+                          );
+                        } else {
+                          return ShimmerNewsList();  // Shimmer effect for news
+                        }
+                      },
+                    ),
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.03,
@@ -203,9 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 9,
-                  ),
+                  const SizedBox(height: 9),
                   Container(
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
@@ -214,7 +197,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       color: Color(0xffE6EEFA),
                     ),
-                    child: ListView.builder(
+                    child: AppCubit.get(context).post.isEmpty
+                        ? ShimmerPostsList()  // Use ShimmerPostsList widget for shimmer effect
+                        : ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
@@ -229,7 +214,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             child: buildPostItem(
-                                AppCubit.get(context).post[index], context),
+                                AppCubit.get(context).post[index],
+                                context),
                           );
                         } else {
                           return buildPostItem(
@@ -241,20 +227,94 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: AppCubit.get(context).post.length,
                     ),
                   ),
-                  const SizedBox(
-                    height: 30,
-                  ),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
             fallback: (context) => Center(
-              child: CircularProgressIndicator(
-                color: defaultColor,
-              ),
+              child: ShimmerPostsList(),  // Use ShimmerPostsList widget for shimmer effect
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class ShimmerNewsList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return Container(
+            width: 200.0,
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+          );
+        },
+        itemCount: 5,  // Adjust the itemCount according to your needs
+      ),
+    );
+  }
+}
+class ShimmerFacultiesList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+    scrollDirection: Axis.horizontal,
+    itemBuilder: (context, index) {
+    return Container(
+    width: 120.0,
+    margin: const EdgeInsets.symmetric(
+      vertical: 8.0,
+    ),
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+    );
+    },
+          itemCount: 5,  // Adjust the itemCount according to your needs
+        ),
+    );
+  }
+}
+class ShimmerPostsList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor:  const Color(0xffE6EEFA),
+      highlightColor:  const Color(0xffE6EEFA),
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return Container(
+            height: 100.0,
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+              color: const Color(0xffE6EEFA),
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+          );
+        },
+        itemCount: 5,  // Adjust the itemCount according to your needs
+      ),
     );
   }
 }

@@ -10,10 +10,12 @@ import 'package:alex_uni_new/screens/profile/person_profile/person_profile_scree
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 
+import '../../view_image_screen.dart';
+
 Widget buildSharedPostItem(
-  SharePostModel model,
-  context,
-) =>
+    SharePostModel model,
+    context,
+    ) =>
     Container(
       margin: const EdgeInsets.only(top: 9),
       decoration: const BoxDecoration(
@@ -60,6 +62,7 @@ Widget buildSharedPostItem(
                     },
                     // ---------------MY PROFILE PICTURE------------------
                     child: CircleAvatar(
+                      backgroundColor: Colors.white,
                       backgroundImage: NetworkImage(
                         '${model.shareUserImage}',
                       ),
@@ -165,7 +168,7 @@ Widget buildSharedPostItem(
               ),
             ),
             // ------------------MY POST TITLE------------------
-            if (model.sharePostText != "")
+            if (model.sharePostText!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: Text(
@@ -177,10 +180,9 @@ Widget buildSharedPostItem(
                   ),
                 ),
               ),
-            if (model.sharePostText == "")
-              const SizedBox(
-                height: 7,
-              ),
+            SizedBox(
+              height: model.sharePostText!.isNotEmpty ? 10 : 7,
+            ),
             Container(
               padding: const EdgeInsets.all(9),
               margin: const EdgeInsets.only(bottom: 9),
@@ -217,6 +219,7 @@ Widget buildSharedPostItem(
                         },
                         // ------------------SHARED USER PROFILE PICTURE------------------
                         child: CircleAvatar(
+                          backgroundColor: Colors.white,
                           backgroundImage: NetworkImage(
                             '${model.postModel!.userImage}',
                           ),
@@ -242,14 +245,14 @@ Widget buildSharedPostItem(
                                           onTap: () {
                                             if (!isGuest) {
                                               if (AppCubit.get(context)
-                                                      .user!
-                                                      .uId !=
+                                                  .user!
+                                                  .uId !=
                                                   model.postModel!.userId) {
                                                 navigateTo(
                                                   context: context,
                                                   screen: PersonProfileScreen(
                                                     userId:
-                                                        model.postModel!.userId,
+                                                    model.postModel!.userId,
                                                   ),
                                                 );
                                               } else {
@@ -261,7 +264,7 @@ Widget buildSharedPostItem(
                                                 context: context,
                                                 screen: PersonProfileScreen(
                                                   userId:
-                                                      model.postModel!.userId,
+                                                  model.postModel!.userId,
                                                 ),
                                               );
                                             }
@@ -312,20 +315,21 @@ Widget buildSharedPostItem(
                       height: 1,
                     ),
                   ),
-                  Text(
-                    '${model.postModel!.text}',
-                    style: const TextStyle(
-                      fontSize: 15.6,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromARGB(255, 50, 50, 50),
+                  if (model.postModel!.text!.isNotEmpty)
+                    Text(
+                      '${model.postModel!.text}',
+                      style: const TextStyle(
+                        fontSize: 15.6,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromARGB(255, 50, 50, 50),
+                      ),
                     ),
-                  ),
                   SizedBox(
-                    height: model.postModel!.image!.isNotEmpty ? 10 : 6,
+                    height: model.postModel!.text!.isNotEmpty ? 10 : 4,
                   ),
                   if (model.postModel!.image!.isNotEmpty &&
                       model.postModel!.image!.length == 1)
-                    // ----------------SHARED POST CONTAINER----------------
+                  // ----------------SHARED POST CONTAINER----------------
                     Container(
                       clipBehavior: Clip.antiAliasWithSaveLayer,
                       decoration: BoxDecoration(
@@ -339,133 +343,145 @@ Widget buildSharedPostItem(
                     ),
                   if (model.postModel!.image!.isNotEmpty &&
                       model.postModel!.image!.length > 1)
-                    Container(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Stack(
-                        alignment: AlignmentDirectional.bottomCenter,
-                        children: [
-                          GridView.count(
-                            physics: const BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            childAspectRatio: 1 / 1,
-                            children: List.generate(
-                              model.postModel!.image!.length > 4
-                                  ? 4
-                                  : model.postModel!.image!.length,
-                              (index1) => Container(
-                                color: Colors.white,
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: InkWell(
-                                        // onTap: () {
-                                        //   navigateTo(
-                                        //       context: context,
-                                        //       screen: ViewImagesScreen(
-                                        //           view: AppCubit.get(context).posts,
-                                        //           index1: index,
-                                        //           index2: index1,
-                                        //           id: AppCubit.get(context)
-                                        //               .postsId));
-                                        // },
-                                        child: model.postModel!.image!.length >
-                                                4
-                                            ? index1 == 3
-                                                ? Stack(
-                                                    alignment: Alignment.center,
-                                                    children: [
-                                                      Container(
-                                                        width: double.infinity,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
-                                                          image:
-                                                              DecorationImage(
-                                                            image: NetworkImage(
-                                                              model.postModel!
-                                                                      .image![
-                                                                  index1],
-                                                            ),
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      ClipRRect(
-                                                        child: BackdropFilter(
-                                                          filter:
-                                                              ImageFilter.blur(
-                                                            sigmaY: 3,
-                                                            sigmaX: 3,
-                                                          ),
-                                                          child: Container(
-                                                            decoration:
-                                                                const BoxDecoration(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                76,
-                                                                11,
-                                                                36,
-                                                                50,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      // ---------------EXCEEDING IMAGE NUMBER---------------
-                                                      Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          horizontal: 16,
-                                                          vertical: 6,
-                                                        ),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: const Color
-                                                              .fromARGB(
-                                                              136, 4, 25, 47),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(23),
-                                                        ),
-                                                        child: Text(
-                                                          '${model.postModel!.image!.length - 4}+',
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 25,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
-                                                : Image.network(
-                                                    model.postModel!
-                                                        .image![index1],
-                                                    width: double.infinity,
-                                                    fit: BoxFit.cover,
-                                                  )
-                                            : Image.network(
-                                                model.postModel!.image![index1],
+                    InkWell(
+                      // onTap: () {
+                      //   int selectedImageIndex = index1; // Store the selected index
+                      //   navigateTo(
+                      //     context: context,
+                      //     screen: ViewImagesScreen(
+                      //       photos: model.postModel!.image!,
+                      //       selectedIndex: selectedImageIndex,
+                      //     ),
+                      //   );
+                      // },
+                      child: Container(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Stack(
+                          alignment: AlignmentDirectional.bottomCenter,
+                          children: [
+                            GridView.count(
+                              physics: const BouncingScrollPhysics(),
+                              shrinkWrap: true,
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 1 / 1,
+                              children: List.generate(
+                                model.postModel!.image!.length > 4
+                                    ? 4
+                                    : model.postModel!.image!.length,
+                                    (index1) => Container(
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        child: InkWell(
+                                          onTap: () {// Store the selected index
+                                              navigateTo(
+                                                context: context,
+                                                screen: ViewImagesScreen(
+                                                  photos: model.postModel!.image!,
+                                                  selectedIndex: index1,
+                                                ),
+                                              );
+
+                                          },
+                                          child: model.postModel!.image!.length >
+                                              4
+                                              ? index1 == 3
+                                              ? Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              Container(
                                                 width: double.infinity,
-                                                fit: BoxFit.cover,
+                                                decoration:
+                                                BoxDecoration(
+                                                  color: Colors.white,
+                                                  image:
+                                                  DecorationImage(
+                                                    image: NetworkImage(
+                                                      model.postModel!
+                                                          .image![
+                                                      index1],
+                                                    ),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
                                               ),
+                                              ClipRRect(
+                                                child: BackdropFilter(
+                                                  filter:
+                                                  ImageFilter.blur(
+                                                    sigmaY: 3,
+                                                    sigmaX: 3,
+                                                  ),
+                                                  child: Container(
+                                                    decoration:
+                                                    const BoxDecoration(
+                                                      color: Color
+                                                          .fromARGB(
+                                                        76,
+                                                        11,
+                                                        36,
+                                                        50,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              // ---------------EXCEEDING IMAGE NUMBER---------------
+                                              Container(
+                                                padding:
+                                                const EdgeInsets
+                                                    .symmetric(
+                                                  horizontal: 16,
+                                                  vertical: 6,
+                                                ),
+                                                decoration:
+                                                BoxDecoration(
+                                                  color: const Color
+                                                      .fromARGB(
+                                                      136, 4, 25, 47),
+                                                  borderRadius:
+                                                  BorderRadius
+                                                      .circular(23),
+                                                ),
+                                                child: Text(
+                                                  '${model.postModel!.image!.length - 4}+',
+                                                  style:
+                                                  const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 25,
+                                                    fontWeight:
+                                                    FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                              : Image.network(
+                                            model.postModel!
+                                                .image![index1],
+                                            width: double.infinity,
+                                            fit: BoxFit.cover,
+                                          )
+                                              : Image.network(
+                                            model.postModel!.image![index1],
+                                            width: double.infinity,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                 ],
@@ -492,7 +508,7 @@ Widget buildSharedPostItem(
                         },
                         child: Icon(
                           model.likes.any((element) =>
-                                  element == AppCubit.get(context).user!.uId)
+                          element == AppCubit.get(context).user!.uId)
                               ? IconlyBold.heart
                               : IconlyLight.heart,
                           size: 25.0,
@@ -541,24 +557,24 @@ Widget buildSharedPostItem(
                           color: Colors.white,
                         ),
                       ),
-                    if (isGuest == false) const SizedBox(width: 25),
+                    if (isGuest == false) const SizedBox(width: 30),
                     if (isGuest == false)
                       InkWell(
                         onTap: () {
                           AppCubit.get(context)
-                                  .savedPostsId
-                                  .any((element) => element == model.postId)
+                              .savedPostsId
+                              .any((element) => element == model.postId)
                               ? AppCubit.get(context).removeSavedPost(
-                                  postId: model.postId!,
-                                )
+                            postId: model.postId!,
+                          )
                               : AppCubit.get(context).addSavePosts(
-                                  model: model,
-                                );
+                            model: model,
+                          );
                         },
                         child: Icon(
                           AppCubit.get(context)
-                                  .savedPostsId
-                                  .any((element) => element == model.postId)
+                              .savedPostsId
+                              .any((element) => element == model.postId)
                               ? IconlyBold.bookmark
                               : IconlyLight.bookmark,
                           size: 24,
@@ -590,6 +606,7 @@ showSharePostSheet({required BuildContext context, required PostModel model}) {
         ),
         child: SingleChildScrollView(
           child: Container(
+
             color: const Color(0xffE6EEFA),
             padding: const EdgeInsets.all(10),
             child: Column(
@@ -600,6 +617,7 @@ showSharePostSheet({required BuildContext context, required PostModel model}) {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     CircleAvatar(
+                      backgroundColor: Colors.white,
                       backgroundImage: NetworkImage(
                         AppCubit.get(context).user!.image!,
                       ),
@@ -608,12 +626,24 @@ showSharePostSheet({required BuildContext context, required PostModel model}) {
                     const SizedBox(
                       width: 20,
                     ),
-                    Text(
-                      AppCubit.get(context).user!.name!,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppCubit.get(context).user!.name!,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Text(
+                          "Sharing post...",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -621,6 +651,8 @@ showSharePostSheet({required BuildContext context, required PostModel model}) {
                   height: 10,
                 ),
                 reusableTextFormField(
+                  padding: const EdgeInsets.all(9),
+                  maxLines: null,
                   label: lang == 'en' ? 'Write your post' : 'اكتب منشورك',
                   onTap: () {},
                   controller: controller,
@@ -635,6 +667,8 @@ showSharePostSheet({required BuildContext context, required PostModel model}) {
                     children: [
                       Expanded(
                         child: reusableElevatedButton(
+                          radius: 24,
+                          backColor: const Color.fromARGB(255, 62, 165, 66),
                           label: lang == 'en' ? 'Share' : 'مشاركة',
                           function: () async {
                             await AppCubit.get(context).sharePost(
@@ -652,6 +686,8 @@ showSharePostSheet({required BuildContext context, required PostModel model}) {
                       ),
                       Expanded(
                         child: reusableElevatedButton(
+                          radius: 24,
+                          backColor: const Color.fromARGB(255, 216, 36, 23),
                           label: lang == 'en' ? 'Cancel' : 'الغاء',
                           function: () {
                             Navigator.pop(context);
