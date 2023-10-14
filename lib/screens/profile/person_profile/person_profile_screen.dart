@@ -4,7 +4,7 @@ import 'dart:ui';
 
 import 'package:alex_uni_new/models/posts/post_model.dart';
 import 'package:alex_uni_new/screens/drawer/settings/edit_screen.dart';
-import 'package:alex_uni_new/screens/profile/photos_screen.dart';
+import 'package:alex_uni_new/screens/profile/person_profile/person_photo_screen.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,10 +28,18 @@ class PersonProfileScreen extends StatefulWidget {
 }
 
 class _PersonProfileScreenState extends State<PersonProfileScreen> {
+
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
     AppCubit.get(context).getSelectedUser(widget.userId!);
+    _scrollController.addListener(() {
+      if(_scrollController.offset == _scrollController.position.maxScrollExtent && !AppCubit.get(context).isLastSelectedUserPost){
+        AppCubit.get(context).getSelectedUserPostsFromLast(AppCubit.get(context).selectedUser!.uId!);
+      }
+    });
   }
 
   @override
@@ -56,6 +64,8 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
               builder: (context) {
                 UserModel userModel = cubit.selectedUser!;
                 return SingleChildScrollView(
+                  controller: _scrollController,
+                  physics: const BouncingScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -320,7 +330,8 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                   onTap: () {
                                     navigateTo(
                                         context: context,
-                                        screen: PhotoScreen());
+                                        screen: PersonPhotoScreen(id: userModel.uId!),
+                                    );
                                   },
                                   child: Column(
                                     children: [
@@ -384,19 +395,6 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                         .selectedUserPosts
                                         .length,
                                   ),
-                                  // ListView.builder(
-                                  //   physics: const NeverScrollableScrollPhysics(),
-                                  //   shrinkWrap: true,
-                                  //   itemBuilder: (context, index) =>
-                                  //       buildShareItem(
-                                  //           AppCubit.get(context)
-                                  //               .selectedUserSharedPosts,
-                                  //           index,
-                                  //           context),
-                                  //   itemCount: AppCubit.get(context)
-                                  //       .selectedUserSharedPosts
-                                  //       .length,
-                                  // ),
                                 ],
                               ),
                             ),

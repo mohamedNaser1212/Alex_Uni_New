@@ -272,3 +272,39 @@ class GetLastMyPhotosErrorState extends AppStates{
   }
 }
 
+class GetPersonPhotosLoadingState extends AppStates{}
+
+class GetPersonPhotosSuccessState extends AppStates{}
+
+class GetPersonPhotosErrorState extends AppStates{
+  final String error;
+
+  GetPersonPhotosErrorState(this.error){
+    print(error.toString());
+  }
+}
+
+class GetLastPersonPhotosSuccessState extends AppStates{}
+
+class GetLastPersonPhotosErrorState extends AppStates{
+  final String error;
+
+  GetLastPersonPhotosErrorState(this.error){
+    print(error.toString());
+  }
+}
+
+class GetLastPersonPhotosLoadingState extends AppStates{}
+
+class GetLastSelectedUserPostsSuccessState extends AppStates{}
+
+class GetLastSelectedUserPostsErrorState extends AppStates{
+  final String error;
+
+  GetLastSelectedUserPostsErrorState(this.error){
+    print(error.toString());
+  }
+}
+
+class GetLastSelectedUserPostsLoadingState extends AppStates{}
+

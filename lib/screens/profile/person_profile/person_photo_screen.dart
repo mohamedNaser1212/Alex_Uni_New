@@ -1,30 +1,32 @@
-import 'package:alex_uni_new/constants/constants.dart';
-import 'package:alex_uni_new/cubit/app_cubit.dart';
-import 'package:alex_uni_new/states/app_states.dart';
-import 'package:alex_uni_new/widgets/reusable_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../view_image_screen.dart';
+import '../../../constants/constants.dart';
+import '../../../cubit/app_cubit.dart';
+import '../../../states/app_states.dart';
+import '../../../widgets/reusable_widgets.dart';
+import '../../view_image_screen.dart';
 
-// PhotoScreen
-class PhotoScreen extends StatefulWidget {
-  PhotoScreen({super.key});
+class PersonPhotoScreen extends StatefulWidget {
+  const PersonPhotoScreen({super.key,required this.id});
+
+  final String id;
 
   @override
-  State<PhotoScreen> createState() => _PhotoScreenState();
+  State<PersonPhotoScreen> createState() => _PersonPhotoScreenState();
 }
 
-class _PhotoScreenState extends State<PhotoScreen> {
+class _PersonPhotoScreenState extends State<PersonPhotoScreen> {
 
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    AppCubit.get(context).getMyPhotos();
-    _scrollController.addListener(() {
-      if(_scrollController.offset >= _scrollController.position.maxScrollExtent && !AppCubit.get(context).isLastMyPhoto){
-          AppCubit.get(context).getMyPhotosFromLast();
+    AppCubit.get(context).getPersonPhotos(widget.id);
+    _scrollController.addListener(()  {
+      if(_scrollController.offset >= _scrollController.position.maxScrollExtent
+          && !AppCubit.get(context).isLastPersonPhoto){
+        AppCubit.get(context).getPersonPhotosFromLast(widget.id);
       }
     });
   }
@@ -38,7 +40,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
           appBar: AppBar(
             title: Text(lang=='en'?'Photos':'الصور'),
           ),
-          body: AppCubit.get(context).myPhotos.isNotEmpty
+          body: AppCubit.get(context).personPhotos.isNotEmpty
               ? GridView.count(
             controller: _scrollController,
             shrinkWrap: true,
@@ -46,7 +48,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
             mainAxisSpacing: 1,
             crossAxisSpacing: 1,
             childAspectRatio: 1 / 1.69,
-            children: AppCubit.get(context).myPhotos
+            children: AppCubit.get(context).personPhotos
                 .asMap()
                 .entries
                 .map((entry) => buildPhotoItem(entry.key, entry.value))

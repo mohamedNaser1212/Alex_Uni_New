@@ -25,10 +25,18 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
     AppCubit.get(context).getMyPosts();
+    _scrollController.addListener(() {
+      if(_scrollController.offset == _scrollController.position.maxScrollExtent && !AppCubit.get(context).isLastMyPost){
+        AppCubit.get(context).getMyPostsFromLast();
+      }
+    });
   }
 
   @override
@@ -41,6 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         return Scaffold(
           body: SingleChildScrollView(
+            controller: _scrollController,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

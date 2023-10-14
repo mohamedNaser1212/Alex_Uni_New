@@ -21,20 +21,20 @@ class SavedScreen extends StatefulWidget {
 
 class _SavedScreenState extends State<SavedScreen> {
 
-  final ScrollController _scrollController = ScrollController();
+  // final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
 
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        if (!AppCubit.get(context).isLastSavedPost) {
-          AppCubit.get(context).getSavedPostsFromLast();
-        }
-      }
-    });
+    // _scrollController.addListener(() {
+    //   if (_scrollController.position.pixels ==
+    //       _scrollController.position.maxScrollExtent) {
+    //     if (!AppCubit.get(context).isLastSavedPost) {
+    //       AppCubit.get(context).getSavedPostsFromLast();
+    //     }
+    //   }
+    // });
   }
 
   @override
@@ -47,7 +47,7 @@ class _SavedScreenState extends State<SavedScreen> {
             title: Text(lang == 'en' ? 'Saved Posts' : 'المنشورات المحفوظة'),
           ),
           body: SingleChildScrollView(
-            controller: _scrollController,
+            // controller: _scrollController,
             child: Column(
               children: [
                 Container(

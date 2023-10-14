@@ -846,6 +846,67 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+  List<String> personPhotos = [];
+  DocumentSnapshot? lastPersonPhoto;
+  bool isLastPersonPhoto = false;
+
+  removePersonPhotos() {
+    personPhotos = [];
+    lastPersonPhoto = null;
+    isLastPersonPhoto = false;
+  }
+
+  getPersonPhotos(String userId){
+    removePersonPhotos();
+    emit(GetPersonPhotosLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('photos')
+        .orderBy('date', descending: true)
+        .limit(15)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        personPhotos.add(element.data()['image']);
+      }
+      if (value.docs.length < 15) {
+        isLastPersonPhoto = true;
+      }
+      lastPersonPhoto = value.docs[value.docs.length - 1];
+    }).then((value) {
+      emit(GetPersonPhotosSuccessState());
+    }).catchError((error) {
+      isLastPersonPhoto = true;
+      emit(GetPersonPhotosErrorState(error.toString()));
+    });
+  }
+
+  getPersonPhotosFromLast(String userId){
+    emit(GetLastPersonPhotosLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('photos')
+        .orderBy('date', descending: true)
+        .startAfterDocument(lastPersonPhoto!)
+        .limit(15)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        personPhotos.add(element.data()['image']);
+      }
+      if (value.docs.length < 15) {
+        isLastPersonPhoto = true;
+      }
+      lastPersonPhoto = value.docs[value.docs.length - 1];
+    }).then((value) {
+      emit(GetLastPersonPhotosSuccessState());
+    }).catchError((error) {
+      isLastPersonPhoto = true;
+      emit(GetLastPersonPhotosErrorState(error.toString()));
+    });
+  }
 
   addSavePosts({
     required model,
@@ -865,7 +926,9 @@ class AppCubit extends Cubit<AppStates> {
                 },
         )
         .then((value) {
-      getSavePosts();
+          savedPostsId.add(model.postId);
+          savedPosts.add(model);
+      // getSavePosts();
       emit(AddSavePostSuccessState());
     }).catchError((error) {
       emit(AddSavePostErrorState());
@@ -875,8 +938,8 @@ class AppCubit extends Cubit<AppStates> {
   List savedPosts = [];
   List<String> savedPostsId = [];
 
-  DocumentSnapshot? lastSavedPost;
-  bool isLastSavedPost = false;
+  // DocumentSnapshot? lastSavedPost;
+  // bool isLastSavedPost = false;
 
   getSavePosts() {
     removeSavedPosts();
@@ -885,7 +948,6 @@ class AppCubit extends Cubit<AppStates> {
         .collection('users')
         .doc(uId)
         .collection('savedPosts')
-        .limit(5)
         .get()
         .then((value) {
       savedPosts = [];
@@ -903,56 +965,51 @@ class AppCubit extends Cubit<AppStates> {
           savedPostsId.add(element.id);
         }
       }
-      if (value.docs.length < 5) {
-        isLastSavedPost = true;
-      }
-      lastSavedPost = value.docs[value.docs.length - 1];
       emit(GetSavedPostsSuccessState());
     }).catchError((error) {
-      isLastSavedPost = true;
       emit(GetSavedPostsErrorState());
     });
   }
 
-  getSavedPostsFromLast() {
-    emit(GetLastSavedPostsLoadingState());
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uId)
-        .collection('savedPosts')
-        .startAfterDocument(lastSavedPost!)
-        .limit(5)
-        .get()
-        .then((value) {
-      for (var element in value.docs) {
-        if (element.data()['isShared'] == false) {
-          PostModel currentPost = PostModel.fromJson(element.data());
-          currentPost.postId = element.id;
-          savedPosts.add(currentPost);
-          savedPostsId.add(element.id);
-        } else {
-          SharePostModel currentPost = SharePostModel.fromJson(element.data());
-          currentPost.postId = element.id;
-          savedPosts.add(currentPost);
-          savedPostsId.add(element.id);
-        }
-      }
-      if (value.docs.length < 5) {
-        isLastSavedPost = true;
-      }
-      lastSavedPost = value.docs[value.docs.length - 1];
-      emit(GetLastSavedPostsSuccessState());
-    }).catchError((error) {
-      isLastSavedPost = true;
-      emit(GetLastSavedPostsErrorState(error.toString()));
-    });
-  }
+  // getSavedPostsFromLast() {
+  //   emit(GetLastSavedPostsLoadingState());
+  //   FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(uId)
+  //       .collection('savedPosts')
+  //       .startAfterDocument(lastSavedPost!)
+  //       .limit(5)
+  //       .get()
+  //       .then((value) {
+  //     for (var element in value.docs) {
+  //       if (element.data()['isShared'] == false) {
+  //         PostModel currentPost = PostModel.fromJson(element.data());
+  //         currentPost.postId = element.id;
+  //         savedPosts.add(currentPost);
+  //         savedPostsId.add(element.id);
+  //       } else {
+  //         SharePostModel currentPost = SharePostModel.fromJson(element.data());
+  //         currentPost.postId = element.id;
+  //         savedPosts.add(currentPost);
+  //         savedPostsId.add(element.id);
+  //       }
+  //     }
+  //     if (value.docs.length < 5) {
+  //       isLastSavedPost = true;
+  //     }
+  //     lastSavedPost = value.docs[value.docs.length - 1];
+  //     emit(GetLastSavedPostsSuccessState());
+  //   }).catchError((error) {
+  //     isLastSavedPost = true;
+  //     emit(GetLastSavedPostsErrorState(error.toString()));
+  //   });
+  // }
 
   removeSavedPosts() {
     savedPosts = [];
     savedPostsId = [];
-    lastSavedPost = null;
-    isLastSavedPost = false;
+    // lastSavedPost = null;
+    // isLastSavedPost = false;
   }
 
   sharePost({
@@ -971,7 +1028,10 @@ class AppCubit extends Cubit<AppStates> {
     sharePostModel.postModel!.postId = model.postId;
     FirebaseFirestore.instance
         .collection('posts')
-        .add(sharePostModel.toMap())
+        .add({
+      ...sharePostModel.toMap(),
+      'isFinished': true,
+        })
         .then((value) {
       emit(AddSharePostSuccessState());
     }).catchError((error) {
@@ -988,7 +1048,8 @@ class AppCubit extends Cubit<AppStates> {
         .doc(postId)
         .delete()
         .then((value) {
-      getSavePosts();
+      savedPosts.removeWhere((element) => element.postId == postId);
+      savedPostsId.removeWhere((element) => element == postId);
       emit(RemoveSavedPostSuccessState());
     }).catchError((error) {
       emit(RemoveSavedPostErrorState());
@@ -1304,13 +1365,26 @@ class AppCubit extends Cubit<AppStates> {
 
   List selectedUserPosts = [];
   List<String> selectedUserPhotos = [];
+
+  DocumentSnapshot? lastSelectedUserPost;
+  bool isLastSelectedUserPost = false;
+
+  removeSelectedUserPosts() {
+    selectedUserPosts = [];
+    selectedUserPhotos = [];
+    lastSelectedUserPost = null;
+    isLastSelectedUserPost = false;
+  }
+
   getSelectedUserPosts(String id) {
+    removeSelectedUserPosts();
     emit(GetSelectedUserPostsLoadingState());
     FirebaseFirestore.instance
         .collection('posts')
         .where('userId', isEqualTo: id)
         .where('showPost', isEqualTo: true)
         .orderBy('date', descending: true)
+        .limit(5)
         .get()
         .then((value) {
       selectedUserPosts = [];
@@ -1328,24 +1402,47 @@ class AppCubit extends Cubit<AppStates> {
           selectedUserPhotos.addAll(currentPost.postModel!.image!);
         }
       }
+      if (value.docs.length < 5) {
+        isLastSelectedUserPost = true;
+      }
+      lastSelectedUserPost = value.docs[value.docs.length - 1];
       emit(GetSelectedUserPostsSuccessState());
     }).catchError((error) {
+      isLastSelectedUserPost = true;
       emit(GetSelectedUserPostsErrorState());
     });
   }
 
-  List<SharePostModel> selectedUserSharedPosts = [];
-  getSelectedUserSharedPosts(String id) {
-    emit(GetSelectedUserLoadingState());
-    FirebaseFirestore.instance.collection('users').doc(id).get().then((value) {
-      selectedUserSharedPosts = [];
-      for (var element in value.data()!['sharePosts']) {
-        SharePostModel sharePostModel = SharePostModel.fromJson(element);
-        selectedUserSharedPosts.add(sharePostModel);
+  getSelectedUserPostsFromLast(String id) {
+    emit(GetLastSelectedUserPostsLoadingState());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .where('userId', isEqualTo: id)
+        .where('showPost', isEqualTo: true)
+        .orderBy('date', descending: true)
+        .startAfterDocument(lastSelectedUserPost!)
+        .limit(5)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        if (element.data()['isShared'] == false) {
+          PostModel currentPost = PostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          selectedUserPosts.add(currentPost);
+        } else {
+          SharePostModel currentPost = SharePostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          selectedUserPosts.add(currentPost);
+        }
       }
-      emit(GetSelectedUserSuccessState());
+      if (value.docs.length < 5) {
+        isLastSelectedUserPost = true;
+      }
+      lastSelectedUserPost = value.docs[value.docs.length - 1];
+      emit(GetLastSelectedUserPostsSuccessState());
     }).catchError((error) {
-      emit(GetSelectedUserErrorState());
+      isLastSelectedUserPost = true;
+      emit(GetLastSelectedUserPostsErrorState(error.toString()));
     });
   }
 
