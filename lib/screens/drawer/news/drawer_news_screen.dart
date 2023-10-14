@@ -1,11 +1,11 @@
 import 'package:alex_uni_new/constants/constants.dart';
-import 'package:alex_uni_new/models/both_news_model.dart';
-import 'package:alex_uni_new/models/news_model.dart';
+import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/screens/home/news/arabic_news_details_screen.dart';
+import 'package:alex_uni_new/states/app_states.dart';
 import 'package:alex_uni_new/widgets/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/home/news/english_news_details_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconly/iconly.dart';
 
 class DrawerNewsScreen extends StatefulWidget {
@@ -16,108 +16,108 @@ class DrawerNewsScreen extends StatefulWidget {
 }
 
 class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
+  ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (lang == 'en') {
+      AppCubit.get(context).getEnglishNews();
+    } else {
+      AppCubit.get(context).getArabicNews();
+    }
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        if (lang == 'en' && !AppCubit.get(context).isLastNews) {
+          AppCubit.get(context).getEnglishNewsFromLast();
+        } if(lang == 'ar' && !AppCubit.get(context).isLastNews) {
+          AppCubit.get(context).getArabicNewsFromLast();
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            lang == 'en' ?
-            IconlyBold.arrow_left_circle : IconlyBold.arrow_right_circle,
-            color: defaultColor,
-            size: 35,
-          ),
-        ),
-        title: Text(
-          lang == 'en' ? 'Latest News' : 'الاخبار',
-          style: TextStyle(
-            color: defaultColor,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: lang == 'ar'
-          ? SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.02,
-            ),
-            StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('News')
-                  .orderBy('date', descending: true)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot ds = snapshot.data!.docs[index];
-                      ArabicNewsModel model = ArabicNewsModel.fromJson(
-                          ds.data()! as Map<String, dynamic>?);
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        AppCubit cubit = AppCubit.get(context);
 
-                      return buildNewsItem(
-                        context: context,
-                        model: model,
-                      );
-                    },
-                    itemCount: snapshot.data!.docs.length,
-                  );
-                } else {
-                  return Center(
-                    child: Text(
-                      lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات ',
-                    ),
-                  );
-                }
-              },
-            ),
-          ],
-        ),
-      )
-          : StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('News')
-            .where('type', isEqualTo: 'both')
-            .orderBy('date', descending: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) {
-                DocumentSnapshot ds = snapshot.data!.docs[index];
-                BothNewsModel model = BothNewsModel.fromJson(
-                    ds.data()! as Map<String, dynamic>?);
-                return Column(
-                  children: [
-                    if (index == 0)
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.03,
-                      ),
-                    buildNewsItem(
-                      context: context,
-                      model: model,
-                    ),
-                  ],
-                );
-              },
-              itemCount: snapshot.data!.docs.length,
-            );
-          } else {
-            return Center(
-              child: Text(
-                lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات',
+        return WillPopScope(
+          onWillPop: () async {
+            AppCubit.get(context).removeNews();
+            Navigator.pop(context);
+            return true;
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  lang == 'en'
+                      ? IconlyBold.arrow_left_circle
+                      : IconlyBold.arrow_right_circle,
+                  color: defaultColor,
+                  size: 35,
+                ),
               ),
-            );
-          }
-        },
-      ),
+              title: Text(
+                lang == 'en' ? 'Latest News' : 'الاخبار',
+                style: TextStyle(
+                  color: defaultColor,
+                ),
+              ),
+              centerTitle: true,
+            ),
+            body: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  lang == 'ar'
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return buildNewsItem(
+                              context: context,
+                              model: cubit.news[index],
+                            );
+                          },
+                          itemCount: cubit.news.length,
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                if (index == 0)
+                                  SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.height * 0.03,
+                                  ),
+                                buildNewsItem(
+                                  context: context,
+                                  model: cubit.bothNews[index],
+                                ),
+                              ],
+                            );
+                          },
+                          itemCount: cubit.bothNews.length,
+                        ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -132,13 +132,13 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
           onTap: () {
             navigateTo(
               context: context,
-              screen:
-              lang == "en" ?
-              BothNewsDetailsScreen(
-                newsModel: model,
-              ) : ArabicNewsDetailsScreen(
-                newsModel: model,
-              ),
+              screen: lang == "en"
+                  ? BothNewsDetailsScreen(
+                      newsModel: model,
+                    )
+                  : ArabicNewsDetailsScreen(
+                      newsModel: model,
+                    ),
             );
           },
           child: Container(

@@ -52,6 +52,7 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
     );
     return FirebaseFirestore.instance.collection('posts').add({
       ...model.toMap(),
+      'isFinished': true,
       'isShared': false,
     }).then((value) {
       AppCubit.get(context).getPosts();

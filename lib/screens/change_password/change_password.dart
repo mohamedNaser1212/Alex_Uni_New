@@ -4,10 +4,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svg_flutter/svg.dart';
-
 import '../../constants/constants.dart';
-import '../../cubit/login_cubit.dart';
-import '../../states/login_states.dart';
 import '../../widgets/reusable_widgets.dart';
 
 class ChangePassword extends StatelessWidget {
@@ -20,7 +17,7 @@ class ChangePassword extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {
-        if (state is changePasswordSuccessState) {
+        if (state is ChangePasswordSuccessState) {
           showFlushBar(
             context: context,
             message: lang=='ar'?'تم تحديث كلمه السر':'password updated',
@@ -180,7 +177,7 @@ class ChangePassword extends StatelessWidget {
                             padding:
                             const EdgeInsets.symmetric(horizontal: 28.0),
                             child: ConditionalBuilder(
-                              condition: state is! changePasswordLoadingState,
+                              condition: state is! ChangePasswordLoadingState,
                               builder: (context) {
                                 return Center(
                                   child: InkWell(

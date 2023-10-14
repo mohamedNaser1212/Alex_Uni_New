@@ -77,7 +77,6 @@ class MyAppState extends State<MyApp> {
           create: (BuildContext context) => AppCubit()
             ..getUserData()
             ..getMyPosts()
-            ..getSavePosts()
             ..getSettings()
           ..getSavePosts(),
         ),

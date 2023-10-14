@@ -54,7 +54,6 @@ class DeletePostImageSuccessState extends AppStates {}
 class CreatePostLoadingState extends AppStates {}
 
 class CreatePostSuccessState extends AppStates {}
-
 class CreatePostErrorState extends AppStates {}
 
 class GetPostsLoadingState extends AppStates {}
@@ -200,8 +199,8 @@ class RemoveSavedPostLoadingState extends AppStates {}
 class RemoveSavedPostSuccessState extends AppStates {}
 class RemoveSavedPostErrorState extends AppStates {}
 
-class changePasswordSuccessState extends AppStates{}
-class changePasswordLoadingState extends AppStates{}
+class ChangePasswordSuccessState extends AppStates{}
+class ChangePasswordLoadingState extends AppStates{}
 
 class ChangePasswordErrorState extends AppStates{}
 
@@ -211,5 +210,41 @@ class LoadMorePostsErrorState extends AppStates{
   final String error;
 
   LoadMorePostsErrorState(this.error);
+}
+
+class GetLastPostsSuccessState extends AppStates{}
+
+class GetLastPostsErrorState extends AppStates{
+  final String error;
+
+  GetLastPostsErrorState(this.error){
+    print(error.toString());
+  }
+}
+
+class GetLastPostsLoadingState extends AppStates{}
+
+class GetLastNewsLoadingState extends AppStates{}
+
+class GetLastNewsSuccessState extends AppStates{}
+
+class GetLastNewsErrorState extends AppStates{
+  final String error;
+
+  GetLastNewsErrorState(this.error){
+    print(error.toString());
+  }
+}
+
+class GetLastSavedPostsLoadingState extends AppStates{}
+
+class GetLastSavedPostsSuccessState extends AppStates{}
+
+class GetLastSavedPostsErrorState extends AppStates{
+  final String error;
+
+  GetLastSavedPostsErrorState(this.error){
+    print(error.toString());
+  }
 }
 

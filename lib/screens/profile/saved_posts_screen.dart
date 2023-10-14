@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:alex_uni_new/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,8 +12,30 @@ import '../home/posts/comments/comments_screen.dart';
 import '../view_image_screen.dart';
 import 'person_profile/person_profile_screen.dart';
 
-class SavedScreen extends StatelessWidget {
-  const SavedScreen({Key? key}) : super(key: key);
+class SavedScreen extends StatefulWidget {
+  SavedScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SavedScreen> createState() => _SavedScreenState();
+}
+
+class _SavedScreenState extends State<SavedScreen> {
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        if (!AppCubit.get(context).isLastSavedPost) {
+          AppCubit.get(context).getSavedPostsFromLast();
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +47,7 @@ class SavedScreen extends StatelessWidget {
             title: Text(lang == 'en' ? 'Saved Posts' : 'المنشورات المحفوظة'),
           ),
           body: SingleChildScrollView(
+            controller: _scrollController,
             child: Column(
               children: [
                 Container(
@@ -73,8 +95,7 @@ class SavedScreen extends StatelessWidget {
   Widget savedPostsItems(
     BuildContext context,
     model,
-  ) =>
-      model is PostModel
+  ) => model is PostModel
           ? buildNotSharedPostItem(
               model,
               context,
@@ -87,8 +108,7 @@ class SavedScreen extends StatelessWidget {
   Widget buildNotSharedPostItem(
     PostModel model,
     context,
-  ) =>
-      Container(
+  ) => Container(
         decoration: const BoxDecoration(
           border: Border(
             bottom: BorderSide(
@@ -120,7 +140,7 @@ class SavedScreen extends StatelessWidget {
                               ),
                             );
                           } else {
-                            AppCubit.get(context).changeBottomNavBar(1);
+                            Navigator.pop(context);
                           }
                         } else {
                           navigateTo(
@@ -167,8 +187,7 @@ class SavedScreen extends StatelessWidget {
                                                 ),
                                               );
                                             } else {
-                                              AppCubit.get(context)
-                                                  .changeBottomNavBar(1);
+                                              Navigator.pop(context);
                                             }
                                           } else {
                                             navigateTo(
@@ -213,6 +232,7 @@ class SavedScreen extends StatelessWidget {
                                 IconButton(
                                   onPressed: () {
                                     AppCubit.get(context).deletePost(model);
+
                                   },
                                   icon: const Icon(
                                     IconlyBold.delete,

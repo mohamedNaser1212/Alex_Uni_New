@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:alex_uni_new/constants/constants.dart';
 import 'package:alex_uni_new/constants/strings.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
@@ -376,7 +375,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             AppCubit.get(context).getSavePosts();
                             navigateTo(
                               context: context,
-                              screen: const SavedScreen(),
+                              screen: SavedScreen(),
                             );
                           },
                           child: Column(
