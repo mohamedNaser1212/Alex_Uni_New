@@ -344,9 +344,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: () {
                             navigateTo(
                               context: context,
-                              screen:  PhotoScreen(
-                                photos:AppCubit.get(context).myphotos,
-                              ),
+                              screen:  PhotoScreen(),
                             );
                           },
                           child: Column(

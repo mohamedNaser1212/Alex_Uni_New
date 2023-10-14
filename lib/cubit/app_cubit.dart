@@ -265,16 +265,16 @@ class AppCubit extends Cubit<AppStates> {
       String formattedDate = DateFormat('yyyy-MM-dd hh:mm a').format(now);
 
       //make document for post
-      final postRef = FirebaseFirestore.instance
-          .collection('posts')
-          .doc();
+      final postRef = FirebaseFirestore.instance.collection('posts').doc();
 
       postRef.set({
         'isFinished': false,
       });
 
       for (XFile image in images) {
-        Reference reference = storageRef.ref().child('posts/${postRef.id}/image${images.indexOf(image)}');
+        Reference reference = storageRef
+            .ref()
+            .child('posts/${postRef.id}/image${images.indexOf(image)}');
 
         UploadTask uploadTask = reference.putData(await image.readAsBytes());
 
@@ -284,6 +284,15 @@ class AppCubit extends Cubit<AppStates> {
         // Get the download URL for the current image
         String downloadURL = await taskSnapshot.ref.getDownloadURL();
         imageUrls.add(downloadURL); // Add to the array
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(uId)
+            .collection('photos')
+            .add({
+          'image': downloadURL,
+          'date': formattedDate,
+          'postId': postRef.id,
+        });
       }
 
       PostModel model = PostModel(
@@ -320,18 +329,18 @@ class AppCubit extends Cubit<AppStates> {
 
   bool isLastPost = false;
 
-  removePosts(){
-    post=[];
-    postsId=[];
+  removePosts() {
+    post = [];
+    postsId = [];
   }
 
   getPosts() {
     removePosts();
-    isLastPost=false;
+    isLastPost = false;
     emit(GetPostsLoadingState());
     FirebaseFirestore.instance
         .collection('posts')
-        .where('isFinished',isEqualTo: true)
+        .where('isFinished', isEqualTo: true)
         .where('showPost', isEqualTo: true)
         .orderBy('date', descending: true)
         .limit(5)
@@ -351,13 +360,13 @@ class AppCubit extends Cubit<AppStates> {
         }
       }
       lastPost = value.docs[value.docs.length - 1];
-      if(value.docs.length<5){
-        isLastPost=true;
+      if (value.docs.length < 5) {
+        isLastPost = true;
       }
     }).then((value) {
       emit(GetPostsSuccessState());
     }).catchError((error) {
-      isLastPost=true;
+      isLastPost = true;
       emit(GetPostsErrorState(error.toString()));
     });
   }
@@ -366,7 +375,7 @@ class AppCubit extends Cubit<AppStates> {
     emit(GetLastPostsLoadingState());
     FirebaseFirestore.instance
         .collection('posts')
-        .where('isFinished',isEqualTo: true)
+        .where('isFinished', isEqualTo: true)
         .where('showPost', isEqualTo: true)
         .orderBy('date', descending: true)
         .startAfterDocument(lastPost!)
@@ -387,13 +396,13 @@ class AppCubit extends Cubit<AppStates> {
         }
       }
       lastPost = value.docs[value.docs.length - 1];
-      if(value.docs.length<5){
-        isLastPost=true;
+      if (value.docs.length < 5) {
+        isLastPost = true;
       }
     }).then((value) {
       emit(GetLastPostsSuccessState());
     }).catchError((error) {
-      isLastPost=true;
+      isLastPost = true;
       emit(GetLastPostsErrorState(error.toString()));
     });
   }
@@ -508,6 +517,16 @@ class AppCubit extends Cubit<AppStates> {
             .where('postId', isEqualTo: model.postId)
             .get()
             .then((value) {
+          for (var element in value.docs) {
+            element.reference.delete();
+          }
+        });
+        FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('photos')
+        .where('postId', isEqualTo: model.postId)
+        .get().then((value) {
           for (var element in value.docs) {
             element.reference.delete();
           }
@@ -678,16 +697,27 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   List myPosts = [];
-  List<String> myphotos = [];
   List myPostsId = [];
 
+  DocumentSnapshot? lastMyPost;
+  bool isLastMyPost = false;
+
+  removeMyPosts() {
+    myPosts = [];
+    myPostsId = [];
+    lastMyPost = null;
+    isLastMyPost = false;
+  }
+
   getMyPosts() {
+    removeMyPosts();
     emit(GetPostsLoadingState());
     FirebaseFirestore.instance
         .collection('posts')
         .where('showPost', isEqualTo: true)
         .where('userId', isEqualTo: uId)
         .orderBy('date', descending: true)
+        .limit(5)
         .get()
         .then((value) {
       for (var element in value.docs) {
@@ -695,23 +725,127 @@ class AppCubit extends Cubit<AppStates> {
           PostModel currentPost = PostModel.fromJson(element.data());
           currentPost.postId = element.id;
           myPosts.add(currentPost);
-          myphotos.addAll(currentPost.image!);
-
+          // myphotos.addAll(currentPost.image!);
           myPostsId.add(element.id);
         } else {
           SharePostModel currentPost = SharePostModel.fromJson(element.data());
           currentPost.postId = element.id;
           myPosts.add(currentPost);
           myPostsId.add(element.id);
-          myphotos.addAll(currentPost.postModel!.image!);
+          // myphotos.addAll(currentPost.postModel!.image!);
         }
       }
+      if (value.docs.length < 5) {
+        isLastMyPost = true;
+      }
+      lastMyPost = value.docs[value.docs.length - 1];
     }).then((value) {
       emit(GetPostsSuccessState());
     }).catchError((error) {
+      isLastMyPost = true;
       emit(GetPostsErrorState(error.toString()));
     });
   }
+
+  getMyPostsFromLast() {
+    emit(GetLastPostsLoadingState());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .where('showPost', isEqualTo: true)
+        .where('userId', isEqualTo: uId)
+        .orderBy('date', descending: true)
+        .startAfterDocument(lastMyPost!)
+        .limit(5)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        if (element.data()['isShared'] == false) {
+          PostModel currentPost = PostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          myPosts.add(currentPost);
+          // myphotos.addAll(currentPost.image!);
+          myPostsId.add(element.id);
+        } else {
+          SharePostModel currentPost = SharePostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          myPosts.add(currentPost);
+          myPostsId.add(element.id);
+        }
+      }
+      if (value.docs.length < 5) {
+        isLastMyPost = true;
+      }
+      lastMyPost = value.docs[value.docs.length - 1];
+    }).then((value) {
+      emit(GetLastPostsSuccessState());
+    }).catchError((error) {
+      isLastMyPost = true;
+      emit(GetLastPostsErrorState(error.toString()));
+    });
+  }
+
+   List<String> myPhotos = [];
+  DocumentSnapshot? lastMyPhoto;
+  bool isLastMyPhoto = false;
+
+  removeMyPhotos() {
+    myPhotos = [];
+    lastMyPhoto = null;
+    isLastMyPhoto = false;
+  }
+
+  getMyPhotos(){
+    removeMyPhotos();
+    emit(GetMyPhotosLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('photos')
+        .orderBy('date', descending: true)
+        .limit(15)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        myPhotos.add(element.data()['image']);
+      }
+      if (value.docs.length < 15) {
+        isLastMyPhoto = true;
+      }
+      lastMyPhoto = value.docs[value.docs.length - 1];
+    }).then((value) {
+      emit(GetMyPhotosSuccessState());
+    }).catchError((error) {
+      isLastMyPhoto = true;
+      emit(GetMyPhotosErrorState(error.toString()));
+    });
+  }
+
+  getMyPhotosFromLast(){
+    emit(GetLastMyPhotosLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('photos')
+        .orderBy('date', descending: true)
+        .startAfterDocument(lastMyPhoto!)
+        .limit(15)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        myPhotos.add(element.data()['image']);
+      }
+      if (value.docs.length < 15) {
+        isLastMyPhoto = true;
+      }
+      lastMyPhoto = value.docs[value.docs.length - 1];
+    }).then((value) {
+      emit(GetLastMyPhotosSuccessState());
+    }).catchError((error) {
+      isLastMyPhoto = true;
+      emit(GetLastMyPhotosErrorState(error.toString()));
+    });
+  }
+
 
   addSavePosts({
     required model,
@@ -769,13 +903,13 @@ class AppCubit extends Cubit<AppStates> {
           savedPostsId.add(element.id);
         }
       }
-      if(value.docs.length<5){
-        isLastSavedPost=true;
+      if (value.docs.length < 5) {
+        isLastSavedPost = true;
       }
       lastSavedPost = value.docs[value.docs.length - 1];
       emit(GetSavedPostsSuccessState());
     }).catchError((error) {
-      isLastSavedPost=true;
+      isLastSavedPost = true;
       emit(GetSavedPostsErrorState());
     });
   }
@@ -803,22 +937,22 @@ class AppCubit extends Cubit<AppStates> {
           savedPostsId.add(element.id);
         }
       }
-      if(value.docs.length<5){
-        isLastSavedPost=true;
+      if (value.docs.length < 5) {
+        isLastSavedPost = true;
       }
       lastSavedPost = value.docs[value.docs.length - 1];
       emit(GetLastSavedPostsSuccessState());
     }).catchError((error) {
-      isLastSavedPost=true;
+      isLastSavedPost = true;
       emit(GetLastSavedPostsErrorState(error.toString()));
     });
   }
 
-  removeSavedPosts(){
-    savedPosts=[];
-    savedPostsId=[];
-    lastSavedPost=null;
-    isLastSavedPost=false;
+  removeSavedPosts() {
+    savedPosts = [];
+    savedPostsId = [];
+    lastSavedPost = null;
+    isLastSavedPost = false;
   }
 
   sharePost({
@@ -987,17 +1121,17 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  bool isLastNews=false;
+  bool isLastNews = false;
 
   List<ArabicNewsModel> news = [];
   DocumentSnapshot? lastArabicNews;
 
-  removeNews(){
-    news=[];
-    bothNews=[];
-    lastBothNews=null;
-    lastArabicNews=null;
-    isLastNews=false;
+  removeNews() {
+    news = [];
+    bothNews = [];
+    lastBothNews = null;
+    lastArabicNews = null;
+    isLastNews = false;
   }
 
   getArabicNews() {
@@ -1012,19 +1146,19 @@ class AppCubit extends Cubit<AppStates> {
       for (var element in value.docs) {
         news.add(ArabicNewsModel.fromJson(element.data()));
       }
-      lastArabicNews=value.docs[value.docs.length-1];
-      if(value.docs.length<5){
-        isLastNews=true;
+      lastArabicNews = value.docs[value.docs.length - 1];
+      if (value.docs.length < 5) {
+        isLastNews = true;
       }
     }).then((value) {
       emit(GetNewsSuccessState());
     }).catchError((error) {
-      isLastNews=true;
+      isLastNews = true;
       emit(GetNewsErrorState(error.toString()));
     });
   }
 
-  getArabicNewsFromLast(){
+  getArabicNewsFromLast() {
     emit(GetLastNewsLoadingState());
     FirebaseFirestore.instance
         .collection('News')
@@ -1037,21 +1171,20 @@ class AppCubit extends Cubit<AppStates> {
       for (var element in value.docs) {
         news.add(ArabicNewsModel.fromJson(element.data()));
       }
-      lastArabicNews=value.docs[value.docs.length-1];
-      if(value.docs.length<5){
-        isLastNews=true;
+      lastArabicNews = value.docs[value.docs.length - 1];
+      if (value.docs.length < 5) {
+        isLastNews = true;
       }
     }).then((value) {
       emit(GetLastNewsSuccessState());
     }).catchError((error) {
-      isLastNews=true;
+      isLastNews = true;
       emit(GetLastNewsErrorState(error.toString()));
     });
   }
 
   List<BothNewsModel> bothNews = [];
   DocumentSnapshot? lastBothNews;
-
 
   getEnglishNews() {
     removeNews();
@@ -1066,19 +1199,19 @@ class AppCubit extends Cubit<AppStates> {
       for (var element in value.docs) {
         bothNews.add(BothNewsModel.fromJson(element.data()));
       }
-      lastBothNews=value.docs[value.docs.length-1];
-      if(value.docs.length<5){
-        isLastNews=true;
+      lastBothNews = value.docs[value.docs.length - 1];
+      if (value.docs.length < 5) {
+        isLastNews = true;
       }
     }).then((value) {
       emit(GetNewsSuccessState());
     }).catchError((error) {
-      isLastNews=true;
+      isLastNews = true;
       emit(GetNewsErrorState(error.toString()));
     });
   }
 
-  getEnglishNewsFromLast(){
+  getEnglishNewsFromLast() {
     emit(GetLastNewsLoadingState());
     FirebaseFirestore.instance
         .collection('News')
@@ -1091,14 +1224,14 @@ class AppCubit extends Cubit<AppStates> {
       for (var element in value.docs) {
         bothNews.add(BothNewsModel.fromJson(element.data()));
       }
-      lastBothNews=value.docs[value.docs.length-1];
-      if(value.docs.length<5){
-        isLastNews=true;
+      lastBothNews = value.docs[value.docs.length - 1];
+      if (value.docs.length < 5) {
+        isLastNews = true;
       }
     }).then((value) {
       emit(GetLastNewsSuccessState());
     }).catchError((error) {
-      isLastNews=true;
+      isLastNews = true;
       emit(GetLastNewsErrorState(error.toString()));
     });
   }
@@ -1401,5 +1534,4 @@ class AppCubit extends Cubit<AppStates> {
   //     emit(LoadMorePostsErrorState(error.toString()));
   //   });
   // }
-
 }

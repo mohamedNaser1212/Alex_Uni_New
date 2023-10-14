@@ -9,15 +9,27 @@ import '../view_image_screen.dart';
 
 // PhotoScreen
 class PhotoScreen extends StatefulWidget {
-  const PhotoScreen({super.key,required this.photos});
-
-  final List<String> photos;
+  PhotoScreen({super.key});
 
   @override
   State<PhotoScreen> createState() => _PhotoScreenState();
 }
 
 class _PhotoScreenState extends State<PhotoScreen> {
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    AppCubit.get(context).getMyPhotos();
+    _scrollController.addListener(() {
+      if(_scrollController.offset >= _scrollController.position.maxScrollExtent && !AppCubit.get(context).isLastMyPhoto){
+          AppCubit.get(context).getMyPhotosFromLast();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
@@ -27,14 +39,15 @@ class _PhotoScreenState extends State<PhotoScreen> {
           appBar: AppBar(
             title: Text(lang=='en'?'Photos':'الصور'),
           ),
-          body: widget.photos.isNotEmpty
+          body: AppCubit.get(context).myPhotos.isNotEmpty
               ? GridView.count(
+            controller: _scrollController,
             shrinkWrap: true,
             crossAxisCount: 3,
             mainAxisSpacing: 1,
             crossAxisSpacing: 1,
             childAspectRatio: 1 / 1.69,
-            children: widget.photos
+            children: AppCubit.get(context).myPhotos
                 .asMap()
                 .entries
                 .map((entry) => buildPhotoItem(entry.key, entry.value))
@@ -59,7 +72,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
       navigateTo(
         context: context,
         screen: ViewImagesScreen(
-          photos: widget.photos,
+          photos:AppCubit.get(context).myPhotos,
           selectedIndex: index,
         ),
       );

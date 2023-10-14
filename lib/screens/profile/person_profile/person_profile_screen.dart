@@ -320,10 +320,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                   onTap: () {
                                     navigateTo(
                                         context: context,
-                                        screen: PhotoScreen(
-                                            photos: AppCubit.get(context)
-                                                .selectedUserPhotos
-                                        ));
+                                        screen: PhotoScreen());
                                   },
                                   child: Column(
                                     children: [

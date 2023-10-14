@@ -248,3 +248,27 @@ class GetLastSavedPostsErrorState extends AppStates{
   }
 }
 
+class GetMyPhotosSuccessState extends AppStates{}
+
+class GetMyPhotosErrorState extends AppStates{
+  final String error;
+
+  GetMyPhotosErrorState(this.error){
+    print(error.toString());
+  }
+}
+
+class GetMyPhotosLoadingState extends AppStates{}
+
+class GetLastMyPhotosLoadingState extends AppStates{}
+
+class GetLastMyPhotosSuccessState extends AppStates{}
+
+class GetLastMyPhotosErrorState extends AppStates{
+  final String error;
+
+  GetLastMyPhotosErrorState(this.error){
+    print(error.toString());
+  }
+}
+
