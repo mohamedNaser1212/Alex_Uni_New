@@ -98,7 +98,13 @@ class GetCommentsLoadingState extends AppStates {}
 
 class GetCommentsSuccessState extends AppStates {}
 
-class GetCommentsErrorState extends AppStates{}
+class GetCommentsErrorState extends AppStates{
+  final String error;
+
+  GetCommentsErrorState(this.error){
+    print(error);
+  }
+}
 
 class DeleteCommentLoadingState extends AppStates{}
 
@@ -307,4 +313,16 @@ class GetLastSelectedUserPostsErrorState extends AppStates{
 }
 
 class GetLastSelectedUserPostsLoadingState extends AppStates{}
+
+class GetLastCommentsLoadingState extends AppStates{}
+
+class GetLastCommentsSuccessState extends AppStates{}
+
+class GetLastCommentsErrorState extends AppStates{
+  final String error;
+
+  GetLastCommentsErrorState(this.error){
+    print(error.toString());
+  }
+}
 

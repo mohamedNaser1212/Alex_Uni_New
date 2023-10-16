@@ -7,10 +7,32 @@ import '../../../../models/posts/post_model.dart';
 
 var commentsController = TextEditingController();
 
-class CommentsScreen extends StatelessWidget {
-  const CommentsScreen({Key? key,required this.postId}) : super(key: key);
+class CommentsScreen extends StatefulWidget {
+  CommentsScreen({Key? key,required this.postId}) : super(key: key);
 
   final String postId;
+
+  @override
+  State<CommentsScreen> createState() => _CommentsScreenState();
+}
+
+class _CommentsScreenState extends State<CommentsScreen> {
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if(_scrollController.offset == _scrollController.position.maxScrollExtent
+          &&
+          !AppCubit.get(context).isLastComment
+          &&
+        AppCubit.get(context).lastComment!=null){
+        AppCubit.get(context).getCommentsFromLast(postId: widget.postId);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +41,7 @@ class CommentsScreen extends StatelessWidget {
       builder: (context,state){
         return WillPopScope(
           onWillPop: ()async{
-            AppCubit.get(context).comments=[];
+            AppCubit.get(context).removeComments();
             return true;
           },
           child: Scaffold(
@@ -34,6 +56,7 @@ class CommentsScreen extends StatelessWidget {
                 ),
               ),
               body: ListView.separated(
+                  controller: _scrollController,
                   itemBuilder: (context,index)=>comments(
                     AppCubit.get(context).comments,
                       index,
@@ -83,7 +106,7 @@ class CommentsScreen extends StatelessWidget {
                           onTap: (){
                             if(commentsController.text.isNotEmpty){
                               AppCubit.get(context).writeComment(
-                                postId: postId,
+                                postId: widget.postId,
                                 text: commentsController.text,
                               );
                               commentsController.clear();
@@ -116,6 +139,7 @@ class CommentsScreen extends StatelessWidget {
       },
     );
   }
+
   Widget comments(List<CommentDataModel>data,index,context){
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -168,7 +192,7 @@ class CommentsScreen extends StatelessWidget {
                 onPressed: (){
                   AppCubit.get(context).deleteComment(
                     commentId: data[index].id!,
-                    postId: postId,
+                    postId: widget.postId,
                   );
                 },
                 icon:const Icon(

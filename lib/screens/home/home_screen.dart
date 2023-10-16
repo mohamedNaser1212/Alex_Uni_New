@@ -28,9 +28,18 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     AppCubit.get(context).getPosts();
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-              _scrollController.position.maxScrollExtent &&
-          !AppCubit.get(context).isLastPost) {
+      if(_scrollController.offset == _scrollController.position.maxScrollExtent
+          &&
+          !AppCubit.get(context).isLastPost
+          &&
+        AppCubit.get(context).lastSavedPost!=null){
+        AppCubit.get(context).getSavedPostsFromLast();
+      }
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent
+          &&
+          !AppCubit.get(context).isLastPost
+      &&
+        AppCubit.get(context).lastPost!=null) {
         AppCubit.get(context).getPostsFromLast();
       }
     });

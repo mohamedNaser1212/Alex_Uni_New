@@ -451,7 +451,8 @@ class AppCubit extends Cubit<AppStates> {
           commentModel.toJson(),
         )
         .then((value) {
-      getComments(postId: postId);
+      // getComments(postId: postId);
+      comments.add(commentModel);
       emit(WriteCommentSuccessState());
     }).catchError((error) {
       emit(WriteCommentErrorState());
@@ -470,7 +471,8 @@ class AppCubit extends Cubit<AppStates> {
         .doc(commentId)
         .delete()
         .then((value) {
-      getComments(postId: postId);
+      // getComments(postId: postId);
+      comments.removeWhere((element) => element.id == commentId);
       emit(DeleteCommentSuccessState());
     }).catchError((error) {
       emit(DeleteCommentErrorState());
@@ -478,26 +480,67 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   List<CommentDataModel> comments = [];
+  DocumentSnapshot? lastComment;
+  bool isLastComment = false;
+
+  removeComments() {
+    comments = [];
+    lastComment = null;
+    isLastComment = false;
+  }
+
   getComments({
     required String postId,
   }) {
+    removeComments();
     emit(GetCommentsLoadingState());
     FirebaseFirestore.instance
         .collection('posts')
         .doc(postId)
         .collection('comments')
+        .limit(20)
         .get()
         .then((value) {
       comments = [];
       for (var element in value.docs) {
-        CommentDataModel currentComment =
-            CommentDataModel.fromJson(element.data());
+        CommentDataModel currentComment = CommentDataModel.fromJson(element.data());
         currentComment.id = element.id;
         comments.add(currentComment);
       }
+      lastComment = value.docs[value.docs.length - 1];
+      if (value.docs.length < 20) {
+        isLastComment = true;
+      }
       emit(GetCommentsSuccessState());
     }).catchError((error) {
-      emit(GetCommentsErrorState());
+      emit(GetCommentsErrorState(error.toString()));
+    });
+  }
+
+  getCommentsFromLast({
+    required String postId,
+  }) {
+    emit(GetLastCommentsLoadingState());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .startAfterDocument(lastComment!)
+        .limit(20)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        CommentDataModel currentComment = CommentDataModel.fromJson(element.data());
+        currentComment.id = element.id;
+        comments.add(currentComment);
+      }
+      lastComment = value.docs[value.docs.length - 1];
+      if (value.docs.length < 20) {
+        isLastComment = true;
+      }
+      emit(GetLastCommentsSuccessState());
+    }).catchError((error) {
+      emit(GetLastCommentsErrorState(error.toString()));
     });
   }
 
@@ -938,8 +981,8 @@ class AppCubit extends Cubit<AppStates> {
   List savedPosts = [];
   List<String> savedPostsId = [];
 
-  // DocumentSnapshot? lastSavedPost;
-  // bool isLastSavedPost = false;
+  DocumentSnapshot? lastSavedPost;
+  bool isLastSavedPost = false;
 
   getSavePosts() {
     removeSavedPosts();
@@ -948,6 +991,7 @@ class AppCubit extends Cubit<AppStates> {
         .collection('users')
         .doc(uId)
         .collection('savedPosts')
+        .limit(5)
         .get()
         .then((value) {
       savedPosts = [];
@@ -965,51 +1009,56 @@ class AppCubit extends Cubit<AppStates> {
           savedPostsId.add(element.id);
         }
       }
+      if (value.docs.length < 5) {
+        isLastSavedPost = true;
+      }
+      lastSavedPost = value.docs[value.docs.length - 1];
       emit(GetSavedPostsSuccessState());
     }).catchError((error) {
+      isLastSavedPost = true;
       emit(GetSavedPostsErrorState());
     });
   }
 
-  // getSavedPostsFromLast() {
-  //   emit(GetLastSavedPostsLoadingState());
-  //   FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(uId)
-  //       .collection('savedPosts')
-  //       .startAfterDocument(lastSavedPost!)
-  //       .limit(5)
-  //       .get()
-  //       .then((value) {
-  //     for (var element in value.docs) {
-  //       if (element.data()['isShared'] == false) {
-  //         PostModel currentPost = PostModel.fromJson(element.data());
-  //         currentPost.postId = element.id;
-  //         savedPosts.add(currentPost);
-  //         savedPostsId.add(element.id);
-  //       } else {
-  //         SharePostModel currentPost = SharePostModel.fromJson(element.data());
-  //         currentPost.postId = element.id;
-  //         savedPosts.add(currentPost);
-  //         savedPostsId.add(element.id);
-  //       }
-  //     }
-  //     if (value.docs.length < 5) {
-  //       isLastSavedPost = true;
-  //     }
-  //     lastSavedPost = value.docs[value.docs.length - 1];
-  //     emit(GetLastSavedPostsSuccessState());
-  //   }).catchError((error) {
-  //     isLastSavedPost = true;
-  //     emit(GetLastSavedPostsErrorState(error.toString()));
-  //   });
-  // }
+  getSavedPostsFromLast() {
+    emit(GetLastSavedPostsLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('savedPosts')
+        .startAfterDocument(lastSavedPost!)
+        .limit(5)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        if (element.data()['isShared'] == false) {
+          PostModel currentPost = PostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          savedPosts.add(currentPost);
+          savedPostsId.add(element.id);
+        } else {
+          SharePostModel currentPost = SharePostModel.fromJson(element.data());
+          currentPost.postId = element.id;
+          savedPosts.add(currentPost);
+          savedPostsId.add(element.id);
+        }
+      }
+      if (value.docs.length < 5) {
+        isLastSavedPost = true;
+      }
+      lastSavedPost = value.docs[value.docs.length - 1];
+      emit(GetLastSavedPostsSuccessState());
+    }).catchError((error) {
+      isLastSavedPost = true;
+      emit(GetLastSavedPostsErrorState(error.toString()));
+    });
+  }
 
   removeSavedPosts() {
     savedPosts = [];
     savedPostsId = [];
-    // lastSavedPost = null;
-    // isLastSavedPost = false;
+    lastSavedPost = null;
+    isLastSavedPost = false;
   }
 
   sharePost({
