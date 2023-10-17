@@ -66,7 +66,7 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
         preferredSize: Size(
           double.infinity,
           widget.departmentModel.name!.length > 32 ||
-              widget.departmentModel.arabicName!.length > 32
+                  widget.departmentModel.arabicName!.length > 32
               ? 63
               : 50,
         ),
@@ -78,7 +78,8 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                 lang == 'en'
                     ? 'Degree: ${widget.departmentModel.degree!}'
                     : 'الدرجة العلمية: ${widget.departmentModel.arabicDegree!}',
-                style: const TextStyle(
+                style: TextStyle(
+                  fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: Colors.grey,
@@ -92,10 +93,11 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                       : widget.departmentModel.arabicName!,
                   overflow: TextOverflow.ellipsis,
                   maxLines: widget.departmentModel.name!.length > 17 ||
-                      widget.departmentModel.arabicName!.length > 17
+                          widget.departmentModel.arabicName!.length > 17
                       ? 2
                       : 1,
                   style: TextStyle(
+                    fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                     fontSize: 17,
                     fontWeight: FontWeight.w900,
                     color: defaultColor,
@@ -145,7 +147,7 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   color:
-                                  const Color(0xff38455e).withOpacity(0.9),
+                                      const Color(0xff38455e).withOpacity(0.9),
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 child: IconButton(
@@ -167,7 +169,7 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   color:
-                                  const Color(0xff38455e).withOpacity(0.9),
+                                      const Color(0xff38455e).withOpacity(0.9),
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 child: IconButton(
@@ -220,6 +222,8 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                             Text(
                               widget.departmentModel.name!,
                               style: TextStyle(
+                                fontFamily:
+                                    lang == 'ar' ? 'arabic2' : 'poppins',
                                 fontSize: 19.5,
                                 fontWeight: FontWeight.w900,
                                 color: defaultColor,
@@ -245,13 +249,15 @@ class _DepartmentDetailsScreenState extends State<DepartmentDetailsScreen> {
                             Text(
                               lang == 'en'
                                   ? widget.departmentModel
-                                  .sectionDescriptions[index]!
+                                      .sectionDescriptions[index]!
                                   : widget.departmentModel
-                                  .arabicSectionDescriptions[index]!,
-                              style: const TextStyle(
+                                      .arabicSectionDescriptions[index]!,
+                              style: TextStyle(
+                                fontFamily:
+                                    lang == 'ar' ? 'arabic2' : 'poppins',
                                 fontSize: 16.0,
                                 height: 1.5,
-                                color: Color.fromARGB(255, 63, 63, 63),
+                                color: const Color.fromARGB(255, 63, 63, 63),
                               ),
                             ),
                             const SizedBox(

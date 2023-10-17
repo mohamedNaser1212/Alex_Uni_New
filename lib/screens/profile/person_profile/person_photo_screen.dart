@@ -1,10 +1,13 @@
+import 'package:alex_uni_new/constants/constants.dart';
+import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/screens/view_image_screen.dart';
+import 'package:alex_uni_new/states/app_states.dart';
+import 'package:alex_uni_new/widgets/reusable_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../constants/constants.dart';
-import '../../../cubit/app_cubit.dart';
-import '../../../states/app_states.dart';
-import '../../../widgets/reusable_widgets.dart';
-import '../../view_image_screen.dart';
+import 'package:iconly/iconly.dart';
+import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
+import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
 class PersonPhotoScreen extends StatefulWidget {
   const PersonPhotoScreen({super.key,required this.id});
@@ -38,53 +41,243 @@ class _PersonPhotoScreenState extends State<PersonPhotoScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(lang=='en'?'Photos':'الصور'),
-          ),
-          body: AppCubit.get(context).personPhotos.isNotEmpty
-              ? GridView.count(
-            controller: _scrollController,
-            shrinkWrap: true,
-            crossAxisCount: 3,
-            mainAxisSpacing: 1,
-            crossAxisSpacing: 1,
-            childAspectRatio: 1 / 1.69,
-            children: AppCubit.get(context).personPhotos
-                .asMap()
-                .entries
-                .map((entry) => buildPhotoItem(entry.key, entry.value))
-                .toList(),
-          )
-              : const Center(
-            child: Text(
-              'No Photos',
+            title: Text(
+              lang == 'en' ? 'Photos' : 'الصور',
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
               ),
             ),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                lang == 'en'
+                    ? IconlyBold.arrow_left_circle
+                    : IconlyBold.arrow_right_circle,
+                color: defaultColor,
+                size: 35,
+              ),
+            ),
+            centerTitle: true,
           ),
+          body: AppCubit.get(context).personPhotos.isNotEmpty
+              ? StaggeredGridView.countBuilder(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 2,
+                  physics: const BouncingScrollPhysics(),
+                  staggeredTileBuilder: (int index) =>
+                      const StaggeredTile.fit(1),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => buildPhotoItem(
+                    index,
+                    AppCubit.get(context).personPhotos[index],
+                  ),
+                  itemCount: AppCubit.get(context).personPhotos.length,
+                )
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset("assets/images/University.png"),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Text(
+                          lang == 'ar'
+                              ? "لا يوجد صور\n انت لم تقم بإضافة اي منشورات حتى الآن."
+                              : "Empty photos\nYou haven't added any posts yet!!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: defaultColor,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 24,
+                            fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 55,
+                      ),
+                    ],
+                  ),
+                ),
         );
       },
     );
   }
 
   Widget buildPhotoItem(int index, String image) => InkWell(
-    onTap: () {
-      navigateTo(
-        context: context,
-        screen: ViewImagesScreen(
-          photos:AppCubit.get(context).myPhotos,
-          selectedIndex: index,
+        onTap: () {
+          navigateTo(
+            context: context,
+            screen: ViewImagesScreen(
+              photos: AppCubit.get(context).personPhotos,
+              selectedIndex: index,
+            ),
+          );
+        },
+        child: Container(
+          margin: const EdgeInsets.all(8),
+          height: index.isEven ? 200 : 240,
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 140, 209, 255),
+            borderRadius: BorderRadius.all(
+              Radius.circular(23),
+            ),
+          ),
+          child: Image.network(
+            image,
+            fit: BoxFit.cover,
+            width: double.infinity,
+          ),
         ),
       );
-    },
-    child: Container(
-      padding: const EdgeInsets.all(1),
-      child: Image.network(
-        image,
-        fit: BoxFit.cover,
-        width: double.infinity,
-      ),
-    ),
-  );
 }
+
+/*
+
+import 'package:alex_uni_new/constants/constants.dart';
+import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/screens/view_image_screen.dart';
+import 'package:alex_uni_new/states/app_states.dart';
+import 'package:alex_uni_new/widgets/reusable_widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconly/iconly.dart';
+import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
+import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
+
+class PersonPhotoScreen extends StatefulWidget {
+  const PersonPhotoScreen({super.key,required this.id});
+
+  final String id;
+
+  @override
+  State<PersonPhotoScreen> createState() => _PersonPhotoScreenState();
+}
+
+class _PersonPhotoScreenState extends State<PersonPhotoScreen> {
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    AppCubit.get(context).getPersonPhotos(widget.id);
+    _scrollController.addListener(()  {
+      if(_scrollController.offset >= _scrollController.position.maxScrollExtent
+          && !AppCubit.get(context).isLastPersonPhoto){
+        AppCubit.get(context).getPersonPhotosFromLast(widget.id);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              lang == 'en' ? 'Photos' : 'الصور',
+              style: TextStyle(
+                fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+              ),
+            ),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                lang == 'en'
+                    ? IconlyBold.arrow_left_circle
+                    : IconlyBold.arrow_right_circle,
+                color: defaultColor,
+                size: 35,
+              ),
+            ),
+            centerTitle: true,
+          ),
+          body: AppCubit.get(context).personPhotos.isNotEmpty
+              ? StaggeredGridView.countBuilder(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 2,
+                  physics: const BouncingScrollPhysics(),
+                  staggeredTileBuilder: (int index) =>
+                      const StaggeredTile.fit(1),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => buildPhotoItem(
+                    index,
+                    AppCubit.get(context).personPhotos[index],
+                  ),
+                  itemCount: AppCubit.get(context).personPhotos.length,
+                )
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset("assets/images/University.png"),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Text(
+                          lang == 'ar'
+                              ? "لا يوجد صور\n انت لم تقم بإضافة اي منشورات حتى الآن."
+                              : "Empty photos\nYou haven't added any posts yet!!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: defaultColor,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 24,
+                            fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 55,
+                      ),
+                    ],
+                  ),
+                ),
+        );
+      },
+    );
+  }
+
+  Widget buildPhotoItem(int index, String image) => InkWell(
+        onTap: () {
+          navigateTo(
+            context: context,
+            screen: ViewImagesScreen(
+              photos: AppCubit.get(context).personPhotos,
+              selectedIndex: index,
+            ),
+          );
+        },
+        child: Container(
+          margin: const EdgeInsets.all(8),
+          height: index.isEven ? 200 : 240,
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 140, 209, 255),
+            borderRadius: BorderRadius.all(
+              Radius.circular(23),
+            ),
+          ),
+          child: Image.network(
+            image,
+            fit: BoxFit.cover,
+            width: double.infinity,
+          ),
+        ),
+      );
+}
+
+*/

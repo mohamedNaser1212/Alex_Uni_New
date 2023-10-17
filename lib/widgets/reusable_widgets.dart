@@ -1,6 +1,6 @@
+import 'package:alex_uni_new/constants/constants.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-
 
 // import 'cache_helper.dart';
 
@@ -34,6 +34,7 @@ Widget reusableElevatedButton({
         child: Text(
           label.toUpperCase(),
           style: TextStyle(
+            fontFamily: lang == 'ar' ? "arabic2" : "poppins",
             color: textColor,
             fontWeight: fontWeight,
             fontSize: fontSize,
@@ -94,11 +95,9 @@ Widget reusableTextFormField({
     );
 
 void navigateTo({
-
   required context,
   required Widget screen,
 }) {
-
   Navigator.push(
     context,
     MaterialPageRoute(
@@ -106,6 +105,7 @@ void navigateTo({
     ),
   );
 }
+
 void navigateReplacement({
   required context,
   required Widget screen,
@@ -117,6 +117,7 @@ void navigateReplacement({
     ),
   );
 }
+
 void navigateAndFinish({
   required context,
   required Widget screen,
@@ -126,7 +127,7 @@ void navigateAndFinish({
     MaterialPageRoute(
       builder: (builder) => screen,
     ),
-        (route) => false,
+    (route) => false,
   );
 }
 
@@ -141,58 +142,54 @@ void navigateAndFinish({
 //   );
 // }
 
-void printFullText(String text)
-{
+void printFullText(String text) {
   final pattern = RegExp('.{1,800}');
-  pattern.allMatches(text).forEach((match)=>print(match.group(0)));
+  pattern.allMatches(text).forEach((match) => print(match.group(0)));
 }
 
 Widget showFlushBar({
   required BuildContext context,
   required String message,
-})=> Flushbar(
-  message: message,
-  icon: Icon(
-    Icons.info_outline,
-    size: 28.0,
-    color: Colors.blue[300],
-  ),
-  margin: const EdgeInsets.all(6.0),
-  flushbarStyle: FlushbarStyle.FLOATING,
-  flushbarPosition: FlushbarPosition.TOP,
-  textDirection: Directionality.of(context),
-  borderRadius: BorderRadius.circular(12),
-  duration: const Duration(seconds: 3),
-  leftBarIndicatorColor: Colors.blue[300],
-)..show(context);
-
-
-
-
-
+}) =>
+    Flushbar(
+      message: message,
+      icon: Icon(
+        Icons.info_outline,
+        size: 28.0,
+        color: Colors.blue[300],
+      ),
+      margin: const EdgeInsets.all(6.0),
+      flushbarStyle: FlushbarStyle.FLOATING,
+      flushbarPosition: FlushbarPosition.TOP,
+      textDirection: Directionality.of(context),
+      borderRadius: BorderRadius.circular(12),
+      duration: const Duration(seconds: 3),
+      leftBarIndicatorColor: Colors.blue[300],
+    )..show(context);
 
 PreferredSizeWidget defaultappbar({
   required BuildContext context,
   String? title,
   List<Widget>? actions,
-})=> AppBar(
-  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-  titleSpacing: 5,
-  leading: IconButton(
-    onPressed: () {
-      Navigator.pop(context);
-    },
-    icon: const Icon(
-      Icons.keyboard_arrow_left,
-      size: 30,
-      // color: Colors.black,
-    ),
-  ),
-  title: Text(
-    title!,
-    style: const TextStyle(
-      //  color: Colors.black,
-    ),
-  ),
-  actions: actions,
-);
+}) =>
+    AppBar(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      titleSpacing: 5,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: const Icon(
+          Icons.keyboard_arrow_left,
+          size: 30,
+          // color: Colors.black,
+        ),
+      ),
+      title: Text(
+        title!,
+        style: const TextStyle(
+            //  color: Colors.black,
+            ),
+      ),
+      actions: actions,
+    );

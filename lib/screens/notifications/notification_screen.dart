@@ -7,12 +7,27 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        lang == 'en' ? 'Notification Screen' : 'صفحه الاشعارات',
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset("assets/images/University.png"),
+          const SizedBox(
+            height: 25,
+          ),
+          Text(
+            lang == 'en' ? 'Empty Notifications' : 'لا يوجد اشعارات',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: defaultColor,
+              fontWeight: FontWeight.w900,
+              fontSize: 24,
+              fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+            ),
+          ),
+          const SizedBox(
+            height: 55,
+          ),
+        ],
       ),
     );
   }

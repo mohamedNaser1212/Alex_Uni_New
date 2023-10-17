@@ -25,7 +25,7 @@ class CollegeTab extends StatelessWidget {
           child: ListView.separated(
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) => InkWell(
-              onTap: (){
+              onTap: () {
                 cubit.getAllAdmins(index);
                 navigateTo(context: context, screen: const ChooseScreen());
               },
@@ -54,10 +54,12 @@ class CollegeTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CircleAvatar(
-              backgroundImage: NetworkImage(
-                '${universityModel.image}',
+              radius: 26,
+              backgroundColor: Colors.transparent,
+              child: Image.asset(
+                'assets/images/University.png',
+                fit: BoxFit.fitHeight,
               ),
-              radius: 25,
             ),
             const SizedBox(
               width: 10,
@@ -68,11 +70,11 @@ class CollegeTab extends StatelessWidget {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.75,
-                  child:  Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width * 0.6,
                         child: Text(
                           '${universityModel.name}',

@@ -1,4 +1,6 @@
+import 'package:alex_uni_new/constants/strings.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/screens/profile/saved_posts_screen.dart';
 import 'package:alex_uni_new/widgets/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/drawer/settings/settings.dart';
 import 'package:alex_uni_new/screens/home/posts/add_posts_screen.dart';
@@ -40,7 +42,7 @@ class _UserLayoutState extends State<UserLayout> {
               AppCubit.get(context).currentIndex == 3 ? true : false,
           extendBody: true,
           appBar: AppBar(
-            leading: AppCubit.get(context).currentIndex == 0
+            leading: !isGuest ? AppCubit.get(context).currentIndex == 0
                 ? IconButton(
                     onPressed: () {
                       scafKey.currentState!.openDrawer();
@@ -49,7 +51,7 @@ class _UserLayoutState extends State<UserLayout> {
                       Icons.menu_rounded,
                     ),
                   )
-                : Container(),
+                : Container() : null,
             backgroundColor: AppCubit.get(context).currentIndex == 0
                 ? const Color(0xfffdfdfd)
                 : Colors.transparent,
@@ -59,10 +61,11 @@ class _UserLayoutState extends State<UserLayout> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (isGuest == true)
-                  const Text(
-                    "Hello sir,",
+                  Text(
+                    lang == 'ar' ? 'ضيف,' : "Hello sir,",
                     style: TextStyle(
-                      color: Color.fromARGB(255, 151, 151, 151),
+                      fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                      color: const Color.fromARGB(255, 151, 151, 151),
                       fontSize: 17,
                       fontWeight: FontWeight.w500,
                     ),
@@ -82,8 +85,9 @@ class _UserLayoutState extends State<UserLayout> {
                   Text(
                     AppCubit.get(context)
                         .titles[AppCubit.get(context).currentIndex],
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 53, 53, 53),
+                    style: TextStyle(
+                      fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                      color: const Color.fromARGB(255, 53, 53, 53),
                       fontSize: 18.5,
                       fontWeight: FontWeight.w700,
                     ),
@@ -110,8 +114,9 @@ class _UserLayoutState extends State<UserLayout> {
                       screen: const LoginScreen(),
                     );
                   },
-                  icon: const Icon(
-                    IconlyLight.login,
+                  icon: Icon(
+                    IconlyBold.login,
+                    color: defaultColor,
                   ),
                 ),
             ],
@@ -190,7 +195,10 @@ class _UserLayoutState extends State<UserLayout> {
                                       ),
                                       Text(
                                         lang == 'en' ? 'Messages' : 'الرسائل',
-                                        style: const TextStyle(
+                                        style: TextStyle(
+                                          fontFamily: lang == 'ar'
+                                              ? 'arabic2'
+                                              : 'poppins',
                                           fontWeight: FontWeight.w900,
                                           fontSize: 16,
                                         ),
@@ -211,7 +219,14 @@ class _UserLayoutState extends State<UserLayout> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const SavedScreen(),
+                                    ),
+                                  );
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 12,
@@ -227,8 +242,11 @@ class _UserLayoutState extends State<UserLayout> {
                                         width: 10,
                                       ),
                                       Text(
-                                        lang == 'en' ? 'Favourites' : 'المفضلة',
-                                        style: const TextStyle(
+                                        lang == 'en' ? 'Saved' : 'المحفوظة',
+                                        style: TextStyle(
+                                          fontFamily: lang == 'ar'
+                                              ? 'arabic2'
+                                              : 'poppins',
                                           fontWeight: FontWeight.w900,
                                           fontSize: 16,
                                         ),
@@ -271,7 +289,10 @@ class _UserLayoutState extends State<UserLayout> {
                                       ),
                                       Text(
                                         lang == 'en' ? 'News' : 'الاخبار',
-                                        style: const TextStyle(
+                                        style: TextStyle(
+                                          fontFamily: lang == 'ar'
+                                              ? 'arabic2'
+                                              : 'poppins',
                                           fontWeight: FontWeight.w900,
                                           fontSize: 16,
                                         ),
@@ -314,7 +335,10 @@ class _UserLayoutState extends State<UserLayout> {
                                       ),
                                       Text(
                                         lang == 'en' ? 'Settings' : 'الاعدادات',
-                                        style: const TextStyle(
+                                        style: TextStyle(
+                                          fontFamily: lang == 'ar'
+                                              ? 'arabic2'
+                                              : 'poppins',
                                           fontWeight: FontWeight.w900,
                                           fontSize: 16,
                                         ),
@@ -352,7 +376,10 @@ class _UserLayoutState extends State<UserLayout> {
                                       ),
                                       Text(
                                         lang == 'en' ? 'Help' : 'المساعدة',
-                                        style: const TextStyle(
+                                        style: TextStyle(
+                                          fontFamily: lang == 'ar'
+                                              ? 'arabic2'
+                                              : 'poppins',
                                           fontWeight: FontWeight.w900,
                                           fontSize: 16,
                                         ),
@@ -382,11 +409,20 @@ class _UserLayoutState extends State<UserLayout> {
                           function: () {
                             setState(() {
                               AppCubit.get(context).customDialog(
-                                title: "Attention",
-                                desc1: "Are you sure you want to leave ?",
+                                title: lang == "en"
+                                    ? customDialogTitle
+                                    : customDialogTitleArabic,
+                                desc1: lang == "en"
+                                    ? customDialogLeaveDesc
+                                    : customDialogLeaveDescArabic,
                                 hasDesc2: false,
                                 crossAxis: CrossAxisAlignment.center,
-                                rightBtnText: "Logout",
+                                leftBtnText: lang == "en"
+                                    ? customDialogCancelBtn
+                                    : customDialogCancelBtnArabic,
+                                rightBtnText: lang == "en"
+                                    ? customDialogLogoutBtn
+                                    : customDialogLogoutBtnArabic,
                                 leftBtn: () {
                                   Navigator.pop(context);
                                 },

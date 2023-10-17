@@ -8,7 +8,7 @@ import '../../../../models/posts/post_model.dart';
 var commentsController = TextEditingController();
 
 class CommentsScreen extends StatefulWidget {
-  CommentsScreen({Key? key,required this.postId}) : super(key: key);
+  const CommentsScreen({Key? key, required this.postId}) : super(key: key);
 
   final String postId;
 
@@ -17,18 +17,16 @@ class CommentsScreen extends StatefulWidget {
 }
 
 class _CommentsScreenState extends State<CommentsScreen> {
-
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(() {
-      if(_scrollController.offset == _scrollController.position.maxScrollExtent
-          &&
-          !AppCubit.get(context).isLastComment
-          &&
-        AppCubit.get(context).lastComment!=null){
+      if (_scrollController.offset ==
+              _scrollController.position.maxScrollExtent &&
+          !AppCubit.get(context).isLastComment &&
+          AppCubit.get(context).lastComment != null) {
         AppCubit.get(context).getCommentsFromLast(postId: widget.postId);
       }
     });
@@ -36,116 +34,125 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppCubit,AppStates>(
-      listener: (context,state){},
-      builder: (context,state){
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
         return WillPopScope(
-          onWillPop: ()async{
+          onWillPop: () async {
             AppCubit.get(context).removeComments();
             return true;
           },
           child: Scaffold(
-              appBar: AppBar(
-                centerTitle: true,
-                title: Text(
-                  lang=='ar'?'التعليقات':'Comments',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+            appBar: AppBar(
+              centerTitle: true,
+              title: Text(
+                lang == 'ar' ? 'التعليقات' : 'Comments',
+                style: TextStyle(
+                  fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              body: ListView.separated(
-                  controller: _scrollController,
-                  itemBuilder: (context,index)=>comments(
-                    AppCubit.get(context).comments,
-                      index,
-                    context
-                  ),
-                  separatorBuilder: (context,index)=>const SizedBox(height: 10,),
-                  itemCount: AppCubit.get(context).comments.length
-              ),
-              bottomNavigationBar: !isGuest? Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(15,15,15,MediaQuery.of(context).viewInsets.bottom),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(15)
-                            ),
-                            child: Row(
-                              children: [
-                                const SizedBox(
-                                  width: 10,
+            ),
+            body: ListView.separated(
+                controller: _scrollController,
+                itemBuilder: (context, index) =>
+                    comments(AppCubit.get(context).comments, index, context),
+                separatorBuilder: (context, index) => const SizedBox(
+                      height: 10,
+                    ),
+                itemCount: AppCubit.get(context).comments.length),
+            bottomNavigationBar: !isGuest
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(15, 15, 15,
+                            MediaQuery.of(context).viewInsets.bottom),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: commentsController,
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: 'Write a comment',
+                                child: Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 10,
                                     ),
-                                  ),
+                                    Expanded(
+                                      child: TextFormField(
+                                        controller: commentsController,
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintStyle: TextStyle(
+                                            fontFamily: lang == 'ar'
+                                                ? 'arabic2'
+                                                : 'poppins',
+                                          ),
+                                          hintText: lang == 'en'
+                                              ? 'Write a comment'
+                                              : 'اكتب تعليقك',
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        InkWell(
-                          onTap: (){
-                            if(commentsController.text.isNotEmpty){
-                              AppCubit.get(context).writeComment(
-                                postId: widget.postId,
-                                text: commentsController.text,
-                              );
-                              commentsController.clear();
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(15)
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Icon(
-                                Icons.send,
-                                color: Colors.white,
                               ),
                             ),
-                          ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                if (commentsController.text.isNotEmpty) {
+                                  AppCubit.get(context).writeComment(
+                                    postId: widget.postId,
+                                    text: commentsController.text,
+                                  );
+                                  commentsController.clear();
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: defaultColor,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Icon(
+                                    Icons.send,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                ],
-              ):null,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                    ],
+                  )
+                : null,
           ),
         );
       },
     );
   }
 
-  Widget comments(List<CommentDataModel>data,index,context){
+  Widget comments(List<CommentDataModel> data, index, context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Row(
         children: [
-           CircleAvatar(
+          CircleAvatar(
             radius: 30,
             backgroundImage: NetworkImage(
               data[index].ownerImage,
@@ -157,11 +164,11 @@ class _CommentsScreenState extends State<CommentsScreen> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(15)
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(15),
               ),
               child: Padding(
-                padding:const  EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -178,7 +185,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                     ),
                     Text(
                       data[index].text,
-                      style:const  TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                       ),
                     ),
@@ -187,18 +194,18 @@ class _CommentsScreenState extends State<CommentsScreen> {
               ),
             ),
           ),
-          if(uId==data[index].ownerId)
+          if (uId == data[index].ownerId)
             IconButton(
-                onPressed: (){
-                  AppCubit.get(context).deleteComment(
-                    commentId: data[index].id!,
-                    postId: widget.postId,
-                  );
-                },
-                icon:const Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
+              onPressed: () {
+                AppCubit.get(context).deleteComment(
+                  commentId: data[index].id!,
+                  postId: widget.postId,
+                );
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
             ),
         ],
       ),

@@ -1,11 +1,11 @@
 import 'package:alex_uni_new/constants/constants.dart';
-import 'package:alex_uni_new/cubit/app_cubit.dart';
+import 'package:alex_uni_new/models/both_news_model.dart';
+import 'package:alex_uni_new/models/news_model.dart';
 import 'package:alex_uni_new/screens/home/news/arabic_news_details_screen.dart';
-import 'package:alex_uni_new/states/app_states.dart';
 import 'package:alex_uni_new/widgets/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/home/news/english_news_details_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconly/iconly.dart';
 
 class DrawerNewsScreen extends StatefulWidget {
@@ -16,108 +16,116 @@ class DrawerNewsScreen extends StatefulWidget {
 }
 
 class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
-  ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    if (lang == 'en') {
-      AppCubit.get(context).getEnglishNews();
-    } else {
-      AppCubit.get(context).getArabicNews();
-    }
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        if (lang == 'en' && !AppCubit.get(context).isLastNews) {
-          AppCubit.get(context).getEnglishNewsFromLast();
-        } if(lang == 'ar' && !AppCubit.get(context).isLastNews) {
-          AppCubit.get(context).getArabicNewsFromLast();
-        }
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        AppCubit cubit = AppCubit.get(context);
-
-        return WillPopScope(
-          onWillPop: () async {
-            AppCubit.get(context).removeNews();
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
             Navigator.pop(context);
-            return true;
           },
-          child: Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  lang == 'en'
-                      ? IconlyBold.arrow_left_circle
-                      : IconlyBold.arrow_right_circle,
-                  color: defaultColor,
-                  size: 35,
-                ),
-              ),
-              title: Text(
-                lang == 'en' ? 'Latest News' : 'الاخبار',
-                style: TextStyle(
-                  color: defaultColor,
-                ),
-              ),
-              centerTitle: true,
-            ),
-            body: SingleChildScrollView(
-              controller: _scrollController,
+          icon: Icon(
+            lang == 'en'
+                ? IconlyBold.arrow_left_circle
+                : IconlyBold.arrow_right_circle,
+            color: defaultColor,
+            size: 35,
+          ),
+        ),
+        title: Text(
+          lang == 'en' ? 'Latest News' : 'الاخبار',
+          style: TextStyle(
+            fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+            color: defaultColor,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: lang == 'ar'
+          ? SingleChildScrollView(
               child: Column(
                 children: [
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
-                  lang == 'ar'
-                      ? ListView.builder(
+                  StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('News')
+                        .orderBy('date', descending: true)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
                           shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
+                            DocumentSnapshot ds = snapshot.data!.docs[index];
+                            ArabicNewsModel model = ArabicNewsModel.fromJson(
+                                ds.data()! as Map<String, dynamic>?);
+
                             return buildNewsItem(
                               context: context,
-                              model: cubit.news[index],
+                              model: model,
                             );
                           },
-                          itemCount: cubit.news.length,
-                        )
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                if (index == 0)
-                                  SizedBox(
-                                    height:
-                                        MediaQuery.of(context).size.height * 0.03,
-                                  ),
-                                buildNewsItem(
-                                  context: context,
-                                  model: cubit.bothNews[index],
-                                ),
-                              ],
-                            );
-                          },
-                          itemCount: cubit.bothNews.length,
-                        ),
+                          itemCount: snapshot.data!.docs.length,
+                        );
+                      } else {
+                        return Center(
+                          child: Text(
+                            lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات ',
+                            style: TextStyle(
+                              fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ],
               ),
+            )
+          : StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('News')
+                  .where('type', isEqualTo: 'both')
+                  .orderBy('date', descending: true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot ds = snapshot.data!.docs[index];
+                      BothNewsModel model = BothNewsModel.fromJson(
+                          ds.data()! as Map<String, dynamic>?);
+                      return Column(
+                        children: [
+                          if (index == 0)
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.03,
+                            ),
+                          buildNewsItem(
+                            context: context,
+                            model: model,
+                          ),
+                        ],
+                      );
+                    },
+                    itemCount: snapshot.data!.docs.length,
+                  );
+                } else {
+                  return Center(
+                    child: Text(
+                      lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات',
+                      style: TextStyle(
+                        fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                      ),
+                    ),
+                  );
+                }
+              },
             ),
-          ),
-        );
-      },
     );
   }
 
@@ -186,7 +194,8 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
                           textDirection: lang == 'en'
                               ? TextDirection.ltr
                               : TextDirection.rtl,
-                          style: const TextStyle(
+                          style: TextStyle(
+                            fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                             fontSize: 14.5,
                             fontWeight: FontWeight.w900,
                           ),
@@ -199,9 +208,11 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
                               textDirection: lang == 'en'
                                   ? TextDirection.ltr
                                   : TextDirection.rtl,
-                              style: const TextStyle(
+                              style: TextStyle(
+                                fontFamily:
+                                    lang == 'ar' ? 'arabic2' : 'poppins',
                                 fontSize: 12,
-                                color: Color.fromARGB(255, 88, 88, 88),
+                                color: const Color.fromARGB(255, 88, 88, 88),
                               ),
                             ),
                           ],
@@ -216,10 +227,11 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
                           textDirection: lang == 'en'
                               ? TextDirection.ltr
                               : TextDirection.rtl,
-                          style: const TextStyle(
+                          style: TextStyle(
+                            fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: Color.fromARGB(255, 88, 88, 88),
+                            color: const Color.fromARGB(255, 88, 88, 88),
                           ),
                         ),
                       ],

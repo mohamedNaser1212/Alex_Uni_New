@@ -10,7 +10,8 @@ Widget buildNewsItem({
   required BuildContext context,
   model,
   required int index,
-}) => index != 1
+}) =>
+    index != 1
         ? InkWell(
             onTap: () {
               if (model is ArabicNewsModel) {
@@ -20,8 +21,7 @@ Widget buildNewsItem({
                     newsModel: model,
                   ),
                 );
-              }
-              else {
+              } else {
                 navigateTo(
                   context: context,
                   screen: BothNewsDetailsScreen(
@@ -78,11 +78,11 @@ Widget buildNewsItem({
                       height: 8,
                     ),
                     Expanded(
-                      flex: 3,
+                      flex: 2,
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.7299999713897705),
+                          color: Colors.white.withOpacity(0.73),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(8),
                             topRight: Radius.circular(8),
@@ -97,12 +97,14 @@ Widget buildNewsItem({
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Expanded(
-                                  flex: 3,
+                                  flex: 2,
                                   child: Text(
                                     model.title,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
+                                    style: TextStyle(
+                                      fontFamily:
+                                          lang == 'ar' ? 'arabic2' : 'poppins',
                                       color: Colors.black,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -116,8 +118,11 @@ Widget buildNewsItem({
                                   flex: 1,
                                   child: Text(
                                     '${model.date}',
-                                    style: const TextStyle(
-                                      color: Color.fromARGB(255, 111, 111, 111),
+                                    style: TextStyle(
+                                      fontFamily:
+                                          lang == 'ar' ? 'arabic2' : 'poppins',
+                                      color: const Color.fromARGB(
+                                          255, 111, 111, 111),
                                       fontSize: 11.4,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -134,8 +139,9 @@ Widget buildNewsItem({
                                     maxLines: 4,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
+                                      fontFamily: 'poppins',
                                       color: Color.fromARGB(255, 111, 111, 111),
-                                      fontSize: 13,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.w400,
                                     ),
                                   )
@@ -144,6 +150,7 @@ Widget buildNewsItem({
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
+                                      fontFamily: 'arabic2',
                                       color: Color.fromARGB(255, 111, 111, 111),
                                       fontSize: 13,
                                       fontWeight: FontWeight.w400,
@@ -208,6 +215,7 @@ Widget buildNewsItem({
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(
                           flex: 3,
@@ -227,11 +235,11 @@ Widget buildNewsItem({
                           height: 8,
                         ),
                         Expanded(
-                          flex: 3,
+                          flex: 2,
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.7299999713897705),
+                              color: Colors.white.withOpacity(0.73),
                               borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(8),
                                 topRight: Radius.circular(8),
@@ -251,7 +259,10 @@ Widget buildNewsItem({
                                         model.title,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
+                                        style: TextStyle(
+                                          fontFamily: lang == 'ar'
+                                              ? 'arabic2'
+                                              : 'poppins',
                                           color: Colors.black,
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -265,10 +276,15 @@ Widget buildNewsItem({
                                       flex: 1,
                                       child: Text(
                                         '${model.date}',
-                                        style: const TextStyle(
-                                          color: Color.fromARGB(255, 111, 111, 111),
-                                          fontSize: 11.4,
-                                          fontWeight: FontWeight.w500,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontFamily: lang == 'ar'
+                                              ? 'arabic2'
+                                              : 'poppins',
+                                          color: const Color.fromARGB(
+                                              255, 111, 111, 111),
+                                          fontSize: lang == 'ar' ? 10.1 : 11,
+                                          fontWeight: FontWeight.w700,
                                         ),
                                       ),
                                     ),
@@ -283,8 +299,10 @@ Widget buildNewsItem({
                                         maxLines: 4,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
-                                          color: Color.fromARGB(255, 111, 111, 111),
-                                          fontSize: 13,
+                                          fontFamily: 'poppins',
+                                          color: Color.fromARGB(
+                                              255, 111, 111, 111),
+                                          fontSize: 15,
                                           fontWeight: FontWeight.w400,
                                         ),
                                       )
@@ -293,7 +311,9 @@ Widget buildNewsItem({
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
-                                          color: Color.fromARGB(255, 111, 111, 111),
+                                          fontFamily: 'arabic2',
+                                          color: Color.fromARGB(
+                                              255, 111, 111, 111),
                                           fontSize: 13,
                                           fontWeight: FontWeight.w400,
                                         ),
@@ -312,12 +332,16 @@ Widget buildNewsItem({
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: TextButton(
-                        onPressed: (){
-                          navigateTo(context: context, screen: const DrawerNewsScreen(),);
+                        onPressed: () {
+                          navigateTo(
+                            context: context,
+                            screen: const DrawerNewsScreen(),
+                          );
                         },
                         child: Text(
                           lang == 'en' ? 'Read More' : 'قراءة المزيد',
-                          style: const TextStyle(
+                          style: TextStyle(
+                            fontFamily: lang == 'en' ? 'poppins' : 'arabic2',
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

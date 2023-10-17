@@ -42,12 +42,12 @@ Widget buildFacultyItem(context, UniversityModel model) => InkWell(
             ),
             Expanded(
               child: Text(
-                lang == 'en' ?
-                '${model.name}' : "${model.arabicName}",
+                lang == 'en' ? '${model.name}' : "${model.arabicName}",
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
+                  fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                   fontSize: MediaQuery.of(context).size.width / 25,
                   fontWeight: FontWeight.w500,
                   color: const Color(0xff464646),

@@ -28,18 +28,16 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     AppCubit.get(context).getPosts();
     _scrollController.addListener(() {
-      if(_scrollController.offset == _scrollController.position.maxScrollExtent
-          &&
-          !AppCubit.get(context).isLastPost
-          &&
-        AppCubit.get(context).lastSavedPost!=null){
+      if (_scrollController.offset ==
+              _scrollController.position.maxScrollExtent &&
+          !AppCubit.get(context).isLastPost &&
+          AppCubit.get(context).lastSavedPost != null) {
         AppCubit.get(context).getSavedPostsFromLast();
       }
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent
-          &&
-          !AppCubit.get(context).isLastPost
-      &&
-        AppCubit.get(context).lastPost!=null) {
+      if (_scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent &&
+          !AppCubit.get(context).isLastPost &&
+          AppCubit.get(context).lastPost != null) {
         AppCubit.get(context).getPostsFromLast();
       }
     });
@@ -70,14 +68,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: Text(
                       lang == 'en' ? 'Faculties' : 'الكليات',
-                      style: const TextStyle(
-                        fontSize: 22,
+                      style: TextStyle(
+                        fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                        fontSize: lang == 'ar' ? 20 : 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.16,
+                    height: lang == 'en'
+                        ? MediaQuery.of(context).size.height * 0.16
+                        : MediaQuery.of(context).size.height * 0.18,
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: StreamBuilder(
                       stream: FirebaseFirestore.instance
@@ -98,13 +99,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 model,
                               );
                             },
-                            separatorBuilder: (context, index) => const SizedBox(
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
                               width: 7,
                             ),
                             itemCount: snapshot.data!.docs.length,
                           );
                         } else {
-                          return ShimmerFacultiesList(); // Shimmer effect for faculties
+                          return const ShimmerFacultiesList(); // Shimmer effect for faculties
                         }
                       },
                     ),
@@ -115,8 +117,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: Text(
                       lang == 'en' ? 'News' : 'الاخبار',
-                      style: const TextStyle(
-                        fontSize: 22,
+                      style: TextStyle(
+                        fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                        fontSize: lang == 'ar' ? 20 : 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -156,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   itemCount: snapshot.data!.docs.length,
                                 );
                               } else {
-                                return ShimmerNewsList(); // Shimmer effect for news
+                                return const ShimmerNewsList(); // Shimmer effect for news
                               }
                             },
                           )
@@ -192,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   itemCount: snapshot.data!.docs.length,
                                 );
                               } else {
-                                return ShimmerNewsList(); // Shimmer effect for news
+                                return const ShimmerNewsList(); // Shimmer effect for news
                               }
                             },
                           ),
@@ -204,8 +207,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       lang == 'en' ? 'Posts' : 'المنشورات',
-                      style: const TextStyle(
-                        fontSize: 22,
+                      style: TextStyle(
+                        fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                        fontSize: lang == 'ar' ? 20 : 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -222,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Color(0xffE6EEFA),
                     ),
                     child: AppCubit.get(context).post.isEmpty
-                        ? ShimmerPostsList() // Use ShimmerPostsList widget for shimmer effect
+                        ? const ShimmerPostsList() // Use ShimmerPostsList widget for shimmer effect
                         : ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
@@ -239,12 +243,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   child: buildPostItem(
                                       AppCubit.get(context).post[index],
-                                      context),
+                                      context, index),
                                 );
                               } else {
                                 return buildPostItem(
                                   AppCubit.get(context).post[index],
-                                  context,
+                                  context, index
                                 );
                               }
                             },
@@ -257,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            fallback: (context) => Center(
+            fallback: (context) => const Center(
               child: ShimmerPostsList(),
             ),
           ),
@@ -268,6 +272,8 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class ShimmerNewsList extends StatelessWidget {
+  const ShimmerNewsList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
@@ -294,6 +300,8 @@ class ShimmerNewsList extends StatelessWidget {
 }
 
 class ShimmerFacultiesList extends StatelessWidget {
+  const ShimmerFacultiesList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
@@ -322,6 +330,8 @@ class ShimmerFacultiesList extends StatelessWidget {
 }
 
 class ShimmerPostsList extends StatelessWidget {
+  const ShimmerPostsList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(

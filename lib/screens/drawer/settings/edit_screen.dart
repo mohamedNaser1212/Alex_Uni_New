@@ -54,8 +54,23 @@ class EditProfile extends StatelessWidget {
                 iconTheme: const IconThemeData(),
                 title: Text(
                   isArabic ? 'تعديل البيانات' : 'Edit Profile',
-                  style: const TextStyle(),
+                  style: TextStyle(
+                    fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                  ),
                 ),
+                leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    lang == 'en'
+                        ? IconlyBold.arrow_left_circle
+                        : IconlyBold.arrow_right_circle,
+                    color: defaultColor,
+                    size: 35,
+                  ),
+                ),
+                centerTitle: true,
                 actions: [
                   InkWell(
                     splashColor: Colors.transparent,
@@ -69,14 +84,17 @@ class EditProfile extends StatelessWidget {
                     },
                     child: Center(
                       child: Container(
-                        margin: const EdgeInsets.only(right: 5),
+                        margin: lang == 'en'
+                            ? const EdgeInsets.only(right: 5)
+                            : const EdgeInsets.only(left: 5),
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 62, 165, 66),
                             borderRadius: BorderRadius.circular(13)),
                         child: Text(
                           isArabic ? 'تحديث' : 'Update',
-                          style: const TextStyle(
+                          style: TextStyle(
+                            fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
                           ),
@@ -281,8 +299,12 @@ class EditProfile extends StatelessWidget {
                                               isArabic
                                                   ? 'تحديث الصورة الشخصية'
                                                   : 'Update Profile',
-                                              style: const TextStyle(
-                                                fontSize: 18,
+                                              style: TextStyle(
+                                                fontFamily: lang == 'ar'
+                                                    ? 'arabic2'
+                                                    : 'poppins',
+                                                fontSize:
+                                                    lang == 'ar' ? 14 : 18,
                                                 color: Colors.white,
                                               ),
                                             ),
@@ -323,7 +345,10 @@ class EditProfile extends StatelessWidget {
                                               isArabic
                                                   ? 'تحديث الخلفية'
                                                   : 'Update Cover',
-                                              style: const TextStyle(
+                                              style: TextStyle(
+                                                fontFamily: lang == 'ar'
+                                                    ? 'arabic2'
+                                                    : 'poppins',
                                                 fontSize: 18,
                                                 color: Colors.white,
                                               ),
@@ -412,7 +437,9 @@ class EditProfile extends StatelessWidget {
                                 autocorrect: true,
                                 onTap: () {},
                                 decoration: InputDecoration(
-                                  hintText: "tell us about yourself",
+                                  hintText: lang == 'en'
+                                      ? "tell us about yourself"
+                                      : "اخبرنا عن نفسك اكثر",
                                   fillColor:
                                       const Color.fromARGB(255, 225, 234, 239),
                                   filled: true,
@@ -443,30 +470,4 @@ class EditProfile extends StatelessWidget {
       },
     );
   }
-
-  PreferredSizeWidget? defaultAppBar({
-    required BuildContext context,
-    String? title,
-    List<Widget>? action,
-  }) =>
-      AppBar(
-        backgroundColor: defaultColor,
-        centerTitle: false,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
-        title: Text(
-          title!,
-          style: const TextStyle(
-            color: Colors.black,
-          ),
-        ),
-        actions: action,
-      );
 }

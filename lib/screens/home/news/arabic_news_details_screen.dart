@@ -69,17 +69,19 @@ class _ArabicNewsDetailsScreenState extends State<ArabicNewsDetailsScreen> {
           children: [
             Text(
               lang == 'en' ? "Faculty of" : "كلية",
-              style: const TextStyle(
-                color: Color.fromARGB(255, 151, 151, 151),
+              style: TextStyle(
+                fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                color: const Color.fromARGB(255, 151, 151, 151),
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
             ),
             Text(
               lang == 'en' ? "Business Management" : "ادارة الاعمال",
-              style: const TextStyle(
-                color: Color.fromARGB(255, 31, 54, 77),
-                fontSize: 20,
+              style: TextStyle(
+                fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                color: const Color.fromARGB(255, 31, 54, 77),
+                fontSize: lang == 'ar' ? 18 : 20,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -190,6 +192,8 @@ class _ArabicNewsDetailsScreenState extends State<ArabicNewsDetailsScreen> {
                               widget.newsModel.title!,
                               textDirection: TextDirection.rtl,
                               style: TextStyle(
+                                fontFamily:
+                                    lang == 'ar' ? 'arabic2' : 'poppins',
                                 fontSize: 19.5,
                                 fontWeight: FontWeight.w900,
                                 color: defaultColor,
@@ -202,10 +206,12 @@ class _ArabicNewsDetailsScreenState extends State<ArabicNewsDetailsScreen> {
                               lang == 'ar'
                                   ? widget.newsModel.date!
                                   : widget.newsModel.date!,
-                              style: const TextStyle(
+                              style: TextStyle(
+                                fontFamily:
+                                    lang == 'ar' ? 'arabic2' : 'poppins',
                                 fontSize: 13.5,
                                 fontWeight: FontWeight.w500,
-                                color: Color.fromARGB(255, 139, 139, 139),
+                                color: const Color.fromARGB(255, 139, 139, 139),
                               ),
                               textDirection: TextDirection.ltr,
                             ),
@@ -221,10 +227,12 @@ class _ArabicNewsDetailsScreenState extends State<ArabicNewsDetailsScreen> {
                             ),
                             Text(
                               widget.newsModel.descriptions[index]!,
-                              style: const TextStyle(
+                              style: TextStyle(
+                                fontFamily:
+                                    lang == 'ar' ? 'arabic2' : 'poppins',
                                 fontSize: 16.0,
                                 height: 1.5,
-                                color: Color.fromARGB(255, 63, 63, 63),
+                                color: const Color.fromARGB(255, 63, 63, 63),
                               ),
                               textDirection: TextDirection.rtl,
                             ),

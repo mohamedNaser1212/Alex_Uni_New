@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 import 'package:alex_uni_new/constants/cache_helper.dart';
 import 'package:alex_uni_new/constants/constants.dart';
@@ -110,13 +112,19 @@ class AppCubit extends Cubit<AppStates> {
   UserModel? user;
   getUserData() {
     emit(AppGetUserLoadingState());
-    FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
-      user = UserModel.fromJson(value.data()!);
-      emit(AppGetUserSuccessState());
-    }).catchError((error) {
-      print(error.toString());
-      emit(AppGetUserErrorState(error.toString()));
-    });
+    if (uId != null) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uId)
+          .get()
+          .then((value) {
+        user = UserModel.fromJson(value.data()!);
+        emit(AppGetUserSuccessState());
+      }).catchError((error) {
+        print(error.toString());
+        emit(AppGetUserErrorState(error.toString()));
+      });
+    }
   }
 
   updateUser(
@@ -503,11 +511,14 @@ class AppCubit extends Cubit<AppStates> {
         .then((value) {
       comments = [];
       for (var element in value.docs) {
-        CommentDataModel currentComment = CommentDataModel.fromJson(element.data());
+        CommentDataModel currentComment =
+            CommentDataModel.fromJson(element.data());
         currentComment.id = element.id;
         comments.add(currentComment);
       }
-      lastComment = value.docs[value.docs.length - 1];
+      if (value.docs.isNotEmpty) {
+        lastComment = value.docs[value.docs.length - 1];
+      }
       if (value.docs.length < 20) {
         isLastComment = true;
       }
@@ -530,7 +541,8 @@ class AppCubit extends Cubit<AppStates> {
         .get()
         .then((value) {
       for (var element in value.docs) {
-        CommentDataModel currentComment = CommentDataModel.fromJson(element.data());
+        CommentDataModel currentComment =
+            CommentDataModel.fromJson(element.data());
         currentComment.id = element.id;
         comments.add(currentComment);
       }
@@ -565,11 +577,12 @@ class AppCubit extends Cubit<AppStates> {
           }
         });
         FirebaseFirestore.instance
-        .collection('users')
-        .doc(uId)
-        .collection('photos')
-        .where('postId', isEqualTo: model.postId)
-        .get().then((value) {
+            .collection('users')
+            .doc(uId)
+            .collection('photos')
+            .where('postId', isEqualTo: model.postId)
+            .get()
+            .then((value) {
           for (var element in value.docs) {
             element.reference.delete();
           }
@@ -827,7 +840,7 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-   List<String> myPhotos = [];
+  List<String> myPhotos = [];
   DocumentSnapshot? lastMyPhoto;
   bool isLastMyPhoto = false;
 
@@ -837,7 +850,7 @@ class AppCubit extends Cubit<AppStates> {
     isLastMyPhoto = false;
   }
 
-  getMyPhotos(){
+  getMyPhotos() {
     removeMyPhotos();
     emit(GetMyPhotosLoadingState());
     FirebaseFirestore.instance
@@ -863,7 +876,7 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  getMyPhotosFromLast(){
+  getMyPhotosFromLast() {
     emit(GetLastMyPhotosLoadingState());
     FirebaseFirestore.instance
         .collection('users')
@@ -899,7 +912,7 @@ class AppCubit extends Cubit<AppStates> {
     isLastPersonPhoto = false;
   }
 
-  getPersonPhotos(String userId){
+  getPersonPhotos(String userId) {
     removePersonPhotos();
     emit(GetPersonPhotosLoadingState());
     FirebaseFirestore.instance
@@ -925,7 +938,7 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  getPersonPhotosFromLast(String userId){
+  getPersonPhotosFromLast(String userId) {
     emit(GetLastPersonPhotosLoadingState());
     FirebaseFirestore.instance
         .collection('users')
@@ -969,10 +982,10 @@ class AppCubit extends Cubit<AppStates> {
                 },
         )
         .then((value) {
-          savedPostsId.add(model.postId);
-          savedPosts.add(model);
-          selectedUserSavedPostsId.add(model.postId);
-          selectedUserSavedPosts.add(model);
+      savedPostsId.add(model.postId);
+      savedPosts.add(model);
+      selectedUserSavedPostsId.add(model.postId);
+      selectedUserSavedPosts.add(model);
       // getSavePosts();
       emit(AddSavePostSuccessState());
     }).catchError((error) {
@@ -1015,7 +1028,9 @@ class AppCubit extends Cubit<AppStates> {
       if (value.docs.length < 5) {
         isLastSavedPost = true;
       }
-      lastSavedPost = value.docs[value.docs.length - 1];
+      if (value.docs.isNotEmpty) {
+        lastSavedPost = value.docs[value.docs.length - 1];
+      }
       emit(GetSavedPostsSuccessState());
     }).catchError((error) {
       isLastSavedPost = true;
@@ -1050,7 +1065,9 @@ class AppCubit extends Cubit<AppStates> {
       if (value.docs.length < 5) {
         isLastSavedPost = true;
       }
-      lastSavedPost = value.docs[value.docs.length - 1];
+      if (value.docs.isNotEmpty) {
+        lastSavedPost = value.docs[value.docs.length - 1];
+      }
       emit(GetLastSavedPostsSuccessState());
     }).catchError((error) {
       isLastSavedPost = true;
@@ -1062,22 +1079,22 @@ class AppCubit extends Cubit<AppStates> {
   List<String> selectedUserSavedPostsId = [];
   DocumentSnapshot? lastSelectedUserSavedPost;
   bool isLastSelectedUserSavedPost = false;
-  
+
   removeSelectedUserSavedPosts() {
     selectedUserSavedPosts = [];
     selectedUserSavedPostsId = [];
     lastSelectedUserSavedPost = null;
     isLastSelectedUserSavedPost = false;
   }
-  
-  getSelectedUserSavedPosts(String userId){
+
+  getSelectedUserSavedPosts(String userId) {
     removeSelectedUserSavedPosts();
     emit(GetSelectedUserSavedPostsLoadingState());
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
         .collection('savedPosts')
-        .where('userId',isEqualTo: userId)
+        .where('userId', isEqualTo: userId)
         .orderBy('date', descending: true)
         .limit(5)
         .get()
@@ -1098,7 +1115,9 @@ class AppCubit extends Cubit<AppStates> {
       if (value.docs.length < 5) {
         isLastSelectedUserSavedPost = true;
       }
-      lastSelectedUserSavedPost = value.docs[value.docs.length - 1];
+      if (value.docs.isNotEmpty) {
+        lastSelectedUserSavedPost = value.docs[value.docs.length - 1];
+      }
       emit(GetSelectedUserSavedPostsSuccessState());
     }).catchError((error) {
       isLastSelectedUserSavedPost = true;
@@ -1106,13 +1125,13 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  getSelectedUserSavedPostsFromLast(String userId){
+  getSelectedUserSavedPostsFromLast(String userId) {
     emit(GetLastSelectedUserSavedPostsLoadingState());
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
         .collection('savedPosts')
-        .where('userId',isEqualTo: userId)
+        .where('userId', isEqualTo: userId)
         .orderBy('date', descending: true)
         .startAfterDocument(lastSelectedUserSavedPost!)
         .limit(5)
@@ -1163,13 +1182,10 @@ class AppCubit extends Cubit<AppStates> {
       sharePostText: text,
     );
     sharePostModel.postModel!.postId = model.postId;
-    FirebaseFirestore.instance
-        .collection('posts')
-        .add({
+    FirebaseFirestore.instance.collection('posts').add({
       ...sharePostModel.toMap(),
       'isFinished': true,
-        })
-        .then((value) {
+    }).then((value) {
       emit(AddSharePostSuccessState());
     }).catchError((error) {
       emit(AddSharePostErrorState());
@@ -1612,7 +1628,8 @@ class AppCubit extends Cubit<AppStates> {
           children: [
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
+                fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                 fontWeight: FontWeight.w900,
                 fontSize: 23,
               ),
@@ -1625,7 +1642,8 @@ class AppCubit extends Cubit<AppStates> {
               children: [
                 Text(
                   desc1,
-                  style: const TextStyle(
+                  style: TextStyle(
+                    fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),
@@ -1637,7 +1655,8 @@ class AppCubit extends Cubit<AppStates> {
                 if (hasDesc2 == true)
                   Text(
                     desc2,
-                    style: const TextStyle(
+                    style: TextStyle(
+                      fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                       fontWeight: FontWeight.w500,
                       fontSize: 15,
                     ),
@@ -1666,7 +1685,9 @@ class AppCubit extends Cubit<AppStates> {
                               child: Center(
                                 child: Text(
                                   leftBtnText,
-                                  style: const TextStyle(
+                                  style: TextStyle(
+                                    fontFamily:
+                                        lang == 'ar' ? 'arabic2' : 'poppins',
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,
@@ -1698,7 +1719,9 @@ class AppCubit extends Cubit<AppStates> {
                               child: Center(
                                 child: Text(
                                   rightBtnText,
-                                  style: const TextStyle(
+                                  style: TextStyle(
+                                    fontFamily:
+                                        lang == 'ar' ? 'arabic2' : 'poppins',
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,

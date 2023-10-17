@@ -191,10 +191,10 @@ class _BothNewsDetailsScreenState extends State<BothNewsDetailsScreen> {
                               ),
                               textDirection: TextDirection.ltr,
                             ),
-                              const SizedBox(
-                                height: 7.0,
-                              ),
-                              Text(
+                            const SizedBox(
+                              height: 7.0,
+                            ),
+                            Text(
                               lang == 'ar'
                                   ? widget.newsModel.date!
                                   : widget.newsModel.date!,

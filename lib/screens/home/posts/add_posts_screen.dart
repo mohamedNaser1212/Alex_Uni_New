@@ -52,7 +52,6 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
     );
     return FirebaseFirestore.instance.collection('posts').add({
       ...model.toMap(),
-      'isFinished': true,
       'isShared': false,
     }).then((value) {
       AppCubit.get(context).getPosts();
@@ -105,9 +104,10 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
                   color: Colors.white,
                 ),
               ),
-              title: const Text(
-                'Add new post',
+              title: Text(
+                lang == 'en' ? 'Add new post' : 'اضف منشورك',
                 style: TextStyle(
+                  fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                   color: Colors.white,
                 ),
               ),
@@ -198,9 +198,12 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
                                                     .width *
                                                 0.02,
                                           ),
-                                          const Text(
-                                            "Public",
+                                          Text(
+                                            lang == 'en' ? 'Public' : 'عامة',
                                             style: TextStyle(
+                                              fontFamily: lang == 'ar'
+                                                  ? 'arabic2'
+                                                  : 'poppins',
                                               fontWeight: FontWeight.w500,
                                               fontSize: 13,
                                               color: Colors.white,
@@ -253,9 +256,16 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
                                                     AppCubit.get(context)
                                                             .imageFileList
                                                             .isEmpty
-                                                        ? "Add Image"
-                                                        : "Image No.",
-                                                    style: const TextStyle(
+                                                        ? lang == 'ar'
+                                                            ? 'اضف صورة'
+                                                            : "Add Image"
+                                                        : lang == 'ar'
+                                                            ? 'عدد الصور'
+                                                            : "Image No.",
+                                                    style: TextStyle(
+                                                      fontFamily: lang == 'ar'
+                                                          ? 'arabic2'
+                                                          : 'poppins',
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       fontSize: 13,
@@ -319,8 +329,12 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
                                                     AppCubit.get(context)
                                                             .imageFileList
                                                             .isEmpty
-                                                        ? "Add Image"
-                                                        : "Image No.",
+                                                        ? lang == 'ar'
+                                                            ? 'اضف صورة'
+                                                            : "Add Image"
+                                                        : lang == 'ar'
+                                                            ? 'عدد الصور'
+                                                            : "Image No.",
                                                     style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.w500,
@@ -372,7 +386,9 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
                         },
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Post body must not be empty';
+                            return lang == 'ar'
+                                ? 'لا يمكنك نشر منشور فارغ'
+                                : 'Post body must not be empty';
                           }
                           return null;
                         },
@@ -381,8 +397,11 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
                         autofocus: true,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'What\'s on your mind?',
+                          hintText: lang == 'ar'
+                              ? 'ماذا يدور في ذهنك؟'
+                              : 'What\'s on your mind?',
                           hintStyle: TextStyle(
+                            fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                             fontSize: fontSizeReduced ? 18 : 23,
                             color: Colors.grey,
                           ),
@@ -406,7 +425,7 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
                               child: Container(
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
                                 decoration: BoxDecoration(
-                                  color: Colors.red,
+                                  color: Colors.white,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Stack(
@@ -509,9 +528,11 @@ class _AddPostsScreenState extends State<AddPostsScreen> {
                         }
                       },
                       child: state is! CreatePostLoadingState
-                          ? const Text(
-                              'Post',
+                          ? Text(
+                              lang == 'ar' ? 'نشر' : 'Post',
                               style: TextStyle(
+                                fontFamily:
+                                    lang == 'ar' ? 'arabic2' : 'poppins',
                                 color: Colors.white,
                                 fontSize: 16.0,
                               ),

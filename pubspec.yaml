@@ -71,6 +71,7 @@ dependencies:
   awesome_dialog: ^3.1.0
   shimmer: ^3.0.0
   fancy_shimmer_image: ^2.0.3
+  staggered_grid_view_flutter: ^0.0.4
 
 dev_dependencies:
   flutter_test:
@@ -115,13 +116,15 @@ flutter:
     - family: Belleza
       fonts:
         - asset: assets/fonts/Belleza-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
     - family: Inter
       fonts:
         - asset: assets/fonts/Belleza-Regular.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+    - family: arabic1
+      fonts:
+        - asset: assets/fonts/arabic.ttf
+    - family: arabic2
+      fonts:
+        - asset: assets/fonts/marhey.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
