@@ -23,8 +23,6 @@ import 'package:gmt/gmt.dart';
 import 'package:iconly/iconly.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import '../constants/constants.dart';
-import '../constants/constants.dart';
 import '../main.dart';
 import '../models/admin_model.dart';
 import '../models/message_model.dart';
@@ -1037,6 +1035,7 @@ class AppCubit extends Cubit<AppStates> {
     String title = "Attention",
     String desc1 =
         "Alexandria University is not responsible for this action, you will lose your data forever and won't be able to restore it again.",
+    TextAlign textAlign = TextAlign.center,
     String desc2 = "Do you want to proceed ?",
     DialogType type = DialogType.warning,
     bool hasDesc2 = true,
@@ -1069,7 +1068,9 @@ class AppCubit extends Cubit<AppStates> {
               children: [
                 Text(
                   desc1,
-                  style: const TextStyle(
+                  textAlign: textAlign,
+                  style: TextStyle(
+                    fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),
@@ -1081,7 +1082,8 @@ class AppCubit extends Cubit<AppStates> {
                 if (hasDesc2 == true)
                   Text(
                     desc2,
-                    style: const TextStyle(
+                    style: TextStyle(
+                      fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                       fontWeight: FontWeight.w500,
                       fontSize: 15,
                     ),
@@ -1110,7 +1112,9 @@ class AppCubit extends Cubit<AppStates> {
                               child: Center(
                                 child: Text(
                                   leftBtnText,
-                                  style: const TextStyle(
+                                  style: TextStyle(
+                                    fontFamily:
+                                        lang == 'ar' ? 'arabic2' : 'poppins',
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,
@@ -1142,7 +1146,9 @@ class AppCubit extends Cubit<AppStates> {
                               child: Center(
                                 child: Text(
                                   rightBtnText,
-                                  style: const TextStyle(
+                                  style: TextStyle(
+                                    fontFamily:
+                                        lang == 'ar' ? 'arabic2' : 'poppins',
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,
@@ -1172,7 +1178,7 @@ class AppCubit extends Cubit<AppStates> {
     user.updatePassword(newPassword).then((_) {
       emit(changePasswordSuccessState());
     }).catchError((error) {
-      print("Password can't be changed" + error.toString());
+      print("Password can't be changed$error");
       emit(ChangePasswordErrorState());
     });
   }
@@ -1211,6 +1217,4 @@ class AppCubit extends Cubit<AppStates> {
   //     emit(LoadMorePostsErrorState(error.toString()));
   //   });
   // }
-
-
 }

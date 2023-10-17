@@ -214,7 +214,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
           postGraduateDepartments.add(currentDepartment);
         }
       }
-      currentSelectedDepartment = departments.first ?? null;
+      currentSelectedDepartment = departments.first;
     }).then((value) {
       emit(GetDepartmentsSuccessState());
     }).catchError((error) {

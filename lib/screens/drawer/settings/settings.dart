@@ -5,7 +5,7 @@ import 'package:alex_uni_new/constants/constants.dart';
 import 'package:alex_uni_new/constants/strings.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/models/user_model.dart';
-import 'package:alex_uni_new/screens/change_password/change_password.dart';
+import 'package:alex_uni_new/screens/auth/change_password/change_password.dart';
 import 'package:alex_uni_new/widgets/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/drawer/settings/edit_screen.dart';
 import 'package:alex_uni_new/states/app_states.dart';
@@ -34,6 +34,21 @@ class _SettingsState extends State<Settings> {
           appBar: AppBar(
             title: Text(
               lang == "en" ? settings : settingsArabic,
+              style: TextStyle(
+                fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+              ),
+            ),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                lang == 'en'
+                    ? IconlyBold.arrow_left_circle
+                    : IconlyBold.arrow_right_circle,
+                color: defaultColor,
+                size: 35,
+              ),
             ),
             centerTitle: true,
           ),
@@ -74,7 +89,8 @@ class _SettingsState extends State<Settings> {
                                   child: Container(
                                     padding: const EdgeInsets.only(top: 48),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           userModel.name!,
@@ -85,8 +101,9 @@ class _SettingsState extends State<Settings> {
                                           ),
                                         ),
                                         SizedBox(
-                                          height:
-                                          MediaQuery.of(context).size.height *
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.007,
                                         ),
                                         Text(
@@ -118,7 +135,8 @@ class _SettingsState extends State<Settings> {
                                           horizontal: 18,
                                           vertical: lang == 'en' ? 11 : 6,
                                         ),
-                                        margin: const EdgeInsets.only(bottom: 11),
+                                        margin:
+                                            const EdgeInsets.only(bottom: 11),
                                         decoration: BoxDecoration(
                                           color: const Color.fromARGB(
                                             255,
@@ -126,11 +144,15 @@ class _SettingsState extends State<Settings> {
                                             113,
                                             135,
                                           ),
-                                          borderRadius: BorderRadius.circular(18),
+                                          borderRadius:
+                                              BorderRadius.circular(18),
                                         ),
                                         child: Text(
                                           lang == 'en' ? edit : editArabic,
-                                          style: const TextStyle(
+                                          style: TextStyle(
+                                            fontFamily: lang == 'ar'
+                                                ? 'arabic2'
+                                                : 'poppins',
                                             color: Colors.white,
                                             fontSize: 18,
                                             fontWeight: FontWeight.w700,
@@ -189,75 +211,82 @@ class _SettingsState extends State<Settings> {
                               ),
                               child: index != 2
                                   ? ListTile(
-                                title: Text(
-                                  cubit.settingsTitles[index],
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                leading: Icon(
-                                  cubit.settingsIcons[index],
-                                  color: Colors.white,
-                                ),
-                                trailing: DropdownButton<Locale>(
-                                  borderRadius: BorderRadius.circular(13),
-                                  iconEnabledColor: Colors.white,
-                                  dropdownColor: defaultColor,
-                                  enableFeedback: true,
-                                  icon: const Icon(IconlyBold.arrow_down_2),
-                                  iconSize: 22,
-                                  underline: Container(
-                                    height: 0,
-                                  ),
-                                  value: lang == 'en'
-                                      ? const Locale('en')
-                                      : const Locale('ar'),
-                                  onChanged: (newLocale) {
-                                    cubit.changeAppLanguage(
-                                      context: context,
-                                      newLocale: newLocale,
-                                    );
-                                  },
-                                  items: const [
-                                    DropdownMenuItem(
-                                      value: Locale('en'),
-                                      child: Text(
-                                        'EN',
+                                      title: Text(
+                                        cubit.settingsTitles[index],
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                          fontFamily: lang == 'ar'
+                                              ? 'arabic2'
+                                              : 'poppins',
                                           color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700,
                                         ),
                                       ),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: Locale('ar'),
-                                      child: Text(
-                                        'AR',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
+                                      leading: Icon(
+                                        cubit.settingsIcons[index],
+                                        color: Colors.white,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )
+                                      trailing: DropdownButton<Locale>(
+                                        borderRadius: BorderRadius.circular(13),
+                                        iconEnabledColor: Colors.white,
+                                        dropdownColor: defaultColor,
+                                        enableFeedback: true,
+                                        icon:
+                                            const Icon(IconlyBold.arrow_down_2),
+                                        iconSize: 22,
+                                        underline: Container(
+                                          height: 0,
+                                        ),
+                                        value: lang == 'en'
+                                            ? const Locale('en')
+                                            : const Locale('ar'),
+                                        onChanged: (newLocale) {
+                                          cubit.changeAppLanguage(
+                                            context: context,
+                                            newLocale: newLocale,
+                                          );
+                                        },
+                                        items: const [
+                                          DropdownMenuItem(
+                                            value: Locale('en'),
+                                            child: Text(
+                                              'EN',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: Locale('ar'),
+                                            child: Text(
+                                              'AR',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   : ListTile(
-                                title: Text(
-                                  cubit.settingsTitles[index],
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                leading: Icon(
-                                  cubit.settingsIcons[index],
-                                  color: Colors.white,
-                                ),
-                              ),
+                                      title: Text(
+                                        cubit.settingsTitles[index],
+                                        style: TextStyle(
+                                          fontFamily: lang == 'ar'
+                                              ? 'arabic2'
+                                              : 'poppins',
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      leading: Icon(
+                                        cubit.settingsIcons[index],
+                                        color: Colors.white,
+                                      ),
+                                    ),
                             ),
                           ],
                         );
@@ -265,7 +294,8 @@ class _SettingsState extends State<Settings> {
                       if (index == 1) {
                         return InkWell(
                           onTap: () {
-                            navigateTo(context: context, screen: ChangePassword());
+                            navigateTo(
+                                context: context, screen: ChangePassword());
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 2),
@@ -276,39 +306,45 @@ class _SettingsState extends State<Settings> {
                             ),
                             child: index != 2
                                 ? ListTile(
-                              title: Text(
-                                cubit.settingsTitles[index],
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              leading: Icon(
-                                cubit.settingsIcons[index],
-                                color: Colors.white,
-                              ),
-                              trailing: Icon(
-                                lang == 'en'
-                                    ? Icons.keyboard_arrow_right
-                                    : Icons.keyboard_arrow_left,
-                                color: Colors.white,
-                              ),
-                            )
+                                    title: Text(
+                                      cubit.settingsTitles[index],
+                                      style: TextStyle(
+                                        fontFamily: lang == 'ar'
+                                            ? 'arabic2'
+                                            : 'poppins',
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    leading: Icon(
+                                      cubit.settingsIcons[index],
+                                      color: Colors.white,
+                                    ),
+                                    trailing: Icon(
+                                      lang == 'en'
+                                          ? Icons.keyboard_arrow_right
+                                          : Icons.keyboard_arrow_left,
+                                      color: Colors.white,
+                                    ),
+                                  )
                                 : ListTile(
-                              title: Text(
-                                cubit.settingsTitles[index],
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              leading: Icon(
-                                cubit.settingsIcons[index],
-                                color: Colors.white,
-                              ),
-                            ),
+                                    title: Text(
+                                      cubit.settingsTitles[index],
+                                      style: TextStyle(
+                                        fontFamily: lang == 'ar'
+                                            ? 'arabic2'
+                                            : 'poppins',
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    leading: Icon(
+                                      cubit.settingsIcons[index],
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         );
                       }
@@ -316,7 +352,7 @@ class _SettingsState extends State<Settings> {
                         return InkWell(
                           onTap: () {
                             setState(
-                                  () {
+                              () {
                                 AppCubit.get(context).customDialog(
                                   title: lang == "en"
                                       ? customDialogTitle
@@ -339,6 +375,9 @@ class _SettingsState extends State<Settings> {
                                       id: uId!,
                                     );
                                   },
+                                  leftBtn: () {
+                                    Navigator.pop(context);
+                                  },
                                   context: context,
                                 );
                               },
@@ -353,33 +392,39 @@ class _SettingsState extends State<Settings> {
                             ),
                             child: index != 2
                                 ? ListTile(
-                              title: Text(
-                                cubit.settingsTitles[index],
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              leading: Icon(
-                                cubit.settingsIcons[index],
-                                color: Colors.white,
-                              ),
-                            )
+                                    title: Text(
+                                      cubit.settingsTitles[index],
+                                      style: TextStyle(
+                                        fontFamily: lang == 'ar'
+                                            ? 'arabic2'
+                                            : 'poppins',
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    leading: Icon(
+                                      cubit.settingsIcons[index],
+                                      color: Colors.white,
+                                    ),
+                                  )
                                 : ListTile(
-                              title: Text(
-                                cubit.settingsTitles[index],
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              leading: Icon(
-                                cubit.settingsIcons[index],
-                                color: Colors.white,
-                              ),
-                            ),
+                                    title: Text(
+                                      cubit.settingsTitles[index],
+                                      style: TextStyle(
+                                        fontFamily: lang == 'ar'
+                                            ? 'arabic2'
+                                            : 'poppins',
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    leading: Icon(
+                                      cubit.settingsIcons[index],
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         );
                       }
@@ -395,39 +440,45 @@ class _SettingsState extends State<Settings> {
                             ),
                             child: index != 2
                                 ? ListTile(
-                              title: Text(
-                                cubit.settingsTitles[index],
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              leading: Icon(
-                                cubit.settingsIcons[index],
-                                color: Colors.white,
-                              ),
-                              trailing: Icon(
-                                lang == 'en'
-                                    ? Icons.keyboard_arrow_right
-                                    : Icons.keyboard_arrow_left,
-                                color: Colors.white,
-                              ),
-                            )
+                                    title: Text(
+                                      cubit.settingsTitles[index],
+                                      style: TextStyle(
+                                        fontFamily: lang == 'ar'
+                                            ? 'arabic2'
+                                            : 'poppins',
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    leading: Icon(
+                                      cubit.settingsIcons[index],
+                                      color: Colors.white,
+                                    ),
+                                    trailing: Icon(
+                                      lang == 'en'
+                                          ? Icons.keyboard_arrow_right
+                                          : Icons.keyboard_arrow_left,
+                                      color: Colors.white,
+                                    ),
+                                  )
                                 : ListTile(
-                              title: Text(
-                                cubit.settingsTitles[index],
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              leading: Icon(
-                                cubit.settingsIcons[index],
-                                color: Colors.white,
-                              ),
-                            ),
+                                    title: Text(
+                                      cubit.settingsTitles[index],
+                                      style: TextStyle(
+                                        fontFamily: lang == 'ar'
+                                            ? 'arabic2'
+                                            : 'poppins',
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    leading: Icon(
+                                      cubit.settingsIcons[index],
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         );
                       }
@@ -477,7 +528,8 @@ class _SettingsState extends State<Settings> {
                         children: [
                           Text(
                             lang == 'en' ? logoutBtn : logoutBtnArabic,
-                            style: const TextStyle(
+                            style: TextStyle(
+                              fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.w700,

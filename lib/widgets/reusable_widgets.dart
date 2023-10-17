@@ -1,3 +1,4 @@
+import 'package:alex_uni_new/constants/constants.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
@@ -34,6 +35,7 @@ Widget reusableElevatedButton({
         child: Text(
           label.toUpperCase(),
           style: TextStyle(
+            fontFamily: lang == 'ar' ? "arabic2" : "poppins",
             color: textColor,
             fontWeight: fontWeight,
             fontSize: fontSize,

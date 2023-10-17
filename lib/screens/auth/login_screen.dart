@@ -103,7 +103,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                         Text(
                                           isArabic ? 'تسجيل الدخول' : 'Log in',
                                           style: TextStyle(
-                                            fontSize: MediaQuery.of(context)
+                                            fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                                            fontSize: 
+                                            lang == 'ar' ? 
+                                            MediaQuery.of(context)
+                                                    .size
+                                                    .aspectRatio *
+                                                53 : MediaQuery.of(context)
                                                     .size
                                                     .aspectRatio *
                                                 61,
@@ -300,9 +306,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                                                     ? 'ضيف'
                                                                     : 'Guest',
                                                                 style:
-                                                                    const TextStyle(
+                                                                    TextStyle(
+                                                                      fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                                                                   fontSize: 20,
-                                                                  color: Color(
+                                                                  color: const Color(
                                                                       0xff3E657B),
                                                                   fontWeight:
                                                                       FontWeight
@@ -363,7 +370,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                                     ? 'تسجيل'
                                                                     : 'Login',
                                                                 style:
-                                                                    const TextStyle(
+                                                                    TextStyle(
+                                                                      fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                                                                   fontSize: 20,
                                                                   color: Colors
                                                                       .white,
@@ -434,9 +442,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                               isArabic
                                                   ? 'ليس لدي حساب؟'
                                                   : 'Don\'t have an account?',
-                                              style: const TextStyle(
+                                              style: TextStyle(
+                                                fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                                                 fontSize: 14,
-                                                color: Color.fromARGB(
+                                                color: const Color.fromARGB(
                                                     182, 18, 67, 96),
                                               ),
                                             ),
@@ -455,9 +464,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 isArabic
                                                     ? 'سجل الأن'
                                                     : 'Sign Up Now',
-                                                style: const TextStyle(
+                                                style: TextStyle(
+                                                  fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                                                   fontWeight: FontWeight.w900,
-                                                  color: Color(0xff124460),
+                                                  color: const Color(0xff124460),
                                                 ),
                                               ),
                                             ),

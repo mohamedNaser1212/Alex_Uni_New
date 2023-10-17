@@ -146,10 +146,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     ),
                                     Text(
                                       isArabic ? ' انشاء حساب' : 'Sign Up',
-                                      style: const TextStyle(
+                                      style: TextStyle(
+                                        fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                                         fontSize: 25,
                                         fontWeight: FontWeight.w800,
-                                        color: Color(0xffffffff),
+                                        color: const Color(0xffffffff),
                                       ),
                                     ),
                                     const SizedBox(
@@ -925,10 +926,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                               isArabic
                                                   ? 'البكالوريوس'
                                                   : 'Undergraduate',
-                                              style: const TextStyle(
+                                              style: TextStyle(
+                                                fontFamily: lang == 'ar' ? 'arabic2' : 'Inter',
                                                 fontWeight: FontWeight.w900,
-                                                color: Color(0xff3E657B),
-                                                fontFamily: 'Inter',
+                                                color: const Color(0xff3E657B),
                                               ),
                                             ),
                                             Radio<bool>(
@@ -945,10 +946,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                               isArabic
                                                   ? 'الماجستير'
                                                   : 'Postgraduate',
-                                              style: const TextStyle(
+                                              style: TextStyle(
+                                                fontFamily: lang == 'ar' ? 'arabic2' : 'Inter',
                                                 fontWeight: FontWeight.w900,
-                                                color: Color(0xff3E657B),
-                                                fontFamily: 'Inter',
+                                                color: const Color(0xff3E657B),
                                               ),
                                             ),
                                           ],
@@ -1010,8 +1011,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                           lang == 'ar'
                                               ? 'لديك حساب بالفعل؟'
                                               : 'Already have an account?',
-                                          style: const TextStyle(
-                                            color: Color.fromARGB(
+                                          style: TextStyle(
+                                            fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                                            fontSize: lang == 'ar' ? 12 : 14,
+                                            color: const Color.fromARGB(
                                                 181, 255, 255, 255),
                                           ),
                                         ),
@@ -1023,7 +1026,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                             lang == 'ar'
                                                 ? 'تسجيل الدخول'
                                                 : 'Login now',
-                                            style: const TextStyle(
+                                            style: TextStyle(
+                                              fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                                              fontSize: lang == 'ar' ? 13 : 14,
                                               color: Colors.white,
                                               fontWeight: FontWeight.w900,
                                             ),

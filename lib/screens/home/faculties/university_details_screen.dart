@@ -35,24 +35,34 @@ class UniversityDetailsScreen extends StatelessWidget {
                 ),
               ),
               title: Text(
-                lang=='en'?'Faculty of ${university.name}':'كلية ${university.arabicName}',
+                lang == 'en'
+                    ? 'Faculty of ${university.name}'
+                    : 'كلية ${university.arabicName}',
                 maxLines: university.name!.length > 18 ? 2 : 1,
                 style: TextStyle(
+                  fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                   color: defaultColor,
                   fontSize: university.name!.length > 18 ? 19.5 : 22,
                   fontWeight: FontWeight.w800,
                 ),
               ),
               bottom: TabBar(
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                ),
                 indicatorColor: defaultColor,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 labelColor: defaultColor,
                 tabs: [
                   Tab(
-                    text: lang=='en'?'Undergraduate Stage':'المرحلة الجامعية',
+                    text: lang == 'en'
+                        ? 'Undergraduate Stage'
+                        : 'المرحلة الجامعية',
                   ),
                   Tab(
-                    text: lang=='en'?'Postgraduate Stage':'الدراسات العليا',
+                    text:
+                        lang == 'en' ? 'Postgraduate Stage' : 'الدراسات العليا',
                   ),
                 ],
               ),

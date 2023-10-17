@@ -46,19 +46,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(
-                      12,
+                    padding: const EdgeInsets.only(
+                      left: 12,
+                      right: 12,
+                      top: 12,
                     ),
                     child: Text(
                       lang == 'en' ? 'Faculties' : 'الكليات',
-                      style: const TextStyle(
-                        fontSize: 22,
+                      style: TextStyle(
+                        fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                        fontSize: lang == 'ar' ? 20 : 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.16,
+                    height: 
+                    lang == 'en' ? MediaQuery.of(context).size.height * 0.16 : MediaQuery.of(context).size.height * 0.18,
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: StreamBuilder(
                       stream: FirebaseFirestore.instance
@@ -80,13 +84,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             },
                             separatorBuilder: (context, index) =>
-                            const SizedBox(
+                                const SizedBox(
                               width: 7,
                             ),
                             itemCount: snapshot.data!.docs.length,
                           );
                         } else {
-                          return ShimmerFacultiesList();  // Shimmer effect for faculties
+                          return const ShimmerFacultiesList(); // Shimmer effect for faculties
                         }
                       },
                     ),
@@ -97,8 +101,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: Text(
                       lang == 'en' ? 'News' : 'الاخبار',
-                      style: const TextStyle(
-                        fontSize: 22,
+                      style: TextStyle(
+                        fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                        fontSize: lang == 'ar' ? 20 : 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -108,72 +113,72 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: lang == 'ar'
                         ? StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('News')
-                          .where('isFinished', isEqualTo: true)
-                          .orderBy('date', descending: true)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return ListView.separated(
-                            physics: const BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              DocumentSnapshot ds =
-                              snapshot.data!.docs[index];
-                              ArabicNewsModel model =
-                              ArabicNewsModel.fromJson(ds.data()!
-                              as Map<String, dynamic>?);
-                              return buildNewsItem(
-                                context: context,
-                                model: model,
-                              );
+                            stream: FirebaseFirestore.instance
+                                .collection('News')
+                                .where('isFinished', isEqualTo: true)
+                                .orderBy('date', descending: true)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return ListView.separated(
+                                  physics: const BouncingScrollPhysics(),
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (context, index) {
+                                    DocumentSnapshot ds =
+                                        snapshot.data!.docs[index];
+                                    ArabicNewsModel model =
+                                        ArabicNewsModel.fromJson(ds.data()!
+                                            as Map<String, dynamic>?);
+                                    return buildNewsItem(
+                                      context: context,
+                                      model: model,
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(
+                                    width: 15,
+                                  ),
+                                  itemCount: snapshot.data!.docs.length,
+                                );
+                              } else {
+                                return const ShimmerNewsList(); // Shimmer effect for news
+                              }
                             },
-                            separatorBuilder: (context, index) =>
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            itemCount: snapshot.data!.docs.length,
-                          );
-                        } else {
-                          return ShimmerNewsList();  // Shimmer effect for news
-                        }
-                      },
-                    )
+                          )
                         : StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('News')
-                          .where('type', isEqualTo: 'both')
-                          .where('isFinished', isEqualTo: true)
-                          .orderBy('date', descending: true)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return ListView.separated(
-                            physics: const BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              DocumentSnapshot ds =
-                              snapshot.data!.docs[index];
-                              BothNewsModel model =
-                              BothNewsModel.fromJson(ds.data()!
-                              as Map<String, dynamic>?);
-                              return buildNewsItem(
-                                context: context,
-                                model: model,
-                              );
+                            stream: FirebaseFirestore.instance
+                                .collection('News')
+                                .where('type', isEqualTo: 'both')
+                                .where('isFinished', isEqualTo: true)
+                                .orderBy('date', descending: true)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return ListView.separated(
+                                  physics: const BouncingScrollPhysics(),
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (context, index) {
+                                    DocumentSnapshot ds =
+                                        snapshot.data!.docs[index];
+                                    BothNewsModel model =
+                                        BothNewsModel.fromJson(ds.data()!
+                                            as Map<String, dynamic>?);
+                                    return buildNewsItem(
+                                      context: context,
+                                      model: model,
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(
+                                    width: 15,
+                                  ),
+                                  itemCount: snapshot.data!.docs.length,
+                                );
+                              } else {
+                                return const ShimmerNewsList(); // Shimmer effect for news
+                              }
                             },
-                            separatorBuilder: (context, index) =>
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            itemCount: snapshot.data!.docs.length,
-                          );
-                        } else {
-                          return ShimmerNewsList();  // Shimmer effect for news
-                        }
-                      },
-                    ),
+                          ),
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.03,
@@ -182,8 +187,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       lang == 'en' ? 'Posts' : 'المنشورات',
-                      style: const TextStyle(
-                        fontSize: 22,
+                      style: TextStyle(
+                        fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                        fontSize: lang == 'ar' ? 20 : 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -198,41 +204,42 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Color(0xffE6EEFA),
                     ),
                     child: AppCubit.get(context).post.isEmpty
-                        ? ShimmerPostsList()  // Use ShimmerPostsList widget for shimmer effect
+                        ? const ShimmerPostsList() // Use ShimmerPostsList widget for shimmer effect
                         : ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return Container(
-                            padding: const EdgeInsets.only(top: 13),
-                            decoration: const BoxDecoration(
-                              color: Color(0xffE6EEFA),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(40),
-                                topRight: Radius.circular(40),
-                              ),
-                            ),
-                            child: buildPostItem(
-                                AppCubit.get(context).post[index],
-                                context),
-                          );
-                        } else {
-                          return buildPostItem(
-                            AppCubit.get(context).post[index],
-                            context,
-                          );
-                        }
-                      },
-                      itemCount: AppCubit.get(context).post.length,
-                    ),
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return Container(
+                                  padding: const EdgeInsets.only(top: 13),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xffE6EEFA),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(40),
+                                      topRight: Radius.circular(40),
+                                    ),
+                                  ),
+                                  child: buildPostItem(
+                                      AppCubit.get(context).post[index],
+                                      context),
+                                );
+                              } else {
+                                return buildPostItem(
+                                  AppCubit.get(context).post[index],
+                                  context,
+                                );
+                              }
+                            },
+                            itemCount: AppCubit.get(context).post.length,
+                          ),
                   ),
                   const SizedBox(height: 30),
                 ],
               ),
             ),
-            fallback: (context) => Center(
-              child: ShimmerPostsList(),  // Use ShimmerPostsList widget for shimmer effect
+            fallback: (context) => const Center(
+              child:
+                  ShimmerPostsList(), // Use ShimmerPostsList widget for shimmer effect
             ),
           ),
         );
@@ -242,6 +249,8 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class ShimmerNewsList extends StatelessWidget {
+  const ShimmerNewsList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
@@ -261,44 +270,50 @@ class ShimmerNewsList extends StatelessWidget {
             ),
           );
         },
-        itemCount: 5,  // Adjust the itemCount according to your needs
+        itemCount: 5, // Adjust the itemCount according to your needs
       ),
     );
   }
 }
+
 class ShimmerFacultiesList extends StatelessWidget {
+  const ShimmerFacultiesList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
-        child: ListView.builder(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: ListView.builder(
         physics: const BouncingScrollPhysics(),
-    scrollDirection: Axis.horizontal,
-    itemBuilder: (context, index) {
-    return Container(
-    width: 120.0,
-    margin: const EdgeInsets.symmetric(
-      vertical: 8.0,
-    ),
-      padding: const EdgeInsets.all(12.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15.0),
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return Container(
+            width: 120.0,
+            margin: const EdgeInsets.symmetric(
+              vertical: 8.0,
+            ),
+            padding: const EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+          );
+        },
+        itemCount: 5, // Adjust the itemCount according to your needs
       ),
-    );
-    },
-          itemCount: 5,  // Adjust the itemCount according to your needs
-        ),
     );
   }
 }
+
 class ShimmerPostsList extends StatelessWidget {
+  const ShimmerPostsList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor:  const Color(0xffE6EEFA),
-      highlightColor:  const Color(0xffE6EEFA),
+      baseColor: const Color(0xffE6EEFA),
+      highlightColor: const Color(0xffE6EEFA),
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
@@ -313,7 +328,7 @@ class ShimmerPostsList extends StatelessWidget {
             ),
           );
         },
-        itemCount: 5,  // Adjust the itemCount according to your needs
+        itemCount: 5, // Adjust the itemCount according to your needs
       ),
     );
   }

@@ -25,8 +25,9 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
             Navigator.pop(context);
           },
           icon: Icon(
-            lang == 'en' ?
-            IconlyBold.arrow_left_circle : IconlyBold.arrow_right_circle,
+            lang == 'en'
+                ? IconlyBold.arrow_left_circle
+                : IconlyBold.arrow_right_circle,
             color: defaultColor,
             size: 35,
           ),
@@ -34,6 +35,7 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
         title: Text(
           lang == 'en' ? 'Latest News' : 'الاخبار',
           style: TextStyle(
+            fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
             color: defaultColor,
           ),
         ),
@@ -41,29 +43,73 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
       ),
       body: lang == 'ar'
           ? SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.02,
-            ),
-            StreamBuilder(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('News')
+                        .orderBy('date', descending: true)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot ds = snapshot.data!.docs[index];
+                            ArabicNewsModel model = ArabicNewsModel.fromJson(
+                                ds.data()! as Map<String, dynamic>?);
+
+                            return buildNewsItem(
+                              context: context,
+                              model: model,
+                            );
+                          },
+                          itemCount: snapshot.data!.docs.length,
+                        );
+                      } else {
+                        return Center(
+                          child: Text(
+                            lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات ',
+                            style: TextStyle(
+                              fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            )
+          : StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('News')
+                  .where('type', isEqualTo: 'both')
                   .orderBy('date', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return ListView.builder(
-                    shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       DocumentSnapshot ds = snapshot.data!.docs[index];
-                      ArabicNewsModel model = ArabicNewsModel.fromJson(
+                      BothNewsModel model = BothNewsModel.fromJson(
                           ds.data()! as Map<String, dynamic>?);
-
-                      return buildNewsItem(
-                        context: context,
-                        model: model,
+                      return Column(
+                        children: [
+                          if (index == 0)
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.03,
+                            ),
+                          buildNewsItem(
+                            context: context,
+                            model: model,
+                          ),
+                        ],
                       );
                     },
                     itemCount: snapshot.data!.docs.length,
@@ -71,53 +117,15 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
                 } else {
                   return Center(
                     child: Text(
-                      lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات ',
+                      lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات',
+                      style: TextStyle(
+                        fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                      ),
                     ),
                   );
                 }
               },
             ),
-          ],
-        ),
-      )
-          : StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('News')
-            .where('type', isEqualTo: 'both')
-            .orderBy('date', descending: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) {
-                DocumentSnapshot ds = snapshot.data!.docs[index];
-                BothNewsModel model = BothNewsModel.fromJson(
-                    ds.data()! as Map<String, dynamic>?);
-                return Column(
-                  children: [
-                    if (index == 0)
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.03,
-                      ),
-                    buildNewsItem(
-                      context: context,
-                      model: model,
-                    ),
-                  ],
-                );
-              },
-              itemCount: snapshot.data!.docs.length,
-            );
-          } else {
-            return Center(
-              child: Text(
-                lang == 'en' ? 'No Data Found' : 'لا يوجد بيانات',
-              ),
-            );
-          }
-        },
-      ),
     );
   }
 
@@ -132,13 +140,13 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
           onTap: () {
             navigateTo(
               context: context,
-              screen:
-              lang == "en" ?
-              BothNewsDetailsScreen(
-                newsModel: model,
-              ) : ArabicNewsDetailsScreen(
-                newsModel: model,
-              ),
+              screen: lang == "en"
+                  ? BothNewsDetailsScreen(
+                      newsModel: model,
+                    )
+                  : ArabicNewsDetailsScreen(
+                      newsModel: model,
+                    ),
             );
           },
           child: Container(
@@ -186,7 +194,8 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
                           textDirection: lang == 'en'
                               ? TextDirection.ltr
                               : TextDirection.rtl,
-                          style: const TextStyle(
+                          style: TextStyle(
+                              fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                             fontSize: 14.5,
                             fontWeight: FontWeight.w900,
                           ),
@@ -199,9 +208,10 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
                               textDirection: lang == 'en'
                                   ? TextDirection.ltr
                                   : TextDirection.rtl,
-                              style: const TextStyle(
+                              style: TextStyle(
+                              fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                                 fontSize: 12,
-                                color: Color.fromARGB(255, 88, 88, 88),
+                                color: const Color.fromARGB(255, 88, 88, 88),
                               ),
                             ),
                           ],
@@ -216,10 +226,11 @@ class _DrawerNewsScreenState extends State<DrawerNewsScreen> {
                           textDirection: lang == 'en'
                               ? TextDirection.ltr
                               : TextDirection.rtl,
-                          style: const TextStyle(
+                          style: TextStyle(
+                              fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: Color.fromARGB(255, 88, 88, 88),
+                            color: const Color.fromARGB(255, 88, 88, 88),
                           ),
                         ),
                       ],

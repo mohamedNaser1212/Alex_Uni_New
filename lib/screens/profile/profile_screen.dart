@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:alex_uni_new/constants/constants.dart';
-import 'package:alex_uni_new/constants/strings.dart';
 import 'package:alex_uni_new/cubit/app_cubit.dart';
 import 'package:alex_uni_new/widgets/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/drawer/settings/edit_screen.dart';
@@ -11,6 +10,8 @@ import 'package:alex_uni_new/states/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconly/iconly.dart';
+import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
+import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 import '../../models/posts/post_model.dart';
 import '../../models/posts/shared_post_model.dart';
 import '../../models/user_model.dart';
@@ -60,61 +61,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           child: userModel.cover != ''
                               ? Image(
-                            image: NetworkImage('${userModel.cover}'),
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          )
+                                  image: NetworkImage('${userModel.cover}'),
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                )
                               : Container(),
-                        ),
-                      ),
-                      Positioned(
-                        top: 0,
-                        right: 7,
-                        child: SizedBox(
-                          height: 116,
-                          child: InkWell(
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            onTap: () {
-                              cubit.customDialog(
-                                title: lang == "en"
-                                    ? customDialogTitle
-                                    : customDialogTitleArabic,
-                                desc1: lang == "en"
-                                    ? customDialogLeaveDesc
-                                    : customDialogLeaveDescArabic,
-                                hasDesc2: false,
-                                crossAxis: CrossAxisAlignment.center,
-                                leftBtnText: lang == "en"
-                                    ? customDialogCancelBtn
-                                    : customDialogCancelBtnArabic,
-                                rightBtnText: lang == "en"
-                                    ? customDialogLogoutBtn
-                                    : customDialogLogoutBtnArabic,
-                                leftBtn: () {
-                                  Navigator.pop(context);
-                                },
-                                rightBtn: () {
-                                  cubit.logout(context);
-                                },
-                                context: context,
-                              );
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 13, top: 6),
-                              padding: const EdgeInsets.all(10),
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  IconlyBold.logout,
-                                  color: Color.fromARGB(255, 228, 39, 25),
-                                ),
-                              ),
-                            ),
-                          ),
                         ),
                       ),
                       Align(
@@ -184,25 +135,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     Row(
                                       children: [
                                         Text(
-                                          lang=='en' ? 'Faculty:':'الكليه:',
+                                          lang == 'en'
+                                              ? 'Faculty:'
+                                              : 'الكليه: ',
                                           style: TextStyle(
+                                            fontFamily: lang == 'ar'
+                                                ? 'arabic2'
+                                                : 'poppins',
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700,
-                                            color: Color.fromARGB(
+                                            color: const Color.fromARGB(
                                                 255, 56, 56, 56),
                                           ),
                                         ),
                                         Container(
                                           width: MediaQuery.of(context)
-                                              .size
-                                              .width *
+                                                  .size
+                                                  .width *
                                               0.6,
-                                          padding: const EdgeInsets.only(
-                                              left: 4),
-                                          child:  Text(
+                                          padding:
+                                              const EdgeInsets.only(left: 4),
+                                          child: Text(
                                             'Faculty of ${userModel.universityname}',
                                             overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
                                               color: Color(0xff6C7A9C),
@@ -211,7 +167,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                       ],
                                     ),
-
                                   ],
                                 ),
                                 Column(
@@ -219,12 +174,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     Row(
                                       children: [
                                         Text(
-                                          lang=='en'?'Country:':'البلد:',
-                                          style:const TextStyle(
+                                          lang == 'en' ? 'Country:' : 'البلد: ',
+                                          style: TextStyle(
+                                            fontFamily: lang == 'ar'
+                                                ? 'arabic2'
+                                                : 'poppins',
                                             fontSize: 17,
                                             fontWeight: FontWeight.w700,
-                                            color:
-                                            Color.fromARGB(255, 56, 56, 56),
+                                            color: const Color.fromARGB(
+                                                255, 56, 56, 56),
                                           ),
                                         ),
                                         Container(
@@ -232,7 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             top: 2,
                                             left: 4,
                                           ),
-                                          child:  Text(
+                                          child: Text(
                                             '${userModel.country}',
                                             style: const TextStyle(
                                               fontSize: 14,
@@ -263,7 +221,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   radius: 21.49,
                                   shadowColor: Colors.transparent,
                                   backColor:
-                                  const Color.fromARGB(255, 47, 90, 115),
+                                      const Color.fromARGB(255, 47, 90, 115),
                                   height: 40,
                                   function: () {
                                     navigateTo(
@@ -285,9 +243,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   radius: 21.49,
                                   shadowColor: Colors.transparent,
                                   textColor:
-                                  const Color.fromARGB(255, 36, 59, 72),
+                                      const Color.fromARGB(255, 36, 59, 72),
                                   backColor:
-                                  const Color.fromARGB(255, 220, 234, 255),
+                                      const Color.fromARGB(255, 220, 234, 255),
                                   height: 40,
                                   function: () {},
                                 ),
@@ -297,17 +255,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                     ),
+                    if(userModel.bio!.isNotEmpty)
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.01,
                     ),
-
-                     Padding(
-                      padding:
-                      const EdgeInsets.only(bottom: 19.0, left: 32, right: 32),
+                    if(userModel.bio!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 19.0, left: 32, right: 32),
                       child: Text(
                         '${userModel.bio}',
                         textAlign: TextAlign.center,
-                        style:const TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Color.fromARGB(255, 119, 129, 151),
@@ -328,8 +287,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   .textTheme
                                   .titleSmall!
                                   .copyWith(
-                                fontSize: 18,
-                              ),
+                                    fontSize: lang == 'ar' ? 15 : 18,
+                                    fontFamily:
+                                        lang == 'ar' ? 'arabic2' : 'poppins',
+                                  ),
                             ),
                             const SizedBox(
                               height: 3,
@@ -345,8 +306,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: () {
                             navigateTo(
                               context: context,
-                              screen:  PhotoScreen(
-                                photos:AppCubit.get(context).myphotos,
+                              screen: PhotoScreen(
+                                photos: AppCubit.get(context).myphotos,
                               ),
                             );
                           },
@@ -358,8 +319,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     .textTheme
                                     .titleSmall!
                                     .copyWith(
-                                  fontSize: 18,
-                                ),
+                                      fontSize: lang == 'ar' ? 15 : 18,
+                                      fontFamily:
+                                          lang == 'ar' ? 'arabic2' : 'poppins',
+                                    ),
                               ),
                               const SizedBox(
                                 height: 3,
@@ -387,8 +350,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     .textTheme
                                     .titleSmall!
                                     .copyWith(
-                                  fontSize: 18,
-                                ),
+                                      fontSize: lang == 'ar' ? 15 : 18,
+                                      fontFamily:
+                                          lang == 'ar' ? 'arabic2' : 'poppins',
+                                    ),
                               ),
                               const SizedBox(
                                 height: 3,
@@ -402,52 +367,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ],
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 29),
-                      decoration: const BoxDecoration(
-                        color: Color(0xffE6EEFA),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(43),
-                          topRight: Radius.circular(43),
+                    if (AppCubit.get(context).myPosts.isNotEmpty)
+                      Container(
+                        margin: const EdgeInsets.only(top: 29),
+                        decoration: const BoxDecoration(
+                          color: Color(0xffE6EEFA),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(43),
+                            topRight: Radius.circular(43),
+                          ),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.only(
+                            top: 15,
+                            left: 7,
+                            right: 7,
+                          ),
+                          margin: const EdgeInsets.only(bottom: 83.0),
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(40),
+                              topRight: Radius.circular(40),
+                            ),
+                            color: Color(0xffE6EEFA),
+                          ),
+                          child: Column(
+                            children: [
+                              ListView.builder(
+                                padding: const EdgeInsets.all(0),
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) =>
+                                    buildMyPostItem(
+                                  AppCubit.get(context).myPosts[index],
+                                  context,
+                                ),
+                                itemCount: AppCubit.get(context).myPosts.length,
+                              ),
+                              // ListView.builder(
+                              //   physics: const NeverScrollableScrollPhysics(),
+                              //   shrinkWrap: true,
+                              //   itemBuilder: (context, index) => buildShareItem(
+                              //       AppCubit.get(context).sharePosts, index, context),
+                              //   itemCount: AppCubit.get(context).sharePosts.length,
+                              // ),
+                            ],
+                          ),
                         ),
                       ),
-                      child: Container(
-                        padding: const EdgeInsets.only(
-                          top: 15,
-                          left: 7,
-                          right: 7,
-                        ),
-                        margin: const EdgeInsets.only(bottom: 83.0),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(40),
-                            topRight: Radius.circular(40),
-                          ),
-                          color: Color(0xffE6EEFA),
+                    if (AppCubit.get(context).myPosts.isEmpty)
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 60,
+                          horizontal: 32,
                         ),
                         child: Column(
                           children: [
-                            ListView.builder(
-                              padding: const EdgeInsets.all(0),
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) => buildMyPostItem(
-                                AppCubit.get(context).myPosts[index],
-                                context,
-                              ),
-                              itemCount: AppCubit.get(context).myPosts.length,
+                            Image.asset("assets/images/University.png"),
+                            const SizedBox(
+                              height: 25,
                             ),
-                            // ListView.builder(
-                            //   physics: const NeverScrollableScrollPhysics(),
-                            //   shrinkWrap: true,
-                            //   itemBuilder: (context, index) => buildShareItem(
-                            //       AppCubit.get(context).sharePosts, index, context),
-                            //   itemCount: AppCubit.get(context).sharePosts.length,
-                            // ),
+                            Text(
+                              lang == 'ar'
+                                  ? "لا يوجد منشورات\n انت لم تقم بإضافة اي منشورات حتى الآن."
+                                  : "Empty posts\nYou haven't added any posts yet!!",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: defaultColor,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 24,
+                                fontFamily:
+                                    lang == 'ar' ? 'arabic2' : 'poppins',
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 55,
+                            ),
                           ],
                         ),
                       ),
-                    ),
                   ],
                 )
               ],
@@ -459,17 +457,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget buildMyPostItem(
-      model,
-      context,
-      ) =>
+    model,
+    context,
+  ) =>
       model is PostModel
           ? buildNotSharedPostItem(model, context)
           : buildSharedPostItem(model, context);
 
   Widget buildNotSharedPostItem(
-      PostModel model,
-      context,
-      ) =>
+    PostModel model,
+    context,
+  ) =>
       Container(
         decoration: const BoxDecoration(
           border: Border(
@@ -541,8 +539,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           onTap: () {
                                             if (!isGuest) {
                                               if (AppCubit.get(context)
-                                                  .user!
-                                                  .uId !=
+                                                      .user!
+                                                      .uId !=
                                                   model.userId) {
                                                 navigateTo(
                                                   context: context,
@@ -636,125 +634,139 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: model.text!.isNotEmpty ? 10 : 4,
                 ),
                 if (model.image!.isNotEmpty && model.image!.length == 1)
-                  Container(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Stack(
-                      alignment: AlignmentDirectional.bottomCenter,
-                      children: [
-                        Image.network(
-                          model.image![0],
-                          width: double.infinity,
-                          fit: BoxFit.cover,
+                  InkWell(
+                    onTap: () {
+                      navigateTo(
+                        context: context,
+                        screen: ViewImagesScreen(
+                          photos: model.image!,
+                          selectedIndex: 0,
                         ),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 7),
-                          color: Colors.black.withOpacity(0.6),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                if (isGuest == false)
-                                  InkWell(
-                                    onTap: () {
-                                      AppCubit.get(context).updatePostLikes(
-                                        model,
-                                      );
-                                    },
-                                    child: Icon(
-                                      model.likes!
-                                          .any((element) => element == uId)
-                                          ? IconlyBold.heart
-                                          : IconlyLight.heart,
-                                      size: 25.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                if (isGuest == false) const SizedBox(width: 5),
-                                if (isGuest == false)
-                                  Text(
-                                    '${model.likes!.length}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                if (isGuest == false) const SizedBox(width: 30),
-                                InkWell(
-                                  onTap: () {
-                                    AppCubit.get(context)
-                                        .getComments(postId: model.postId!);
-                                    navigateTo(
-                                      context: context,
-                                      screen: CommentsScreen(
-                                        postId: model.postId!,
+                      );
+                    },
+                    child: Container(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Stack(
+                        alignment: AlignmentDirectional.bottomCenter,
+                        children: [
+                          Image.network(
+                            model.image![0],
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(horizontal: 7),
+                            color: Colors.black.withOpacity(0.6),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  if (isGuest == false)
+                                    InkWell(
+                                      onTap: () {
+                                        AppCubit.get(context).updatePostLikes(
+                                          model,
+                                        );
+                                      },
+                                      child: Icon(
+                                        model.likes!.any(
+                                                (element) => element == uId)
+                                            ? IconlyBold.heart
+                                            : IconlyLight.heart,
+                                        size: 25.0,
+                                        color: Colors.white,
                                       ),
-                                    );
-                                  },
-                                  child: const Icon(
-                                    IconlyLight.chat,
-                                    size: 25,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const Spacer(),
-                                if (isGuest == false)
+                                    ),
+                                  if (isGuest == false)
+                                    const SizedBox(width: 5),
+                                  if (isGuest == false)
+                                    Text(
+                                      '${model.likes!.length}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                  if (isGuest == false)
+                                    const SizedBox(width: 30),
                                   InkWell(
                                     onTap: () {
-                                      _showSharePostSheet(
+                                      AppCubit.get(context)
+                                          .getComments(postId: model.postId!);
+                                      navigateTo(
                                         context: context,
-                                        model: model,
+                                        screen: CommentsScreen(
+                                          postId: model.postId!,
+                                        ),
                                       );
                                     },
                                     child: const Icon(
-                                      IconlyLight.send,
-                                      size: 24,
+                                      IconlyLight.chat,
+                                      size: 25,
                                       color: Colors.white,
                                     ),
                                   ),
-                                if (isGuest == false)
-                                  const SizedBox(
-                                    width: 30,
-                                  ),
-                                if (isGuest == false)
-                                  InkWell(
-                                    onTap: () {
-                                      AppCubit.get(context).savedPostsId.any(
-                                              (element) =>
-                                          element == model.postId)
-                                          ? AppCubit.get(context)
-                                          .removeSavedPost(
-                                        postId: model.postId!,
-                                      )
-                                          : AppCubit.get(context).addSavePosts(
-                                        model: model,
-                                      );
-                                    },
-                                    child: Icon(
-                                      AppCubit.get(context).savedPostsId.any(
-                                              (element) =>
-                                          element == model.postId)
-                                          ? IconlyBold.bookmark
-                                          : IconlyLight.bookmark,
-                                      size: 24,
-                                      color: Colors.white,
+                                  const Spacer(),
+                                  if (isGuest == false)
+                                    InkWell(
+                                      onTap: () {
+                                        _showSharePostSheet(
+                                          context: context,
+                                          model: model,
+                                        );
+                                      },
+                                      child: const Icon(
+                                        IconlyLight.send,
+                                        size: 23,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                              ],
+                                  if (isGuest == false)
+                                    const SizedBox(
+                                      width: 25,
+                                    ),
+                                  if (isGuest == false)
+                                    InkWell(
+                                      onTap: () {
+                                        AppCubit.get(context).savedPostsId.any(
+                                                (element) =>
+                                                    element == model.postId)
+                                            ? AppCubit.get(context)
+                                                .removeSavedPost(
+                                                postId: model.postId!,
+                                              )
+                                            : AppCubit.get(context)
+                                                .addSavePosts(
+                                                model: model,
+                                              );
+                                      },
+                                      child: Icon(
+                                        AppCubit.get(context).savedPostsId.any(
+                                                (element) =>
+                                                    element == model.postId)
+                                            ? IconlyBold.bookmark
+                                            : IconlyLight.bookmark,
+                                        size: 24,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                if (model.image!.isNotEmpty && model.image!.length > 1)
+                if (model.image!.isNotEmpty && model.image!.length == 2)
                   Container(
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(18),
                     ),
                     child: Stack(
                       alignment: AlignmentDirectional.bottomCenter,
@@ -769,8 +781,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           childAspectRatio: 1 / 1,
                           children: List.generate(
                             model.image!.length > 4 ? 4 : model.image!.length,
-                                (index1) => Container(
-                              color: Colors.white,
+                            (index1) => Container(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(18),
+                              ),
                               child: Column(
                                 children: [
                                   Expanded(
@@ -779,104 +795,87 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         navigateTo(
                                           context: context,
                                           screen: ViewImagesScreen(
-
                                             photos: model.image!,
                                             selectedIndex: index1,
-
-
                                           ),
                                         );
                                       },
                                       child: model.image!.length > 4
                                           ? index1 == 3
-                                          ? Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          // ---------------BLURED IMAGE---------------
-                                          InkWell(
-                                            onTap: () {
-                                              navigateTo(
-                                                context: context,
-                                                screen: ViewImagesScreen(
-
-                                                  photos: model.image!,
-                                                  selectedIndex: index1,
-
-
-                                                ),
-                                              );
-                                            },
-                                            child: Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                image: DecorationImage(
-                                                  image: NetworkImage(
-                                                    model
-                                                        .image![index1],
-                                                  ),
+                                              ? Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    // ---------------BLURED IMAGE---------------
+                                                    Container(
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(
+                                                            model
+                                                                .image![index1],
+                                                          ),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    ClipRRect(
+                                                      child: BackdropFilter(
+                                                        filter:
+                                                            ImageFilter.blur(
+                                                          sigmaY: 3,
+                                                          sigmaX: 3,
+                                                        ),
+                                                        child: Container(
+                                                          decoration:
+                                                              const BoxDecoration(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    76,
+                                                                    11,
+                                                                    36,
+                                                                    50),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    // ---------------EXCEEDING IMAGE NUMBER---------------
+                                                    Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 6,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color: const Color
+                                                            .fromARGB(
+                                                            136, 4, 25, 47),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(23),
+                                                      ),
+                                                      child: Text(
+                                                        '${model.image!.length - 4}+',
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 25,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : Image.network(
+                                                  model.image![index1],
+                                                  width: double.infinity,
                                                   fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          ClipRRect(
-                                            child: BackdropFilter(
-                                              filter:
-                                              ImageFilter.blur(
-                                                sigmaY: 3,
-                                                sigmaX: 3,
-                                              ),
-                                              child: Container(
-                                                decoration:
-                                                const BoxDecoration(
-                                                  color:
-                                                  Color.fromARGB(
-                                                      76,
-                                                      11,
-                                                      36,
-                                                      50),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          // ---------------EXCEEDING IMAGE NUMBER---------------
-                                          Container(
-                                            padding: const EdgeInsets
-                                                .symmetric(
-                                              horizontal: 16,
-                                              vertical: 6,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color
-                                                  .fromARGB(
-                                                  136, 4, 25, 47),
-                                              borderRadius:
-                                              BorderRadius
-                                                  .circular(23),
-                                            ),
-                                            child: Text(
-                                              '${model.image!.length - 4}+',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 25,
-                                                fontWeight:
-                                                FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
+                                                )
                                           : Image.network(
-                                        model.image![index1],
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      )
-                                          : Image.network(
-                                        model.image![index1],
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      ),
+                                              model.image![index1],
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                            ),
                                     ),
                                   ),
                                 ],
@@ -901,8 +900,448 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     },
                                     child: Icon(
                                       model.likes!.any((element) =>
-                                      element ==
-                                          AppCubit.get(context).user!.uId)
+                                              element ==
+                                              AppCubit.get(context).user!.uId)
+                                          ? IconlyBold.heart
+                                          : IconlyLight.heart,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                if (isGuest == false) const SizedBox(width: 5),
+                                if (isGuest == false)
+                                  Text(
+                                    '${model.likes!.length}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                if (isGuest == false) const SizedBox(width: 30),
+                                InkWell(
+                                  onTap: () {
+                                    AppCubit.get(context)
+                                        .getComments(postId: model.postId!);
+                                    navigateTo(
+                                      context: context,
+                                      screen: CommentsScreen(
+                                        postId: model.postId!,
+                                      ),
+                                    );
+                                  },
+                                  child: const Icon(
+                                    IconlyLight.chat,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const Spacer(),
+                                if (isGuest == false)
+                                  InkWell(
+                                    onTap: () {
+                                      _showSharePostSheet(
+                                        context: context,
+                                        model: model,
+                                      );
+                                    },
+                                    child: const Icon(
+                                      IconlyLight.send,
+                                      size: 23,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                if (isGuest == false) const SizedBox(width: 25),
+                                if (isGuest == false)
+                                  InkWell(
+                                    onTap: () {
+                                      AppCubit.get(context).savedPostsId.any(
+                                              (element) =>
+                                                  element == model.postId)
+                                          ? AppCubit.get(context)
+                                              .removeSavedPost(
+                                              postId: model.postId!,
+                                            )
+                                          : AppCubit.get(context).addSavePosts(
+                                              model: model,
+                                            );
+                                    },
+                                    child: Icon(
+                                      AppCubit.get(context).savedPostsId.any(
+                                              (element) =>
+                                                  element == model.postId)
+                                          ? IconlyBold.bookmark
+                                          : IconlyLight.bookmark,
+                                      size: 24,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (model.image!.isNotEmpty && model.image!.length == 3)
+                  Container(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      children: [
+                        StaggeredGridView.countBuilder(
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.all(0),
+                          shrinkWrap: true,
+                          crossAxisCount: 2,
+                          staggeredTileBuilder: (int index) {
+                            if (model.image!.isNotEmpty &&
+                                model.image!.length == 3) {
+                              if (index == 2) {
+                                // The third image takes the whole width
+                                return const StaggeredTile.count(2, 1);
+                              } else {
+                                // Display the first two images side by side
+                                return const StaggeredTile.count(1, 1);
+                              }
+                            } else {
+                              return const StaggeredTile.count(1, 1);
+                            }
+                          },
+                          crossAxisSpacing: 10,
+                          itemCount: model.image!.length,
+                          itemBuilder: (BuildContext context, int index1) {
+                            if (model.image!.isNotEmpty &&
+                                model.image!.length == 3) {
+                              if (index1 == 2) {
+                                // The third image takes the whole width of the screen
+                                return InkWell(
+                                  onTap: () {
+                                    navigateTo(
+                                      context: context,
+                                      screen: ViewImagesScreen(
+                                        photos: model.image!,
+                                        selectedIndex: index1,
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(18),
+                                      color: Colors.white,
+                                    ),
+                                    child: Image.network(
+                                      model.image![index1],
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                // Display the first two images side by side
+                                return InkWell(
+                                  onTap: () {
+                                    navigateTo(
+                                      context: context,
+                                      screen: ViewImagesScreen(
+                                        photos: model.image!,
+                                        selectedIndex: index1,
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 10),
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(18),
+                                      color: Colors.white,
+                                    ),
+                                    child: Image.network(
+                                      model.image![index1],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              }
+                            } else {
+                              // Display images 1 to 3 normally
+                              return InkWell(
+                                onTap: () {
+                                  navigateTo(
+                                    context: context,
+                                    screen: ViewImagesScreen(
+                                      photos: model.image!,
+                                      selectedIndex: index1,
+                                    ),
+                                  );
+                                },
+                                child: Image.network(
+                                  model.image![index1],
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                        // ------------------------NavBar------------------------
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 7),
+                          color: Colors.black.withOpacity(0.6),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                if (isGuest == false)
+                                  InkWell(
+                                    onTap: () {
+                                      AppCubit.get(context).updatePostLikes(
+                                        model,
+                                      );
+                                    },
+                                    child: Icon(
+                                      model.likes!.any((element) =>
+                                              element ==
+                                              AppCubit.get(context).user!.uId)
+                                          ? IconlyBold.heart
+                                          : IconlyLight.heart,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                if (isGuest == false) const SizedBox(width: 5),
+                                if (isGuest == false)
+                                  Text(
+                                    '${model.likes!.length}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                if (isGuest == false) const SizedBox(width: 30),
+                                InkWell(
+                                  onTap: () {
+                                    AppCubit.get(context)
+                                        .getComments(postId: model.postId!);
+                                    navigateTo(
+                                      context: context,
+                                      screen: CommentsScreen(
+                                        postId: model.postId!,
+                                      ),
+                                    );
+                                  },
+                                  child: const Icon(
+                                    IconlyLight.chat,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const Spacer(),
+                                if (isGuest == false)
+                                  InkWell(
+                                    onTap: () {
+                                      _showSharePostSheet(
+                                        context: context,
+                                        model: model,
+                                      );
+                                    },
+                                    child: const Icon(
+                                      IconlyLight.send,
+                                      size: 23,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                if (isGuest == false) const SizedBox(width: 25),
+                                if (isGuest == false)
+                                  InkWell(
+                                    onTap: () {
+                                      AppCubit.get(context).savedPostsId.any(
+                                              (element) =>
+                                                  element == model.postId)
+                                          ? AppCubit.get(context)
+                                              .removeSavedPost(
+                                              postId: model.postId!,
+                                            )
+                                          : AppCubit.get(context).addSavePosts(
+                                              model: model,
+                                            );
+                                    },
+                                    child: Icon(
+                                      AppCubit.get(context).savedPostsId.any(
+                                              (element) =>
+                                                  element == model.postId)
+                                          ? IconlyBold.bookmark
+                                          : IconlyLight.bookmark,
+                                      size: 24,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (model.image!.isNotEmpty && model.image!.length > 3)
+                  Container(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      children: [
+                        GridView.count(
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.all(0),
+                          shrinkWrap: true,
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          childAspectRatio: 1 / 1,
+                          children: List.generate(
+                            model.image!.length > 4 ? 4 : model.image!.length,
+                            (index1) => Container(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        navigateTo(
+                                          context: context,
+                                          screen: ViewImagesScreen(
+                                            photos: model.image!,
+                                            selectedIndex: index1,
+                                          ),
+                                        );
+                                      },
+                                      child: model.image!.length > 4
+                                          ? index1 == 3
+                                              ? Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    // ---------------BLURED IMAGE---------------
+                                                    InkWell(
+                                                      onTap: () {
+                                                        navigateTo(
+                                                          context: context,
+                                                          screen:
+                                                              ViewImagesScreen(
+                                                            photos:
+                                                                model.image!,
+                                                            selectedIndex:
+                                                                index1,
+                                                          ),
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                              model.image![
+                                                                  index1],
+                                                            ),
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    ClipRRect(
+                                                      child: BackdropFilter(
+                                                        filter:
+                                                            ImageFilter.blur(
+                                                          sigmaY: 3,
+                                                          sigmaX: 3,
+                                                        ),
+                                                        child: Container(
+                                                          decoration:
+                                                              const BoxDecoration(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    76,
+                                                                    11,
+                                                                    36,
+                                                                    50),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    // ---------------EXCEEDING IMAGE NUMBER---------------
+                                                    Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 6,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color: const Color
+                                                            .fromARGB(
+                                                            136, 4, 25, 47),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(23),
+                                                      ),
+                                                      child: Text(
+                                                        '${model.image!.length - 4}+',
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 25,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : Image.network(
+                                                  model.image![index1],
+                                                  width: double.infinity,
+                                                  fit: BoxFit.cover,
+                                                )
+                                          : Image.network(
+                                              model.image![index1],
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                            ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 7),
+                          color: Colors.black.withOpacity(0.6),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                if (isGuest == false)
+                                  InkWell(
+                                    onTap: () {
+                                      AppCubit.get(context).updatePostLikes(
+                                        model,
+                                      );
+                                    },
+                                    child: Icon(
+                                      model.likes!.any((element) =>
+                                              element ==
+                                              AppCubit.get(context).user!.uId)
                                           ? IconlyBold.heart
                                           : IconlyLight.heart,
                                       size: 25.0,
@@ -957,19 +1396,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     onTap: () {
                                       AppCubit.get(context).savedPostsId.any(
                                               (element) =>
-                                          element == model.postId)
+                                                  element == model.postId)
                                           ? AppCubit.get(context)
-                                          .removeSavedPost(
-                                        postId: model.postId!,
-                                      )
+                                              .removeSavedPost(
+                                              postId: model.postId!,
+                                            )
                                           : AppCubit.get(context).addSavePosts(
-                                        model: model,
-                                      );
+                                              model: model,
+                                            );
                                     },
                                     child: Icon(
                                       AppCubit.get(context).savedPostsId.any(
                                               (element) =>
-                                          element == model.postId)
+                                                  element == model.postId)
                                           ? IconlyBold.bookmark
                                           : IconlyLight.bookmark,
                                       size: 24,
@@ -1004,8 +1443,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                               child: Icon(
                                 model.likes!.any((element) =>
-                                element ==
-                                    AppCubit.get(context).user!.uId)
+                                        element ==
+                                        AppCubit.get(context).user!.uId)
                                     ? IconlyBold.heart
                                     : IconlyLight.heart,
                                 size: 25.0,
@@ -1067,11 +1506,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 AppCubit.get(context).savedPostsId.any(
                                         (element) => element == model.postId)
                                     ? AppCubit.get(context).removeSavedPost(
-                                  postId: model.postId!,
-                                )
+                                        postId: model.postId!,
+                                      )
                                     : AppCubit.get(context).addSavePosts(
-                                  model: model,
-                                );
+                                        model: model,
+                                      );
                               },
                               child: Icon(
                                 AppCubit.get(context).savedPostsId.any(
@@ -1094,9 +1533,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // Shared Posts Container Done
   Widget buildSharedPostItem(
-      SharePostModel model,
-      context,
-      ) =>
+    SharePostModel model,
+    context,
+  ) =>
       Container(
         decoration: const BoxDecoration(
           border: Border(
@@ -1312,7 +1751,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   children: [
                                     Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           children: [
@@ -1320,13 +1759,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               onTap: () {
                                                 if (!isGuest) {
                                                   if (AppCubit.get(context)
-                                                      .user!
-                                                      .uId !=
+                                                          .user!
+                                                          .uId !=
                                                       model.postModel!.userId) {
                                                     navigateTo(
                                                       context: context,
                                                       screen:
-                                                      PersonProfileScreen(
+                                                          PersonProfileScreen(
                                                         userId: model
                                                             .postModel!.userId,
                                                       ),
@@ -1391,34 +1830,204 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 1,
                         ),
                       ),
-                      Text(
-                        '${model.postModel!.text}',
-                        style: const TextStyle(
-                          fontSize: 15.6,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromARGB(255, 50, 50, 50),
+                      if (model.postModel!.text!.isNotEmpty)
+                        Text(
+                          '${model.postModel!.text}',
+                          style: const TextStyle(
+                            fontSize: 15.6,
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromARGB(255, 50, 50, 50),
+                          ),
                         ),
-                      ),
                       SizedBox(
-                        height: model.postModel!.image!.isNotEmpty ? 10 : 6,
+                        height: model.postModel!.text!.isNotEmpty ? 10 : 4,
                       ),
                       if (model.postModel!.image!.isNotEmpty &&
                           model.postModel!.image!.length == 1)
-                      // ----------------SHARED POST CONTAINER----------------
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Image.network(
-                            model.postModel!.image![0],
-                            width: double.infinity,
-                            fit: BoxFit.cover,
+                        // ----------------SHARED POST CONTAINER----------------
+                        InkWell(
+                          onTap: () {
+                            navigateTo(
+                              context: context,
+                              screen: ViewImagesScreen(
+                                photos: model.postModel!.image!,
+                                selectedIndex: 0,
+                              ),
+                            );
+                          },
+                          child: Container(
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Image.network(
+                              model.postModel!.image![0],
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       if (model.postModel!.image!.isNotEmpty &&
-                          model.postModel!.image!.length > 1)
-                      // 4 images post container
+                          model.postModel!.image!.length == 2)
+                        Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: Stack(
+                            alignment: AlignmentDirectional.bottomCenter,
+                            children: [
+                              GridView.count(
+                                physics: const BouncingScrollPhysics(),
+                                padding: const EdgeInsets.all(0),
+                                shrinkWrap: true,
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 10,
+                                crossAxisSpacing: 10,
+                                childAspectRatio: 1 / 1,
+                                children: List.generate(
+                                  model.postModel!.image!.length,
+                                  (index1) => Container(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(18),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: InkWell(
+                                            onTap: () {
+                                              navigateTo(
+                                                context: context,
+                                                screen: ViewImagesScreen(
+                                                  photos:
+                                                      model.postModel!.image!,
+                                                  selectedIndex: index1,
+                                                ),
+                                              );
+                                            },
+                                            child: Image.network(
+                                              model.postModel!.image![index1],
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      if (model.postModel!.image!.isNotEmpty &&
+                          model.postModel!.image!.length == 3)
+                        Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: StaggeredGridView.countBuilder(
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.all(0),
+                            shrinkWrap: true,
+                            crossAxisCount: 2,
+                            staggeredTileBuilder: (int index) {
+                              if (model.postModel!.image!.isNotEmpty &&
+                                  model.postModel!.image!.length == 3) {
+                                if (index == 2) {
+                                  // The third image takes the whole width
+                                  return const StaggeredTile.count(2, 1);
+                                } else {
+                                  // Display the first two images side by side
+                                  return const StaggeredTile.count(1, 1);
+                                }
+                              } else {
+                                return const StaggeredTile.count(1, 1);
+                              }
+                            },
+                            crossAxisSpacing: 10,
+                            itemCount: model.postModel!.image!.length,
+                            itemBuilder: (BuildContext context, int index1) {
+                              if (model.postModel!.image!.isNotEmpty &&
+                                  model.postModel!.image!.length == 3) {
+                                if (index1 == 2) {
+                                  // The third image takes the whole width of the screen
+                                  return InkWell(
+                                    onTap: () {
+                                      navigateTo(
+                                        context: context,
+                                        screen: ViewImagesScreen(
+                                          photos: model.postModel!.image!,
+                                          selectedIndex: index1,
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(18),
+                                        color: Colors.white,
+                                      ),
+                                      child: Image.network(
+                                        model.postModel!.image![index1],
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  // Display the first two images side by side
+                                  return InkWell(
+                                    onTap: () {
+                                      navigateTo(
+                                        context: context,
+                                        screen: ViewImagesScreen(
+                                          photos: model.postModel!.image!,
+                                          selectedIndex: index1,
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(18),
+                                        color: Colors.white,
+                                      ),
+                                      child: Image.network(
+                                        model.postModel!.image![index1],
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                // Display images 1 to 3 normally
+                                return InkWell(
+                                  onTap: () {
+                                    navigateTo(
+                                      context: context,
+                                      screen: ViewImagesScreen(
+                                        photos: model.postModel!.image!,
+                                        selectedIndex: index1,
+                                      ),
+                                    );
+                                  },
+                                  child: Image.network(
+                                    model.postModel!.image![index1],
+                                    fit: BoxFit.cover,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      if (model.postModel!.image!.isNotEmpty &&
+                          model.postModel!.image!.length > 3)
+                        // 4 images post container
                         InkWell(
                           onTap: () {
                             // navigateTo(
@@ -1449,114 +2058,131 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     model.postModel!.image!.length > 4
                                         ? 4
                                         : model.postModel!.image!.length,
-                                        (index1) => Column(
-                                      children: [
-                                        Expanded(
-                                          child: InkWell(
-                                             onTap: () {
-                                               navigateTo(
-                                                 context: context,
-                                                 screen: ViewImagesScreen(
-                                                   photos: model.postModel!.image!,
-                                                   selectedIndex: index1,
-                                                 ),
-                                               );
-                                             },
-                                            child: model.postModel!.image!
-                                                .length >
-                                                4
-                                                ? index1 == 3
-                                                ? Stack(
-                                              alignment:
-                                              Alignment.center,
-                                              children: [
-                                                Container(
-                                                  width:
-                                                  double.infinity,
-                                                  decoration:
-                                                  BoxDecoration(
-                                                    color: Colors.white,
-                                                    image:
-                                                    DecorationImage(
-                                                      image:
-                                                      NetworkImage(
-                                                        model.postModel!
-                                                            .image![
-                                                        index1],
-                                                      ),
+                                    (index1) => Container(
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(18),
+                                        color: Colors.white,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () {
+                                                navigateTo(
+                                                  context: context,
+                                                  screen: ViewImagesScreen(
+                                                    photos:
+                                                        model.postModel!.image!,
+                                                    selectedIndex: index1,
+                                                  ),
+                                                );
+                                              },
+                                              child: model.postModel!.image!
+                                                          .length >
+                                                      4
+                                                  ? index1 == 3
+                                                      ? Stack(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          children: [
+                                                            Container(
+                                                              width: double
+                                                                  .infinity,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                image:
+                                                                    DecorationImage(
+                                                                  image:
+                                                                      NetworkImage(
+                                                                    model.postModel!
+                                                                            .image![
+                                                                        index1],
+                                                                  ),
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            ClipRRect(
+                                                              child:
+                                                                  BackdropFilter(
+                                                                filter:
+                                                                    ImageFilter
+                                                                        .blur(
+                                                                  sigmaY: 3,
+                                                                  sigmaX: 3,
+                                                                ),
+                                                                child:
+                                                                    Container(
+                                                                  decoration:
+                                                                      const BoxDecoration(
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                      76,
+                                                                      11,
+                                                                      36,
+                                                                      50,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            // ---------------EXCEEDING IMAGE NUMBER---------------
+                                                            Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                horizontal: 16,
+                                                                vertical: 6,
+                                                              ),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: const Color
+                                                                    .fromARGB(
+                                                                    136,
+                                                                    4,
+                                                                    25,
+                                                                    47),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            23),
+                                                              ),
+                                                              child: Text(
+                                                                '${model.postModel!.image!.length - 4}+',
+                                                                style:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 25,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        )
+                                                      : Image.network(
+                                                          model.postModel!
+                                                              .image![index1],
+                                                          width:
+                                                              double.infinity,
+                                                          fit: BoxFit.cover,
+                                                        )
+                                                  : Image.network(
+                                                      model.postModel!
+                                                          .image![index1],
+                                                      width: double.infinity,
                                                       fit: BoxFit.cover,
                                                     ),
-                                                  ),
-                                                ),
-                                                ClipRRect(
-                                                  child: BackdropFilter(
-                                                    filter: ImageFilter
-                                                        .blur(
-                                                      sigmaY: 3,
-                                                      sigmaX: 3,
-                                                    ),
-                                                    child: Container(
-                                                      decoration:
-                                                      const BoxDecoration(
-                                                        color: Color
-                                                            .fromARGB(
-                                                          76,
-                                                          11,
-                                                          36,
-                                                          50,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                // ---------------EXCEEDING IMAGE NUMBER---------------
-                                                Container(
-                                                  padding:
-                                                  const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 16,
-                                                    vertical: 6,
-                                                  ),
-                                                  decoration:
-                                                  BoxDecoration(
-                                                    color: const Color
-                                                        .fromARGB(
-                                                        136, 4, 25, 47),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        23),
-                                                  ),
-                                                  child: Text(
-                                                    '${model.postModel!.image!.length - 4}+',
-                                                    style:
-                                                    const TextStyle(
-                                                      color:
-                                                      Colors.white,
-                                                      fontSize: 25,
-                                                      fontWeight:
-                                                      FontWeight
-                                                          .bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                                : Image.network(
-                                              model.postModel!
-                                                  .image![index1],
-                                              width: double.infinity,
-                                              fit: BoxFit.cover,
-                                            )
-                                                : Image.network(
-                                              model.postModel!
-                                                  .image![index1],
-                                              width: double.infinity,
-                                              fit: BoxFit.cover,
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -1588,8 +2214,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                             child: Icon(
                               model.likes.any((element) =>
-                              element ==
-                                  AppCubit.get(context).user!.uId)
+                                      element ==
+                                      AppCubit.get(context).user!.uId)
                                   ? IconlyBold.heart
                                   : IconlyLight.heart,
                               size: 25.0,
@@ -1643,19 +2269,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           InkWell(
                             onTap: () {
                               AppCubit.get(context)
-                                  .savedPostsId
-                                  .any((element) => element == model.postId)
+                                      .savedPostsId
+                                      .any((element) => element == model.postId)
                                   ? AppCubit.get(context).removeSavedPost(
-                                postId: model.postId!,
-                              )
+                                      postId: model.postId!,
+                                    )
                                   : AppCubit.get(context).addSavePosts(
-                                model: model,
-                              );
+                                      model: model,
+                                    );
                             },
                             child: Icon(
                               AppCubit.get(context)
-                                  .savedPostsId
-                                  .any((element) => element == model.postId)
+                                      .savedPostsId
+                                      .any((element) => element == model.postId)
                                   ? IconlyBold.bookmark
                                   : IconlyLight.bookmark,
                               size: 24,
@@ -1705,12 +2331,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(
                         width: 20,
                       ),
-                      Text(
-                        AppCubit.get(context).user!.name!,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppCubit.get(context).user!.name!,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Text(
+                            "Sharing post...",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -1718,6 +2356,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 10,
                   ),
                   reusableTextFormField(
+                    padding: const EdgeInsets.all(9),
+                    maxLines: null,
                     label: lang == 'en' ? 'Write your post' : 'اكتب منشورك',
                     onTap: () {},
                     controller: controller,
@@ -1732,6 +2372,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Expanded(
                           child: reusableElevatedButton(
+                            radius: 24,
+                            backColor: const Color.fromARGB(255, 62, 165, 66),
                             label: lang == 'en' ? 'Share' : 'مشاركة',
                             function: () async {
                               await AppCubit.get(context).sharePost(
@@ -1749,6 +2391,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Expanded(
                           child: reusableElevatedButton(
+                            radius: 24,
+                            backColor: const Color.fromARGB(255, 216, 36, 23),
                             label: lang == 'en' ? 'Cancel' : 'الغاء',
                             function: () {
                               Navigator.pop(context);

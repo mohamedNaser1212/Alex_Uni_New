@@ -37,8 +37,10 @@ class ResetPasswordScreen extends StatelessWidget {
               elevation: 0,
               title: Text(
                 lang == 'ar' ? 'استرجاع كلمة المرور' : 'Reset Password',
-                style: const TextStyle(
-                  color: Color.fromARGB(255, 41, 71, 88),
+                style: TextStyle(
+                  fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
+                  fontSize: lang == 'ar' ? 16 : 14,
+                  color: const Color.fromARGB(255, 41, 71, 88),
                 ),
               ),
               centerTitle: true,
@@ -86,10 +88,11 @@ class ResetPasswordScreen extends StatelessWidget {
                               lang == 'ar'
                                   ? 'استرجاع كلمة المرور'
                                   : 'Forgot Password',
-                              style: const TextStyle(
+                              style: TextStyle(
+                                fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                                 fontSize: 18,
                                 fontWeight: FontWeight.w900,
-                                color: Color(0xff0D3961),
+                                color: const Color(0xff0D3961),
                               ),
                             ),
                             const SizedBox(
@@ -99,10 +102,11 @@ class ResetPasswordScreen extends StatelessWidget {
                               lang == 'ar'
                                   ? 'من فضلك قم بإدخال البريد الالكتروني الذي تريد اعادة كلمة المرور الخاصة به'
                                   : 'Please enter the email address you\'d like your password reset information sent to',
-                              style: const TextStyle(
+                              style: TextStyle(
+                                fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
-                                color: Color.fromARGB(198, 37, 44, 51),
+                                color: const Color.fromARGB(198, 37, 44, 51),
                               ),
                             ),
                             const SizedBox(
@@ -175,7 +179,8 @@ class ResetPasswordScreen extends StatelessWidget {
                                                 lang == 'ar'
                                                     ? 'ارسال البريد الإلكتروني'
                                                     : 'Reset Password',
-                                                style: const TextStyle(
+                                                style: TextStyle(
+                                                  fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                                                   fontSize: 17,
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,

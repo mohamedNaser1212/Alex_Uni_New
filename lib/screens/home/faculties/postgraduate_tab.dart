@@ -34,6 +34,7 @@ class PostGraduateTab extends StatelessWidget {
                                 ? 'Fields of study'
                                 : 'الاقسام الدراسية',
                             style: TextStyle(
+                              fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                               fontSize: 20,
                               color: Colors.grey[600],
                               fontWeight: FontWeight.bold,
@@ -66,6 +67,7 @@ class PostGraduateTab extends StatelessWidget {
                           ? 'No Departments Added Yet'
                           : 'عفوا لا يوجد اقسام للتصفح',
                       style: TextStyle(
+                        fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.grey[600],
@@ -132,7 +134,8 @@ class PostGraduateTab extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
+                            fontFamily: lang == 'ar' ? 'arabic2' : 'poppins',
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
