@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable
 
 import 'dart:ui';
-
 import 'package:alex_uni_new/models/posts/post_model.dart';
 import 'package:alex_uni_new/screens/drawer/settings/edit_screen.dart';
 import 'package:alex_uni_new/screens/profile/person_profile/person_photo_screen.dart';
@@ -34,10 +33,16 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
   @override
   void initState() {
     super.initState();
+    AppCubit.get(context).getSelectedUserSavedPosts(widget.userId!);
     AppCubit.get(context).getSelectedUser(widget.userId!);
     _scrollController.addListener(() {
-      if(_scrollController.offset == _scrollController.position.maxScrollExtent && !AppCubit.get(context).isLastSelectedUserPost){
-        AppCubit.get(context).getSelectedUserPostsFromLast(AppCubit.get(context).selectedUser!.uId!);
+      if(_scrollController.offset == _scrollController.position.maxScrollExtent){
+        if(!AppCubit.get(context).isLastSelectedUserPost) {
+          AppCubit.get(context).getSelectedUserPostsFromLast(AppCubit.get(context).selectedUser!.uId!);
+        }
+        if(!AppCubit.get(context).isLastSelectedUserSavedPost) {
+          AppCubit.get(context).getSelectedUserSavedPostsFromLast(AppCubit.get(context).selectedUser!.uId!);
+        }
       }
     });
   }
@@ -47,8 +52,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {
         if (state is GetSelectedUserSuccessState) {
-          AppCubit.get(context)
-              .getSelectedUserPosts(AppCubit.get(context).selectedUser!.uId!);
+          AppCubit.get(context).getSelectedUserPosts(AppCubit.get(context).selectedUser!.uId!);
         }
         if (state is GetSelectedUserPostsSuccessState) {
           widget.showPost = true;
@@ -400,7 +404,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 );
@@ -657,7 +661,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                 if (isGuest == false)
                                   InkWell(
                                     onTap: () {
-                                      AppCubit.get(context).savedPostsId.any(
+                                      AppCubit.get(context).selectedUserSavedPostsId.any(
                                               (element) =>
                                           element == model.postId)
                                           ? AppCubit.get(context)
@@ -669,7 +673,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                       );
                                     },
                                     child: Icon(
-                                      AppCubit.get(context).savedPostsId.any(
+                                      AppCubit.get(context).selectedUserSavedPostsId.any(
                                               (element) =>
                                           element == model.postId)
                                           ? IconlyBold.bookmark
@@ -873,7 +877,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                 if (isGuest == false)
                                   InkWell(
                                     onTap: () {
-                                      AppCubit.get(context).savedPostsId.any(
+                                      AppCubit.get(context).selectedUserSavedPostsId.any(
                                               (element) =>
                                           element == model.postId)
                                           ? AppCubit.get(context)
@@ -885,7 +889,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                       );
                                     },
                                     child: Icon(
-                                      AppCubit.get(context).savedPostsId.any(
+                                      AppCubit.get(context).selectedUserSavedPostsId.any(
                                               (element) =>
                                           element == model.postId)
                                           ? IconlyBold.bookmark
@@ -982,7 +986,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                           if (isGuest == false)
                             InkWell(
                               onTap: () {
-                                AppCubit.get(context).savedPostsId.any(
+                                AppCubit.get(context).selectedUserSavedPostsId.any(
                                         (element) => element == model.postId)
                                     ? AppCubit.get(context).removeSavedPost(
                                   postId: model.postId!,
@@ -992,7 +996,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                                 );
                               },
                               child: Icon(
-                                AppCubit.get(context).savedPostsId.any(
+                                AppCubit.get(context).selectedUserSavedPostsId.any(
                                         (element) => element == model.postId)
                                     ? IconlyBold.bookmark
                                     : IconlyLight.bookmark,
@@ -1551,7 +1555,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                           InkWell(
                             onTap: () {
                               AppCubit.get(context)
-                                  .savedPostsId
+                                  .selectedUserSavedPostsId
                                   .any((element) => element == model.postId)
                                   ? AppCubit.get(context).removeSavedPost(
                                 postId: model.postId!,
@@ -1562,7 +1566,7 @@ class _PersonProfileScreenState extends State<PersonProfileScreen> {
                             },
                             child: Icon(
                               AppCubit.get(context)
-                                  .savedPostsId
+                                  .selectedUserSavedPostsId
                                   .any((element) => element == model.postId)
                                   ? IconlyBold.bookmark
                                   : IconlyLight.bookmark,

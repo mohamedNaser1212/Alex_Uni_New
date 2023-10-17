@@ -106,6 +106,30 @@ class GetCommentsErrorState extends AppStates{
   }
 }
 
+class GetSelectedUserSavedPostsLoadingState extends AppStates {}
+
+class GetSelectedUserSavedPostsSuccessState extends AppStates {}
+
+class GetSelectedUserSavedPostsErrorState extends AppStates {
+  final String error;
+
+  GetSelectedUserSavedPostsErrorState(this.error){
+    print(error);
+  }
+}
+
+class GetLastSelectedUserSavedPostsLoadingState extends AppStates {}
+
+class GetLastSelectedUserSavedPostsSuccessState extends AppStates {}
+
+class GetLastSelectedUserSavedPostsErrorState extends AppStates {
+  final String error;
+
+  GetLastSelectedUserSavedPostsErrorState(this.error){
+    print(error);
+  }
+}
+
 class DeleteCommentLoadingState extends AppStates{}
 
 class DeleteCommentSuccessState extends AppStates{}

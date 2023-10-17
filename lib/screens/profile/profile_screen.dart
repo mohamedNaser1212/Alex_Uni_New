@@ -31,10 +31,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    AppCubit.get(context).getSelectedUserSavedPosts(uId!);
     AppCubit.get(context).getMyPosts();
     _scrollController.addListener(() {
-      if(_scrollController.offset == _scrollController.position.maxScrollExtent && !AppCubit.get(context).isLastMyPost){
-        AppCubit.get(context).getMyPostsFromLast();
+      if(_scrollController.offset == _scrollController.position.maxScrollExtent){
+        if(!AppCubit.get(context).isLastMyPost) {
+          AppCubit.get(context).getMyPostsFromLast();
+        }
+        if(!AppCubit.get(context).isLastSelectedUserSavedPost) {
+          AppCubit.get(context).getSelectedUserPostsFromLast(uId!);
+        }
       }
     });
   }
@@ -443,13 +449,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               itemCount: AppCubit.get(context).myPosts.length,
                             ),
-                            // ListView.builder(
-                            //   physics: const NeverScrollableScrollPhysics(),
-                            //   shrinkWrap: true,
-                            //   itemBuilder: (context, index) => buildShareItem(
-                            //       AppCubit.get(context).sharePosts, index, context),
-                            //   itemCount: AppCubit.get(context).sharePosts.length,
-                            // ),
                           ],
                         ),
                       ),
@@ -728,7 +727,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 if (isGuest == false)
                                   InkWell(
                                     onTap: () {
-                                      AppCubit.get(context).savedPostsId.any(
+                                      AppCubit.get(context).selectedUserSavedPostsId.any(
                                               (element) =>
                                           element == model.postId)
                                           ? AppCubit.get(context)
@@ -740,7 +739,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       );
                                     },
                                     child: Icon(
-                                      AppCubit.get(context).savedPostsId.any(
+                                      AppCubit.get(context).selectedUserSavedPostsId.any(
                                               (element) =>
                                           element == model.postId)
                                           ? IconlyBold.bookmark
@@ -961,7 +960,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 if (isGuest == false)
                                   InkWell(
                                     onTap: () {
-                                      AppCubit.get(context).savedPostsId.any(
+                                      AppCubit.get(context).selectedUserSavedPostsId.any(
                                               (element) =>
                                           element == model.postId)
                                           ? AppCubit.get(context)
@@ -973,7 +972,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       );
                                     },
                                     child: Icon(
-                                      AppCubit.get(context).savedPostsId.any(
+                                      AppCubit.get(context).selectedUserSavedPostsId.any(
                                               (element) =>
                                           element == model.postId)
                                           ? IconlyBold.bookmark
@@ -1070,7 +1069,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           if (isGuest == false)
                             InkWell(
                               onTap: () {
-                                AppCubit.get(context).savedPostsId.any(
+                                AppCubit.get(context).selectedUserSavedPostsId.any(
                                         (element) => element == model.postId)
                                     ? AppCubit.get(context).removeSavedPost(
                                   postId: model.postId!,
@@ -1080,7 +1079,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 );
                               },
                               child: Icon(
-                                AppCubit.get(context).savedPostsId.any(
+                                AppCubit.get(context).selectedUserSavedPostsId.any(
                                         (element) => element == model.postId)
                                     ? IconlyBold.bookmark
                                     : IconlyLight.bookmark,
@@ -1649,7 +1648,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           InkWell(
                             onTap: () {
                               AppCubit.get(context)
-                                  .savedPostsId
+                                  .selectedUserSavedPostsId
                                   .any((element) => element == model.postId)
                                   ? AppCubit.get(context).removeSavedPost(
                                 postId: model.postId!,
@@ -1660,7 +1659,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                             child: Icon(
                               AppCubit.get(context)
-                                  .savedPostsId
+                                  .selectedUserSavedPostsId
                                   .any((element) => element == model.postId)
                                   ? IconlyBold.bookmark
                                   : IconlyLight.bookmark,
