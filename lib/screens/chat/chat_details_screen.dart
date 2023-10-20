@@ -22,7 +22,7 @@ class ChatDetailsScreen extends StatelessWidget {
     return Builder(
       builder: (BuildContext context) {
         AppCubit.get(context)
-            .receiveMessage(receiverId: chatUserModel!.id!);
+            .receiveMessages(receiverId: chatUserModel!.id!);
         return BlocConsumer<AppCubit, AppStates>(
           listener: (context, state) {},
           builder: (context, state) {
@@ -36,7 +36,7 @@ class ChatDetailsScreen extends StatelessWidget {
                   },
                   icon: const Icon(
                     Icons.arrow_back_ios,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
                 backgroundColor: defaultColor,
@@ -44,6 +44,9 @@ class ChatDetailsScreen extends StatelessWidget {
                   children: [
                     Text(
                       '${chatUserModel?.name}',
+                      style: const TextStyle(
+                        color: Colors.white
+                      ),
                     ),
                   ],
                 ),
@@ -71,7 +74,7 @@ class ChatDetailsScreen extends StatelessWidget {
                             onSend: (value) {
                               AppCubit.get(context).sendMessage(
                                 receiverId: chatUserModel!.id!,
-                                text: value.toString(),
+                                text: value.toString(), image: '',
                               );
                             },
                             actions: [
@@ -105,7 +108,7 @@ class ChatDetailsScreen extends StatelessWidget {
                       ),
                   fallback: (context) => const Center(
                         child: CircularProgressIndicator(
-                          color: Colors.red,
+                          color: Colors.blue,
                         ),
                       )),
             );

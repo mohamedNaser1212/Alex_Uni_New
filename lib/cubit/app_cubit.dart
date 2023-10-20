@@ -626,69 +626,106 @@ class AppCubit extends Cubit<AppStates> {
     emit(DeletePostSuccessState());
   }
 
-  List<MessageModel> messages = [];
-
+  bool isExist=false;
   sendMessage({
     required String receiverId,
     required String text,
-    String? image,
-  }) async {
-    var now = await GMT.now();
-    MessageModel messageModel = MessageModel(
-      image: image ?? '',
+    required String image,
+  })async{
+    var now=await GMT.now();
+    MessageModel model=MessageModel(
       senderId: user!.uId,
       receiverId: receiverId,
       dateTime: now.toString(),
       message: text,
+      image: image,
     );
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uId)
-        .collection('chats')
-        .doc(receiverId)
-        .collection('messages')
-        .add(messageModel.toMap())
-        .then((value) {
-      emit(SendMessageSuccessState());
-    }).catchError((error) {
-      emit(SendMessageErrorState());
-    });
+    print('first $isExist');
+    FirebaseFirestore.instance.collection('users').doc(uId).collection('chats').get().then((value){
+      for (var element in value.docs) {
+        if(element.id==receiverId){
+          isExist=true;
+        }
+      }
+      print('second $isExist');
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(receiverId)
-        .collection('chats')
-        .doc(user!.uId)
-        .collection('messages')
-        .add(messageModel.toMap())
-        .then((value) {
-      emit(SendMessageSuccessState());
-    }).catchError((error) {
-      emit(SendMessageErrorState());
+      if(isExist){
+        print('hello');
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uId)
+            .collection('chats')
+            .doc(receiverId)
+            .update({
+          'messages':FieldValue.arrayUnion([model.toMap()])
+        })
+            .then((value){
+          emit(SendMessageSuccessState());
+        }).catchError((error){
+          emit(SendMessageErrorState());
+        });
+
+        FirebaseFirestore.instance
+            .collection('Admins')
+            .doc(receiverId)
+            .collection('chats')
+            .doc(user!.uId)
+            .update({
+          'messages':FieldValue.arrayUnion([model.toMap()])
+        })
+            .then((value){
+          emit(SendMessageSuccessState());
+        }).catchError((error){
+          emit(SendMessageErrorState());
+        });
+        isExist=false;
+      }else{
+        print('hello 2');
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uId)
+            .collection('chats')
+            .doc(receiverId)
+            .set({
+          'messages':FieldValue.arrayUnion([model.toMap()])
+        })
+            .then((value){
+          emit(SendMessageSuccessState());
+        }).catchError((error){
+          emit(SendMessageErrorState());
+        });
+        FirebaseFirestore.instance.collection('Admins').doc(receiverId).collection('chats').doc(user!.uId).set(
+            {'messages':FieldValue.arrayUnion([model.toMap()])
+            }).then((value){
+          emit(SendMessageSuccessState());
+        });
+      }
     });
   }
 
-  receiveMessage({
+  List messages=[];
+
+  receiveMessages({
     required String receiverId,
-  }) {
+  }){
+    messages=[];
     FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uId)
         .collection('chats')
         .doc(receiverId)
-        .collection('messages')
-        .orderBy('dateTime')
         .snapshots()
         .listen((event) {
-      messages = [];
-      for (var element in event.docs) {
-        messages.add(MessageModel.fromJson(element.data()));
-      }
+      messages=[];
+      event.data()?['messages'].forEach((element) {
+        messages.add(MessageModel.fromJson(element));
+      });
       emit(ReceiveMessageSuccessState());
     });
   }
 
   File? image;
+
   pickPhoto({
     required ImageSource source,
     required String receiverId,
@@ -701,33 +738,6 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  sendImage({
-    required String image,
-    required String dateTime,
-    required String receiverId,
-    required String senderId,
-  }) {
-    MessageModel messageModel = MessageModel(
-      message: '',
-      dateTime: dateTime,
-      image: image,
-      receiverId: receiverId,
-      senderId: senderId,
-    );
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(senderId)
-        .collection('chats')
-        .doc(receiverId)
-        .collection('messages')
-        .add(messageModel.toMap())
-        .then((value) {
-      emit(SendMessageSuccessState());
-    }).catchError((error) {
-      emit(SendMessageErrorState());
-    });
-  }
-
   uploadImage(String receiverId) {
     emit(UploadImageLoadingState());
     FirebaseStorage.instance
@@ -735,20 +745,93 @@ class AppCubit extends Cubit<AppStates> {
         .child('chats/${Uri.file(image!.path).pathSegments.last}')
         .putFile(image!)
         .then((value) {
-      value.ref.getDownloadURL().then((value) async {
-        var now = await GMT.now();
+      value.ref.getDownloadURL().then((value) {
         sendImage(
           image: value,
           receiverId: receiverId,
           senderId: uId!,
-          dateTime: now.toString(),
         );
       }).catchError((error) {
-        emit(UploadImageErrorState(error().toString()));
+        emit(UploadImageErrorState(error.toString()));
       });
     }).catchError((error) {
-      print(error.toString());
-      emit(UploadImageErrorState(error().toString()));
+      emit(UploadImageErrorState(error.toString()));
+    });
+  }
+
+  sendImage({
+    required String image,
+    required String receiverId,
+    required String senderId,
+  }) async{
+    var now = await GMT.now();
+    MessageModel model = MessageModel(
+      message: '',
+      dateTime: now.toString(),
+      image: image,
+      receiverId: receiverId,
+      senderId: senderId,
+    );
+    print('first $isExist');
+    FirebaseFirestore.instance.collection('users').doc(uId).collection('chats').get().then((value){
+      for (var element in value.docs) {
+        if(element.id==receiverId){
+          isExist=true;
+        }
+      }
+      print('second $isExist');
+
+      if(isExist){
+        print('hello');
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(senderId)
+            .collection('chats')
+            .doc(receiverId)
+            .update({
+          'messages':FieldValue.arrayUnion([model.toMap()])
+        })
+            .then((value){
+          emit(SendMessageSuccessState());
+        }).catchError((error){
+          emit(SendMessageErrorState());
+        });
+
+        FirebaseFirestore.instance
+            .collection('Admins')
+            .doc(receiverId)
+            .collection('chats')
+            .doc(senderId)
+            .update({
+          'messages':FieldValue.arrayUnion([model.toMap()])
+        })
+            .then((value){
+          emit(SendMessageSuccessState());
+        }).catchError((error){
+          emit(SendMessageErrorState());
+        });
+        isExist=false;
+      }else{
+        print('hello 2');
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uId)
+            .collection('chats')
+            .doc(receiverId)
+            .set({
+          'messages':FieldValue.arrayUnion([model.toMap()])
+        })
+            .then((value){
+          emit(SendMessageSuccessState());
+        }).catchError((error){
+          emit(SendMessageErrorState());
+        });
+        FirebaseFirestore.instance.collection('Admins').doc(receiverId).collection('chats').doc(user!.uId).set(
+            {'messages':FieldValue.arrayUnion([model.toMap()])
+            }).then((value){
+          emit(SendMessageSuccessState());
+        });
+      }
     });
   }
 

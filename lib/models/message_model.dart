@@ -1,34 +1,55 @@
-class MessageModel{
-  String?image;
-  String? dateTime;
-  String?receiverId;
-  String?senderId;
-  String?message;
+class ListMessageModel{
+  List<MessageModel> messages=[];
 
-  MessageModel({
-    required this.image,
-    required this.dateTime,
-    required this.receiverId,
-    required this.senderId,
-    required this.message,
+  ListMessageModel({
+    required this.messages,
   });
 
-  MessageModel.fromJson(Map<String,dynamic>json){
-    image=json['image'];
-    dateTime=json['dateTime'];
-    receiverId=json['receiverId'];
-    senderId=json['senderId'];
-    message=json['message'];
+  ListMessageModel.fromJson(Map<String,dynamic>json){
+    messages = List.from(json['messages']).map((e) => MessageModel.fromJson(e)).toList();
+
   }
 
   Map<String,dynamic>toMap(){
-    return{
-      'image':image,
-      'dateTime':dateTime,
-      'receiverId':receiverId,
-      'senderId':senderId,
-      'message':message,
+    return {
+      'messages':messages.map((e) => e.toMap()).toList(),
     };
+
   }
 
+}
+
+
+class MessageModel{
+  String ?message;
+  String ?dateTime;
+  String ?image;
+  String ?receiverId;
+  String ?senderId;
+
+  MessageModel({
+    required this.message,
+    required this.dateTime,
+    required this.image,
+    required this.receiverId,
+    required this.senderId,
+  });
+
+  MessageModel.fromJson(Map<String,dynamic>json){
+    message=json['message'];
+    dateTime=json['dateTime'];
+    image=json['image'];
+    receiverId=json['receiverId'];
+    senderId=json['senderId'];
+  }
+
+  Map<String,dynamic>toMap(){
+    return {
+      'message':message,
+      'dateTime':dateTime,
+      'image':image,
+      'receiverId':receiverId,
+      'senderId':senderId,
+    };
+  }
 }

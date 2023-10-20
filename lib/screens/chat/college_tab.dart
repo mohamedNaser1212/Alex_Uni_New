@@ -85,18 +85,7 @@ class CollegeTab extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Text(
-                        'Date',
-                      ),
                     ],
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.76,
-                  child: const Text(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],

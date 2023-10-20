@@ -8,7 +8,6 @@ class AdminModel{
   String? universityId;
   bool? isAvailable;
   bool? postGraduate;
-  bool? underGraduate;
   bool? showInDepartment;
 
   AdminModel({
@@ -20,7 +19,6 @@ class AdminModel{
     this.universityId,
     this.isAvailable,
     this.postGraduate,
-    this.underGraduate,
     this.showInDepartment,
   });
 
@@ -33,7 +31,6 @@ class AdminModel{
     universityId = json['universityId'];
     isAvailable = json['isAvailable'];
     postGraduate = json['postGraduate'];
-    underGraduate = json['underGraduate'];
     showInDepartment = json['showInDepartment'];
   }
 
@@ -47,7 +44,6 @@ class AdminModel{
       'universityId': universityId,
       'isAvailable': isAvailable,
       'postGraduate': postGraduate,
-      'underGraduate': underGraduate,
       'showInDepartment': showInDepartment,
     };
   }
