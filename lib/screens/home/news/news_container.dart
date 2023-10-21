@@ -52,6 +52,7 @@ Widget buildNewsItem({
               ),
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.8,
+
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(98, 158, 172, 193),
@@ -78,7 +79,7 @@ Widget buildNewsItem({
                       height: 8,
                     ),
                     Expanded(
-                      flex: 2,
+                      flex: 3,
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(
@@ -235,7 +236,7 @@ Widget buildNewsItem({
                           height: 8,
                         ),
                         Expanded(
-                          flex: 2,
+                          flex: 3,
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             decoration: BoxDecoration(

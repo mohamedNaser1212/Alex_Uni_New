@@ -80,6 +80,7 @@ class _ViewImagesScreenState extends State<ViewImagesScreen> {
               height: size.height * 0.15,
               child: ListView(
                 scrollDirection: Axis.horizontal,
+
                 physics: const BouncingScrollPhysics(),
                 children: [
                   const SizedBox(
