@@ -39,9 +39,11 @@ class _UserLayoutState extends State<UserLayout> {
         return Scaffold(
           key: scafKey,
           extendBodyBehindAppBar:
-              AppCubit.get(context).currentIndex == 3 ? true : false,
+              AppCubit.get(context).currentIndex == 3 || AppCubit.get(context).currentIndex == 1 ? true : false,
           extendBody: true,
-          appBar: AppBar(
+          appBar: 
+          AppCubit.get(context).currentIndex != 1 ?
+          AppBar(
             leading: !isGuest ? AppCubit.get(context).currentIndex == 0
                 ? IconButton(
                     onPressed: () {
@@ -120,7 +122,7 @@ class _UserLayoutState extends State<UserLayout> {
                   ),
                 ),
             ],
-          ),
+          ) : null,
           drawer: isGuest == false
               ? Drawer(
                   child: Column(

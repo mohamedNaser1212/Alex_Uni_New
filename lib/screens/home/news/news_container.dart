@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:alex_uni_new/constants/constants.dart';
 import 'package:alex_uni_new/models/news_model.dart';
 import 'package:alex_uni_new/screens/drawer/news/drawer_news_screen.dart';
@@ -11,7 +13,7 @@ Widget buildNewsItem({
   model,
   required int index,
 }) =>
-    index != 1
+    index != 3
         ? InkWell(
             onTap: () {
               if (model is ArabicNewsModel) {
@@ -52,7 +54,6 @@ Widget buildNewsItem({
               ),
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.8,
-
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(98, 158, 172, 193),
@@ -79,7 +80,7 @@ Widget buildNewsItem({
                       height: 8,
                     ),
                     Expanded(
-                      flex: 3,
+                      flex: 2,
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(
@@ -94,6 +95,9 @@ Widget buildNewsItem({
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const SizedBox(
+                              height: 8,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -107,7 +111,10 @@ Widget buildNewsItem({
                                       fontFamily:
                                           lang == 'ar' ? 'arabic2' : 'poppins',
                                       color: Colors.black,
-                                      fontSize: 18,
+                                      fontSize: MediaQuery.of(context)
+                                              .size
+                                              .aspectRatio *
+                                          32,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -139,10 +146,14 @@ Widget buildNewsItem({
                                     model.descriptions[0]!,
                                     maxLines: 4,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontFamily: 'poppins',
-                                      color: Color.fromARGB(255, 111, 111, 111),
-                                      fontSize: 15,
+                                      color: const Color.fromARGB(
+                                          255, 111, 111, 111),
+                                      fontSize: MediaQuery.of(context)
+                                              .size
+                                              .aspectRatio *
+                                          27,
                                       fontWeight: FontWeight.w400,
                                     ),
                                   )
@@ -150,10 +161,14 @@ Widget buildNewsItem({
                                     model.descriptions[0]!,
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontFamily: 'arabic2',
-                                      color: Color.fromARGB(255, 111, 111, 111),
-                                      fontSize: 13,
+                                      color: const Color.fromARGB(
+                                          255, 111, 111, 111),
+                                      fontSize: MediaQuery.of(context)
+                                              .size
+                                              .aspectRatio *
+                                          26,
                                       fontWeight: FontWeight.w400,
                                     ),
                                   ),
@@ -236,7 +251,7 @@ Widget buildNewsItem({
                           height: 8,
                         ),
                         Expanded(
-                          flex: 3,
+                          flex: 2,
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             decoration: BoxDecoration(
@@ -251,6 +266,9 @@ Widget buildNewsItem({
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                const SizedBox(
+                                  height: 8,
+                                ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -265,7 +283,10 @@ Widget buildNewsItem({
                                               ? 'arabic2'
                                               : 'poppins',
                                           color: Colors.black,
-                                          fontSize: 18,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .aspectRatio *
+                                              32,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -299,11 +320,14 @@ Widget buildNewsItem({
                                         model.descriptions[0]!,
                                         maxLines: 4,
                                         overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontFamily: 'poppins',
-                                          color: Color.fromARGB(
+                                          color: const Color.fromARGB(
                                               255, 111, 111, 111),
-                                          fontSize: 15,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .aspectRatio *
+                                              27,
                                           fontWeight: FontWeight.w400,
                                         ),
                                       )
@@ -311,11 +335,14 @@ Widget buildNewsItem({
                                         model.descriptions[0]!,
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontFamily: 'arabic2',
-                                          color: Color.fromARGB(
+                                          color: const Color.fromARGB(
                                               255, 111, 111, 111),
-                                          fontSize: 13,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .aspectRatio *
+                                              26,
                                           fontWeight: FontWeight.w400,
                                         ),
                                       ),
@@ -329,23 +356,31 @@ Widget buildNewsItem({
                       width: MediaQuery.of(context).size.width * 0.8,
                       height: MediaQuery.of(context).size.height * 0.4,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.85),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: TextButton(
-                        onPressed: () {
-                          navigateTo(
-                            context: context,
-                            screen: const DrawerNewsScreen(),
-                          );
-                        },
-                        child: Text(
-                          lang == 'en' ? 'Read More' : 'قراءة المزيد',
-                          style: TextStyle(
-                            fontFamily: lang == 'en' ? 'poppins' : 'arabic2',
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                          color: defaultColor.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(18)),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaY: 4, sigmaX: 4),
+                          child: SizedBox(
+                            child: TextButton(
+                              onPressed: () {
+                                navigateTo(
+                                  context: context,
+                                  screen: const DrawerNewsScreen(),
+                                );
+                              },
+                              child: Text(
+                                lang == 'en' ? 'Read More' : 'قراءة المزيد',
+                                style: TextStyle(
+                                  fontFamily:
+                                      lang == 'en' ? 'poppins' : 'arabic2',
+                                  color: Colors.white,
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),

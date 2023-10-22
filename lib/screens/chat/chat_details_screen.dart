@@ -21,8 +21,7 @@ class ChatDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Builder(
       builder: (BuildContext context) {
-        AppCubit.get(context)
-            .receiveMessages(receiverId: chatUserModel!.id!);
+        AppCubit.get(context).receiveMessages(receiverId: chatUserModel!.id!);
         return BlocConsumer<AppCubit, AppStates>(
           listener: (context, state) {},
           builder: (context, state) {
@@ -44,73 +43,71 @@ class ChatDetailsScreen extends StatelessWidget {
                   children: [
                     Text(
                       '${chatUserModel?.name}',
-                      style: const TextStyle(
-                        color: Colors.white
-                      ),
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ],
                 ),
               ),
               body: ConditionalBuilder(
-                  condition: state is! UploadImageLoadingState,
-                  builder: (context) => Column(
-                        children: [
-                          Expanded(
-                            child: ListView.separated(
-                              itemCount: AppCubit.get(context).messages.length,
-                              itemBuilder: (context, index) {
-                                return buildMessage(
-                                    AppCubit.get(context).messages[index],
-                                    context);
-                              },
-                              separatorBuilder:
-                                  (BuildContext context, int index) =>
-                                      const SizedBox(
-                                height: 5,
-                              ),
-                            ),
-                          ),
-                          MessageBar(
-                            onSend: (value) {
-                              AppCubit.get(context).sendMessage(
-                                receiverId: chatUserModel!.id!,
-                                text: value.toString(), image: '',
-                              );
-                            },
-                            actions: [
-                              InkWell(
-                                child: const Icon(
-                                  Icons.add,
-                                  color: Colors.black,
-                                  size: 24,
-                                ),
-                                onTap: () {},
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 8, right: 8),
-                                child: InkWell(
-                                  child: const Icon(
-                                    Icons.camera_alt,
-                                    color: Colors.green,
-                                    size: 24,
-                                  ),
-                                  onTap: () {
-                                    AppCubit.get(context).pickPhoto(
-                                        source: ImageSource.gallery,
-                                        receiverId: chatUserModel!.id!);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                  fallback: (context) => const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.blue,
+                condition: state is! UploadImageLoadingState,
+                builder: (context) => Column(
+                  children: [
+                    Expanded(
+                      child: ListView.separated(
+                        itemCount: AppCubit.get(context).messages.length,
+                        itemBuilder: (context, index) {
+                          return buildMessage(
+                              AppCubit.get(context).messages[index], context);
+                        },
+                        separatorBuilder: (BuildContext context, int index) =>
+                            const SizedBox(
+                          height: 5,
                         ),
-                      )),
+                      ),
+                    ),
+                    MessageBar(
+                      sendButtonColor: defaultColor,
+                      onSend: (value) {
+                        AppCubit.get(context).sendMessage(
+                          receiverId: chatUserModel!.id!,
+                          text: value.toString(),
+                          image: '',
+                        );
+                      },
+                      actions: [
+                        InkWell(
+                          child: Icon(
+                            Icons.add,
+                            color: defaultColor,
+                            size: 24,
+                          ),
+                          onTap: () {},
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8, right: 8),
+                          child: InkWell(
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: defaultColor,
+                              size: 24,
+                            ),
+                            onTap: () {
+                              AppCubit.get(context).pickPhoto(
+                                  source: ImageSource.gallery,
+                                  receiverId: chatUserModel!.id!);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                fallback: (context) => Center(
+                  child: CircularProgressIndicator(
+                    color: defaultColor,
+                  ),
+                ),
+              ),
             );
           },
         );

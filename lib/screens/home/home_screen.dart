@@ -133,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .collection('News')
                                 .where('isFinished', isEqualTo: true)
                                 .orderBy('date', descending: true)
-                                .limit(2)
+                                .limit(4)
                                 .snapshots(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .where('type', isEqualTo: 'both')
                                 .where('isFinished', isEqualTo: true)
                                 .orderBy('date', descending: true)
-                                .limit(2)
+                                .limit(4)
                                 .snapshots(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {

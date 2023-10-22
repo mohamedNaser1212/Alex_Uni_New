@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable
 
+import 'package:alex_uni_new/constants/constants.dart';
 import 'package:alex_uni_new/models/university_model.dart';
 import 'package:alex_uni_new/widgets/reusable_widgets.dart';
 import 'package:alex_uni_new/screens/chat/choose_screen.dart';
@@ -27,7 +28,7 @@ class CollegeTab extends StatelessWidget {
             itemBuilder: (context, index) => InkWell(
               onTap: () {
                 cubit.getAllAdmins(index);
-                navigateTo(context: context, screen: const ChooseScreen());
+                navigateTo(context: context, screen: ChooseScreen());
               },
               child: buildChatItem(
                 context: context,
@@ -69,7 +70,7 @@ class CollegeTab extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.75,
+                  width: MediaQuery.of(context).size.width * 0.73,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisSize: MainAxisSize.max,
@@ -77,8 +78,9 @@ class CollegeTab extends StatelessWidget {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.6,
                         child: Text(
-                          '${universityModel.name}',
+                          lang == 'en' ? '${universityModel.name}' : '${universityModel.arabicName}',
                           style: const TextStyle(
+                            fontFamily: 'arabic1',
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                             overflow: TextOverflow.ellipsis,
@@ -87,6 +89,12 @@ class CollegeTab extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
+                Text(
+                  lang == 'ar' ?
+                  'يمكنك التحدث الى احد ممثلي الكلية' : 'you can talk to our representitive',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

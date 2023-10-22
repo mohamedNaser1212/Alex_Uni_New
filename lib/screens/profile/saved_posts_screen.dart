@@ -1510,7 +1510,7 @@ class _SavedScreenState extends State<SavedScreen> {
                                         ],
                                       ),
                                       Text(
-                                        'Shared by ${model.shareUserName}.',
+                                        lang == 'ar' ? 'قام بمشاركة ${model.shareUserName}.' : 'Shared by ${model.shareUserName}.',
                                         style: const TextStyle(
                                           height: 1.4,
                                           fontSize: 11,

@@ -29,37 +29,37 @@ class UserModel {
     required this.passportId,
   });
 
-  UserModel.fromJson(Map<String,dynamic>? json){
-    email=json!['email'];
-    image=json['image'];
-    cover=json['cover'];
-    name=json['name'];
-    uId=json['uId'];
-    bio=json['bio'];
-    phone=json['phone'];
-    country=json['country'];
-    universityname=json['universityname'];
-    underGraduate=json['underGraduate'];
-    postGraduate=json['postGraduate'];
-    address=json['address'];
-    passportId=json['passportId'];
+  UserModel.fromJson(Map<String, dynamic>? json) {
+    email = json!['email'];
+    image = json['image'];
+    cover = json['cover'];
+    name = json['name'];
+    uId = json['uId'];
+    bio = json['bio'] ?? '';
+    phone = json['phone'];
+    country = json['country'];
+    universityname = json['universityname'];
+    underGraduate = json['underGraduate'];
+    postGraduate = json['postGraduate'];
+    address = json['address'];
+    passportId = json['passportId'];
   }
 
-  Map<String,dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
-      'name':name,
-      'email':email,
-      'image':image,
-      'cover':cover,
-      'uId':uId,
-      'bio':bio,
-      'phone':phone,
-      'country':country,
-      'universityname':universityname,
-      'underGraduate':underGraduate,
-      'postGraduate':postGraduate,
-      'address':address,
-      'passportId':passportId,
+      'name': name,
+      'email': email,
+      'image': image,
+      'cover': cover,
+      'uId': uId,
+      'bio': bio,
+      'phone': phone,
+      'country': country,
+      'universityname': universityname,
+      'underGraduate': underGraduate,
+      'postGraduate': postGraduate,
+      'address': address,
+      'passportId': passportId,
     };
   }
 }

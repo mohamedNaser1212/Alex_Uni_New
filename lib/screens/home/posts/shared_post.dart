@@ -298,7 +298,7 @@ Widget buildSharedPostItem(
                                     ),
                                     // ------------------SHARED USER DATE------------------
                                     Text(
-                                      'Shared by ${model.shareUserName}.',
+                                      lang == 'ar' ? 'قام بمشاركة ${model.shareUserName}.' : 'Shared by ${model.shareUserName}.',
                                       style: const TextStyle(
                                         height: 1.4,
                                         fontSize: 11,

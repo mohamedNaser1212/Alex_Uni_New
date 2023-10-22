@@ -339,6 +339,7 @@ class EditProfile extends StatelessWidget {
                                                   .uploadCoverImage(
                                                 name: nameController.text,
                                                 phone: phoneController.text,
+                                                bio: bioController.text,
                                               );
                                             },
                                             child: Text(

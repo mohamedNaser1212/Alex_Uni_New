@@ -210,7 +210,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   void uploadCoverImage({
-    required String name,
+    required String name, bio,
     required String phone,
   }) {
     emit(UserModelUpdateLoadingState());
@@ -220,7 +220,7 @@ class AppCubit extends Cubit<AppStates> {
         .putFile(coverImage!)
         .then((value) {
       value.ref.getDownloadURL().then((value) {
-        updateUser(name: name, cover: value, phone: phone);
+        updateUser(name: name, cover: value, phone: phone, bio: bio);
         coverImage = null;
       }).catchError((error) {
         emit(UploadImageErrorState(error.toString()));

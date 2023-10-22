@@ -32,15 +32,6 @@ class _ChatScreenState extends State<ChatScreen> {
             appBar: AppBar(
               backgroundColor: defaultColor,
               elevation: 0.6,
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
-                ),
-              ),
               title: TabBar(
                 indicatorColor: Colors.white,
                 tabs: [
@@ -51,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   Tab(
                     child: Text(
-                      lang == 'en' ? 'College' : 'الكليات,',
+                      lang == 'en' ? 'College' : 'الكليات',
                     ),
                   ),
                 ],
