@@ -66,7 +66,7 @@ Widget buildNewsItem({
                       flex: 3,
                       child: Container(
                         width: double.infinity,
-                        height: MediaQuery.of(context).size.height * 0.2,
+                        height: MediaQuery.of(context).size.height * 0.6,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                           image: DecorationImage(
@@ -76,11 +76,9 @@ Widget buildNewsItem({
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 8,
-                    ),
+
                     Expanded(
-                      flex: 2,
+                      flex: 3,
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(
@@ -144,7 +142,7 @@ Widget buildNewsItem({
                             lang == 'en'
                                 ? Text(
                                     model.descriptions[0]!,
-                                    maxLines: 4,
+                                    maxLines:2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontFamily: 'poppins',
@@ -159,7 +157,7 @@ Widget buildNewsItem({
                                   )
                                 : Text(
                                     model.descriptions[0]!,
-                                    maxLines: 3,
+                                    maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontFamily: 'arabic2',
@@ -251,7 +249,7 @@ Widget buildNewsItem({
                           height: 8,
                         ),
                         Expanded(
-                          flex: 2,
+                          flex: 3,
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             decoration: BoxDecoration(
@@ -264,6 +262,7 @@ Widget buildNewsItem({
                               ),
                             ),
                             child: Column(
+
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(
@@ -318,7 +317,7 @@ Widget buildNewsItem({
                                 lang == 'en'
                                     ? Text(
                                         model.descriptions[0]!,
-                                        maxLines: 4,
+                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           fontFamily: 'poppins',
@@ -333,7 +332,7 @@ Widget buildNewsItem({
                                       )
                                     : Text(
                                         model.descriptions[0]!,
-                                        maxLines: 3,
+                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           fontFamily: 'arabic2',

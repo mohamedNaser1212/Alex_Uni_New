@@ -73,7 +73,7 @@ class ChooseScreen extends StatelessWidget {
                                 bottom: 12,
                                 top: 55,
                               ),
-                              height: lang == 'ar' ? MediaQuery.of(context).size.height * 0.22 : MediaQuery.of(context).size.height * 0.2,
+                              height: lang == 'ar' ? MediaQuery.of(context).size.height * 0.3 : MediaQuery.of(context).size.height * 0.3,
                               decoration: BoxDecoration(
                                 color: defaultColor,
                                 borderRadius: BorderRadius.circular(18),
@@ -82,10 +82,10 @@ class ChooseScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Expanded(
-                                    flex: 3,
+                                    flex: 2,
                                     child: Center(
                                       child: Container(
-                                        padding: const EdgeInsets.only(top: 52),
+                                        padding: const EdgeInsets.only(top: 70),
                                         child: Column(
                                           children: [
                                             Text(
@@ -134,7 +134,7 @@ class ChooseScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Expanded(
-                                    flex: 2,
+                                    flex:1,
                                     child: Align(
                                       child: InkWell(
                                         onTap: () {
