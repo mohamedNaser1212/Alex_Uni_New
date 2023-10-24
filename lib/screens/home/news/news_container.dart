@@ -76,7 +76,9 @@ Widget buildNewsItem({
                         ),
                       ),
                     ),
-
+                    const SizedBox(
+                      height: 8,
+                    ),
                     Expanded(
                       flex: 3,
                       child: Container(
@@ -91,11 +93,9 @@ Widget buildNewsItem({
                           ),
                         ),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(
-                              height: 8,
-                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -142,7 +142,7 @@ Widget buildNewsItem({
                             lang == 'en'
                                 ? Text(
                                     model.descriptions[0]!,
-                                    maxLines:2,
+                                    maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontFamily: 'poppins',
@@ -262,12 +262,9 @@ Widget buildNewsItem({
                               ),
                             ),
                             child: Column(
-
+                              mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const SizedBox(
-                                  height: 8,
-                                ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [

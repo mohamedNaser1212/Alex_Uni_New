@@ -72,6 +72,7 @@ dependencies:
   shimmer: ^3.0.0
   fancy_shimmer_image: ^2.0.3
   staggered_grid_view_flutter: ^0.0.4
+  tutorial_coach_mark: ^1.2.11
 
 dev_dependencies:
   flutter_test:

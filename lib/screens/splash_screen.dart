@@ -1,7 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'package:alex_uni_new/constants/cache_helper.dart';
 import 'package:alex_uni_new/constants/constants.dart';
 import 'package:alex_uni_new/screens/auth/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../main.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -10,16 +13,48 @@ class SplashScreen extends StatefulWidget {
   static String id = 'SplashScreen';
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class SplashScreenState extends State<SplashScreen> {
   late Locale _selectedLocale;
   bool _isDropdownOpen = false;
+
+  TutorialCoachMark? tutorialCoachMark;
+  List<TargetFocus> targets = [];
+
+  GlobalKey languageKey = GlobalKey();
+
+  initTarget() {
+    targets = [
+      // faculty
+      TargetFocus(
+        identify: "Choose Language",
+        keyTarget: languageKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return const ChooseLangugeTutorial();
+            },
+          ),
+        ],
+      ),
+    ];
+  }
+
+  displayTutorial() {
+    initTarget();
+    tutorialCoachMark = TutorialCoachMark(targets: targets)
+      ..show(context: context);
+  }
 
   @override
   void initState() {
     super.initState();
+    Future.delayed(const Duration(seconds: 1), () {
+      displayTutorial();
+    });
     _selectedLocale = const Locale('en'); // Default language is English
   }
 
@@ -75,6 +110,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Stack(
             children: [
               Positioned(
+                key: languageKey,
                 top: 20,
                 right: 20,
                 child: GestureDetector(
@@ -84,8 +120,9 @@ class _SplashScreenState extends State<SplashScreen> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius:
-                      BorderRadius.circular(_isDropdownOpen ? 10 : 200),
+                          BorderRadius.circular(_isDropdownOpen ? 10 : 200),
                     ),
+                    width: 80,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: DropdownButton<Locale>(
@@ -130,9 +167,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-
                     const SizedBox(height: 30),
-
                     const Spacer(),
                     SizedBox(
                       height: 290,
@@ -153,14 +188,34 @@ class _SplashScreenState extends State<SplashScreen> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-
-
                   ],
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ChooseLangugeTutorial extends StatelessWidget {
+  const ChooseLangugeTutorial({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 35),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: const Text(
+        "Click on this button to select your app's language",
+        textAlign: TextAlign.center,
       ),
     );
   }

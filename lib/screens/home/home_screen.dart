@@ -7,11 +7,13 @@ import 'package:alex_uni_new/screens/home/faculties/faculties_container.dart';
 import 'package:alex_uni_new/screens/home/news/news_container.dart';
 import 'package:alex_uni_new/screens/home/posts/posts.dart';
 import 'package:alex_uni_new/states/app_states.dart';
+import 'package:alex_uni_new/widgets/reusable_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -23,9 +25,70 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
 
+  TutorialCoachMark? tutorialCoachMark;
+  List<TargetFocus> targets = [];
+
+  GlobalKey facultyKey = GlobalKey();
+  GlobalKey newsKey = GlobalKey();
+  GlobalKey postsKey = GlobalKey();
+  GlobalKey addPostKey = GlobalKey();
+
+  initTarget() {
+    targets = [
+      // faculty
+      TargetFocus(
+        identify: "Faculty",
+        keyTarget: facultyKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: defaultColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text("This is our faculties section\nwhere you can find all the information you need."),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        reusableElevatedButton(label: "Skip", function: () {}),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        reusableElevatedButton(label: "Next", function: () {}),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    ];
+  }
+
+  displayTutorial() {
+    initTarget();
+    tutorialCoachMark = TutorialCoachMark(targets: targets)
+      ..show(context: context);
+  }
+
   @override
   void initState() {
     super.initState();
+    Future.delayed(const Duration(seconds: 1), () {
+      displayTutorial();
+    });
     AppCubit.get(context).getPosts();
     _scrollController.addListener(() {
       if (_scrollController.offset ==
@@ -75,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  Container(
+                  Container(                  
                     height: lang == 'en'
                         ? MediaQuery.of(context).size.height * 0.16
                         : MediaQuery.of(context).size.height * 0.18,
@@ -96,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               model.id = ds.id;
                               return buildFacultyItem(
                                 context,
-                                model,
+                                model,                                
                               );
                             },
                             separatorBuilder: (context, index) =>
@@ -125,6 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Container(
+                    key: newsKey,
                     height: MediaQuery.of(context).size.height * 0.37,
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: lang == 'ar'
@@ -218,6 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 9,
                   ),
                   Container(
+                    key: postsKey,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40),
@@ -243,13 +308,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   child: buildPostItem(
                                       AppCubit.get(context).post[index],
-                                      context, index),
+                                      context,
+                                      index),
                                 );
                               } else {
                                 return buildPostItem(
-                                  AppCubit.get(context).post[index],
-                                  context, index
-                                );
+                                    AppCubit.get(context).post[index],
+                                    context,
+                                    index);
                               }
                             },
                             itemCount: AppCubit.get(context).post.length,

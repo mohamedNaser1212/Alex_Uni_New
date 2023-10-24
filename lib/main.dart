@@ -125,7 +125,7 @@ class MyAppState extends State<MyApp> {
           UserLayout.id: (context) => const UserLayout(),
           // ... define other named routes if needed ...
         },
-        // home: ResetPasswordScreen(),
+        // home: const SplashScreen(),
         home: widget.startPage,
       ),
     );

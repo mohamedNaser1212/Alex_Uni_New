@@ -877,7 +877,9 @@ class AppCubit extends Cubit<AppStates> {
       if (value.docs.length < 5) {
         isLastMyPost = true;
       }
-      lastMyPost = value.docs[value.docs.length - 1];
+      if(value.docs.isNotEmpty) {
+        lastMyPost = value.docs[value.docs.length - 1];
+      }
     }).then((value) {
       emit(GetPostsSuccessState());
     }).catchError((error) {
