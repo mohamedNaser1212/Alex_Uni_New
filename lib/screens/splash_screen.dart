@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api, avoid_print
-
 import 'package:alex_uni_new/constants/cache_helper.dart';
 import 'package:alex_uni_new/constants/constants.dart';
 import 'package:alex_uni_new/screens/auth/login_screen.dart';
@@ -18,6 +16,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   late Locale _selectedLocale;
   bool _isDropdownOpen = false;
+
   @override
   void initState() {
     super.initState();
@@ -85,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius:
-                          BorderRadius.circular(_isDropdownOpen ? 10 : 200),
+                      BorderRadius.circular(_isDropdownOpen ? 10 : 200),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -131,7 +130,9 @@ class _SplashScreenState extends State<SplashScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+
                     const SizedBox(height: 30),
+
                     const Spacer(),
                     SizedBox(
                       height: 290,
@@ -152,6 +153,8 @@ class _SplashScreenState extends State<SplashScreen> {
                         textAlign: TextAlign.center,
                       ),
                     ),
+
+
                   ],
                 ),
               ),

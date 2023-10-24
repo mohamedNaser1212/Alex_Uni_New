@@ -107,6 +107,21 @@ class _UserLayoutState extends State<UserLayout> {
               ],
             ),
             actions: [
+
+              if (isGuest)
+                IconButton(
+                  //make when the user hover over the icon a label appears
+
+
+                  onPressed: () {
+                  AppCubit.get(context).changeAppLanguage(context: context, newLocale:lang=='en'? const Locale('ar'):const Locale('en'));
+
+                  },
+                  icon: Icon(
+                    Icons.language_outlined,
+                    color: defaultColor,
+                  ),
+                ),
               if (isGuest)
                 IconButton(
                   onPressed: () {
