@@ -135,6 +135,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
         universities.add(currentUniversity);
       }
     }).then((value) {
+      currentSelectedUniversity = universities.first;
       getDepartments(universityId: universities.first.id!);
       emit(GetUniversitiesSuccessState());
     }).catchError((error) {
@@ -159,11 +160,12 @@ class RegisterCubit extends Cubit<RegisterStates> {
   bool isvisible1 = true;
   bool isvisible2 = true;
 
-  void changeVisibility1(){
+  void changeVisibility1() {
     isvisible1 = !isvisible1;
     emit(ChangeVisibility());
   }
-  void changeVisibility2(){
+
+  void changeVisibility2() {
     isvisible2 = !isvisible2;
     emit(ChangeVisibility());
   }
@@ -214,8 +216,8 @@ class RegisterCubit extends Cubit<RegisterStates> {
           postGraduateDepartments.add(currentDepartment);
         }
       }
-      currentSelectedDepartment = departments.first;
     }).then((value) {
+      currentSelectedDepartment = departments.first;
       emit(GetDepartmentsSuccessState());
     }).catchError((error) {
       emit(GetDepartmentsErrorState(

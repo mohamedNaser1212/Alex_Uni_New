@@ -4,9 +4,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:label="alex_uni_new"
+        android:label="Alexandria University"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/alex_uni_logo">
         <activity
             android:name=".MainActivity"
             android:exported="true"

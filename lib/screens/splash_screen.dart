@@ -122,7 +122,6 @@ class SplashScreenState extends State<SplashScreen> {
                       borderRadius:
                           BorderRadius.circular(_isDropdownOpen ? 10 : 200),
                     ),
-                    width: 80,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: DropdownButton<Locale>(
